@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, signOut } from "firebase/auth";
-import { getDatabase, ref, get, set, update, onValue, onDisconnect } from "firebase/database";
+import { getDatabase, ref, get, set, update, push, onValue, onChildAdded, onDisconnect } from "firebase/database";
 import { firebaseConfig } from "./firebase-config.js";
 
 const app = initializeApp(firebaseConfig), auth = getAuth(app), db = getDatabase(app);
@@ -52,3 +52,73 @@ const dbApi = {
     set: v => set(r(), v), update: v => update(r(), v) } } })
 };
 window.claude = { use: async n => { await ready; if (n === "db") return dbApi; if (n === "user") return { id: async () => uid }; if (n === "room") return makeRoom(); return null } };
+
+// ---- دردشة صوتية (WebRTC) داخل غرف الأونلاين ----
+const ICE = { iceServers: [{ urls: ["stun:stun.l.google.com:19302", "stun:stun1.l.google.com:19302"] }] };
+let V = null, micOn = false, micStream = null, micTrack = null;
+const wrapEl = () => document.getElementById("wrap");
+const say = t => { try { if (typeof toast === "function") toast(t); else alert(t) } catch (_) {} };
+const mb = document.createElement("button");
+mb.style.cssText = "position:absolute;top:.3em;left:.4em;width:1.8em;height:1.8em;border-radius:50%;border:0;color:#fff;font-size:1em;padding:0;z-index:6;display:none;touch-action:manipulation";
+const paint = () => { mb.textContent = micOn ? "🎙️" : "🔇"; mb.style.background = micOn ? "rgba(31,138,76,.95)" : "rgba(0,0,0,.45)" };
+paint();
+function micOff() { micOn = false; try { V && V.sender && V.sender.replaceTrack(null) } catch (_) {} if (micStream) micStream.getTracks().forEach(t => t.stop()); micStream = null; micTrack = null; paint() }
+mb.onclick = async () => {
+  if (micOn) return micOff();
+  try {
+    micStream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true } });
+    micTrack = micStream.getAudioTracks()[0]; micOn = true;
+    if (V && V.sender) V.sender.replaceTrack(micTrack).catch(() => {});
+  } catch (_) { say("تعذّر تشغيل المايك، اسمح للتطبيق باستخدام المايك") }
+  paint();
+};
+function vTeardown() {
+  micOff(); if (!V) return;
+  V.dead = true; V.unsubs.forEach(f => { try { f() } catch (_) {} });
+  try { V.iceOff && V.iceOff() } catch (_) {} try { V.pc && V.pc.close() } catch (_) {}
+  if (V.audio) { V.audio.srcObject = null; V.audio.remove() } V = null;
+}
+function vSetup(code, role) {
+  const base = "voice/" + code, S = { key: code + role, dead: false, unsubs: [], pc: null, sid: null, sender: null, audio: document.createElement("audio") };
+  V = S; S.audio.autoplay = true; S.audio.setAttribute("playsinline", ""); document.body.appendChild(S.audio);
+  const rdDone = pc => { pc._rd = true; pc._q.splice(0).forEach(c => pc.addIceCandidate(c).catch(() => {})) };
+  const newPC = (sid, mine, theirs) => {
+    try { S.iceOff && S.iceOff() } catch (_) {} try { S.pc && S.pc.close() } catch (_) {}
+    const pc = new RTCPeerConnection(ICE); pc._q = []; pc._rd = false; S.pc = pc; S.sid = sid;
+    S.sender = pc.addTransceiver("audio", { direction: "sendrecv" }).sender;
+    if (micTrack) S.sender.replaceTrack(micTrack).catch(() => {});
+    pc.ontrack = e => { S.audio.srcObject = e.streams[0] || new MediaStream([e.track]); S.audio.play().catch(() => {}) };
+    pc.onicecandidate = e => { if (e.candidate) push(ref(db, base + "/" + mine), { sid, c: JSON.stringify(e.candidate) }).catch(() => {}) };
+    S.iceOff = onChildAdded(ref(db, base + "/" + theirs), s => { const v = s.val(); if (!v || v.sid !== S.sid || S.pc !== pc) return; let c; try { c = JSON.parse(v.c) } catch (_) { return } if (pc._rd) pc.addIceCandidate(c).catch(() => {}); else pc._q.push(c) });
+    return pc;
+  };
+  if (role === "host") {
+    (async () => {
+      await set(ref(db, base), null); if (S.dead) return;
+      const sid = Date.now() + "-" + Math.random().toString(36).slice(2, 6), pc = newPC(sid, "ih", "ig");
+      const off = await pc.createOffer(); await pc.setLocalDescription(off);
+      await set(ref(db, base + "/offer"), { sid, sdp: off.sdp });
+      S.unsubs.push(onValue(ref(db, base + "/answer"), async s => {
+        const v = s.val(); if (!v || v.sid !== sid || S.dead || S.pc !== pc || pc.signalingState !== "have-local-offer") return;
+        try { await pc.setRemoteDescription({ type: "answer", sdp: v.sdp }); rdDone(pc) } catch (_) {}
+      }));
+    })().catch(() => {});
+  } else {
+    S.unsubs.push(onValue(ref(db, base + "/offer"), async s => {
+      const v = s.val(); if (!v || S.dead || v.sid === S.sid) return;
+      try {
+        const pc = newPC(v.sid, "ig", "ih"); await pc.setRemoteDescription({ type: "offer", sdp: v.sdp }); rdDone(pc);
+        const a = await pc.createAnswer(); await pc.setLocalDescription(a);
+        await set(ref(db, base + "/answer"), { sid: v.sid, sdp: a.sdp });
+      } catch (_) {}
+    }));
+  }
+}
+setInterval(() => {
+  if (!uid) return;
+  const w = wrapEl(); if (w && mb.parentNode !== w) w.appendChild(mb);
+  let key = null, c = "", r = "";
+  try { if (typeof online === "function" && online() && w && w.style.display === "block") { c = String(code || ""); r = role; if (c && (r === "host" || r === "guest")) key = c + r } } catch (_) {}
+  mb.style.display = key ? "" : "none";
+  if ((V ? V.key : null) !== key) { vTeardown(); if (key) vSetup(c, r) }
+}, 1000);
