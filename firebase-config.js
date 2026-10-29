@@ -1,5 +1,4 @@
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
+export const firebaseConfig = {
   apiKey: "AIzaSyAmyyODBKKrDmeXTyPm4ycjhmvaa_FcrNQ",
   authDomain: "football-4e751.firebaseapp.com",
   databaseURL: "https://football-4e751-default-rtdb.firebaseio.com",
