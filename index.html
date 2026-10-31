@@ -98,7 +98,19 @@ body{background:radial-gradient(ellipse at 50% 0,#14532d 0,#07150d 70%)}
 </div>
 <div id="msg"></div><div id="toast"></div>
 </div>
-<div id="home"><button id="gear" aria-label="الإعدادات">⚙️</button><div id="hb"></div></div>
+<style id="shopcss">
+#kbox{position:absolute;top:12px;left:12px;height:44px;padding:0 14px;border-radius:22px;background:linear-gradient(180deg,#f5c518,#d99a00);color:#1a1200;font-size:1.05rem;font-weight:800;z-index:3;display:none;align-items:center;gap:6px;box-shadow:0 3px 8px rgba(0,0,0,.4)}
+#abox{position:absolute;top:12px;left:164px;height:44px;padding:0 12px;border-radius:22px;background:rgba(255,255,255,.18);color:#fff;font-size:1rem;font-weight:700;z-index:3;display:none;align-items:center}
+#shop{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.72);display:flex;align-items:center;justify-content:center;padding:14px;direction:rtl;touch-action:manipulation}
+#shop .sp{width:min(94vw,420px);max-height:90vh;overflow:auto;background:#0f2a1b;border:1px solid rgba(255,255,255,.18);border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:10px;text-align:center;color:#fff}
+#shop h3{margin:0;font-size:1.3rem}#shop .kk{opacity:.85}#shop .hb{width:100%}
+#shop .info{white-space:pre-wrap;background:rgba(255,255,255,.08);border-radius:12px;padding:12px;text-align:right;font-size:.95rem}
+#shop input{width:100%;padding:12px;border-radius:10px;border:0;font-size:16px;direction:ltr}
+#shop .ord{background:rgba(255,255,255,.08);border-radius:12px;padding:10px;text-align:right;font-size:.9rem;display:flex;flex-direction:column;gap:6px;word-break:break-word}
+#shop .ord .rowc{display:flex;gap:8px}#shop .ord .hb{padding:8px;font-size:.95rem}
+#shop .sm{font-size:.9rem}#smsg{min-height:1.3em;color:#ffb4b4;font-size:.9rem}
+</style>
+<div id="home"><button id="kbox"></button><button id="abox">🛠️ الإدارة</button><button id="gear" aria-label="الإعدادات">⚙️</button><div id="hb"></div></div>
 <script src="three.min.js"></script>
 <script src="shim.js"></script>
 <script>
@@ -196,13 +208,14 @@ try{const j=JSON.parse(localStorage.getItem("fb_prof2")||"null");if(j&&typeof j=
 if(!prof.fid){const al="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";let f="";for(let i=0;i<6;i++)f+=al[Math.floor(Math.random()*al.length)];prof.fid=f;saveProf()}
 function fixGift(){if(prof.gift<4){const g=prof.gift|0;prof.bonus=Math.max(0,(prof.bonus|0)-(g>=1?100:0)-(g>=2?100:0)-(g>=3?1000:0))+5;prof.gift=4}}
 fixGift();
-const keysOf=()=>Math.max(0,lvOf(prof.goals)+prof.bonus-prof.opened);let pkRes=null,pkBusy=false,pkSel=0;
+let shopCredit=0;try{shopCredit=+localStorage.getItem("fb_credit")||0}catch(_){}
+const keysOf=()=>Math.max(0,lvOf(prof.goals)+prof.bonus+shopCredit-prof.opened);let pkRes=null,pkBusy=false,pkSel=0;
 const lvOf=g=>Math.min(MAXL,Math.floor(g/PER)),esc=s=>String(s).replace(/[&<>"']/g,c=>"&#"+c.charCodeAt(0)+";");
 const home=$("home");let hk="menu",hx="";
 let flipI=0;
 function flipHTML(){const kz=flipI===1;return"<div class='pack"+(kz?" k":"")+"'><img src='"+(kz?KLOGO:LOGO)+"'>"+(kz?"الكايلار":"فريق النمور")+"</div><small>اضغط لفتح الباكج • 🔑 "+keysOf()+"</small>"}
 setInterval(()=>{const e=$("flip");if(!e||hk!=="menu")return;flipI^=1;e.innerHTML=flipHTML()},5000);
-function rh(k,x){revStop();hk=k;hx=x;
+function rh(k,x){revStop();hk=k;hx=x;kboxUpd();
   const lv=lvOf(prof.goals),pct=lv>=MAXL?100:(prof.goals%PER)/PER*100,ini=prof.name?esc([...prof.name][0]):"👤";
   let h="<div class='card'><div class='ring' id='av' style='--p:"+pct+";--c:"+COLS[prof.col]+"'><div class='av' style='background:"+COLS[prof.col]+"'>"+ini+"</div><span class='lv'>"+lv+"</span></div><div class='pn'><b>"+esc(prof.name||"لاعب جديد")+"</b><span>المستوى "+lv+(lv>=MAXL?" 🏆":"")+"</span><div class='bar'><i style='width:"+pct+"%'></i></div><small>"+(lv>=MAXL?"المستوى الأقصى":(prof.goals%PER)+"/"+PER+" هدف للمستوى التالي")+" • مجموع أهدافك "+prof.goals+"</small></div></div><h1>⚽ كرة القدم</h1>";
   if(k==="name")h+="<div class='sec'>اكتب اسمك<input id='ni' maxlength='12' placeholder='اسم اللاعب' value='"+esc(prof.name)+"'><button class='hb' id='sv'>حفظ</button></div>";
@@ -601,6 +614,79 @@ let acc=0,prev=performance.now(),nextR=0,fc=0,fl=prev;snap();
   if(t-fl>=1000){$("fp").textContent=Math.round(fc*1000/(t-fl))+" FPS";fc=0;fl=t}
   requestAnimationFrame(loop)})(prev);
 upd();clock();applyUI();rh(prof.name?"menu":"name");
+// ---------- متجر المفاتيح ----------
+function kboxUpd(){const ab=$("abox");if(ab)ab.style.display=(hk==="menu"&&isAdm())?"flex":"none";const b=$("kbox");if(!b)return;b.style.display=hk==="menu"?"flex":"none";const t="🔑 "+keysOf()+" ＋";if(b.textContent!==t)b.textContent=t;
+  const e=$("pkb");if(e){const u="🎁 الباكجات"+(keysOf()?" 🔑"+keysOf():"");if(e.textContent!==u)e.textContent=u}}
+function loadCredit(){if(!window.fbShop)return;window.fbShop.credit().then(v=>{v=+v||0;if(v!==shopCredit){shopCredit=v;try{localStorage.setItem("fb_credit",String(v))}catch(_){}kboxUpd()}}).catch(()=>{})}
+setInterval(kboxUpd,1000);setInterval(loadCredit,20000);setTimeout(loadCredit,3000);
+$("kbox").onclick=()=>openShop();$("abox").onclick=()=>{openShop();shopStep("adm")};
+function regPlayer(){if(!window.fbShop||!prof.name||typeof ACC==="undefined"||!ACC||!ACC.email)return;const k=prof.name+"|"+ACC.email;if(regPlayer.k===k)return;window.fbShop.reg(prof.name,ACC.email).then(()=>{regPlayer.k=k}).catch(()=>{})}
+setInterval(regPlayer,15000);setTimeout(regPlayer,4000);
+let shopEl=null,shopPick={};
+const shopSt={pending:"⏳ قيد المراجعة",done:"✅ مقبول",rejected:"❌ مرفوض"};
+function closeShop(){if(shopEl){shopEl.remove();shopEl=null}}
+function openShop(){closeShop();loadCredit();shopEl=document.createElement("div");shopEl.id="shop";shopEl.onclick=shopClick;document.body.appendChild(shopEl);shopStep("list")}
+function shopPanel(h){if(shopEl)shopEl.innerHTML="<div class='sp'>"+h+"</div>"}
+function isAdm(){const c=window.shopConfig;return !!(c&&typeof ACC!=="undefined"&&ACC&&ACC.email&&String(ACC.email).toLowerCase()===String(c.adminEmail||"").toLowerCase())}
+function smsg(t){const e=$("smsg");if(e)e.textContent=t}
+async function shopStep(st){
+  if(!shopEl)return;const c=window.shopConfig||{packs:[],methods:[]},x="<button class='hb g sm' data-a='close'>إغلاق</button>",bk="<button class='hb g sm' data-a='list'>↩ رجوع</button>";
+  if(!window.fbShop){shopPanel("<h3>🔑 شحن المفاتيح</h3><p>المتجر يحتاج تسجيل الدخول واتصال بالإنترنت</p>"+x);return}
+  if(st==="adm"||st==="players"||st==="player")return admStep(st);
+  if(st==="list"){shopPick={};shopPanel("<h3>🔑 شحن المفاتيح</h3><div class='kk'>عندك الآن 🔑 "+keysOf()+"</div>"+c.packs.map((p,i)=>"<button class='hb' data-a='pack' data-i='"+i+"'>🔑 "+p.k+" مفاتيح — "+esc(p.price)+"</button>").join("")+"<button class='hb g' data-a='orders'>📋 طلباتي</button>"+(isAdm()?"<button class='hb g' data-a='adm'>🛠️ الإدارة</button>":"")+x)}
+  else if(st==="method"){const p=c.packs[shopPick.i];shopPanel("<h3>🔑 "+p.k+" مفاتيح — "+esc(p.price)+"</h3><div class='kk'>اختر طريقة الدفع</div>"+c.methods.map((m,i)=>"<button class='hb' data-a='meth' data-i='"+i+"'>"+esc(m.label)+"</button>").join("")+bk)}
+  else if(st==="pay"){const p=c.packs[shopPick.i],m=c.methods[shopPick.m];shopPanel("<h3>"+esc(m.label)+"</h3><div class='kk'>🔑 "+p.k+" مفاتيح — "+esc(p.price)+"</div><div class='info'>"+esc(m.info)+"</div><input id='sref' maxlength='80' placeholder='رقم العملية أو كود كارت الشحن'><div id='smsg'></div><button class='hb' data-a='send'>أرسلت الدفع ✅</button><button class='hb g sm' data-a='method'>↩ رجوع</button>")}
+  else if(st==="done"){shopPanel("<h3>✅ وصل طلبك</h3><p>بعد مراجعة الدفع تُضاف المفاتيح لحسابك تلقائياً (عادة خلال ساعات).</p><button class='hb g' data-a='orders'>📋 طلباتي</button>"+x)}
+  else if(st==="orders"){shopPanel("<h3>📋 طلباتي</h3><div class='kk'>جارٍ التحميل...</div>"+bk);try{const o=await window.fbShop.myOrders();if(!shopEl)return;shopPanel("<h3>📋 طلباتي</h3>"+(o.length?o.map(r=>"<div class='ord'><b>🔑 "+(+r.k)+" • "+esc(r.price)+"</b><span>"+esc(shopSt[r.status]||r.status)+"</span></div>").join(""):"<p>ما عندك طلبات</p>")+bk)}catch(_){shopPanel("<p>تعذّر التحميل</p>"+bk)}}
+  else if(st==="admin"){shopPanel("<h3>🛠️ طلبات بانتظار القبول</h3><div class='kk'>جارٍ التحميل...</div>"+bk);try{const o=await window.fbShop.allOrders();if(!shopEl)return;shopPanel("<h3>🛠️ طلبات بانتظار القبول</h3>"+(o.length?o.map(r=>"<div class='ord'><b>"+esc(r.email)+" • "+esc(r.name)+"</b><span>🔑 "+(+r.k)+" • "+esc(r.price)+" • "+esc(r.method)+"</span><span>الدليل: "+esc(r.ref)+"</span><div class='rowc'><button class='hb' data-a='ok' data-u='"+esc(r.u)+"' data-id='"+esc(r.id)+"'>✅ قبول</button><button class='hb g' data-a='no' data-u='"+esc(r.u)+"' data-id='"+esc(r.id)+"'>✖ رفض</button></div></div>").join(""):"<p>ما في طلبات جديدة</p>")+bk)}catch(_){shopPanel("<p>تعذّر التحميل</p>"+bk)}}
+}
+async function shopClick(e){
+  const b=e.target.closest("[data-a]");if(!b){if(e.target===shopEl)closeShop();return}
+  const a=b.dataset.a,c=window.shopConfig||{packs:[],methods:[]};
+  if(await admClick(a,b))return;
+  if(a==="close")closeShop();
+  else if(a==="list"||a==="orders"||a==="admin"||a==="method")shopStep(a);
+  else if(a==="pack"){shopPick={i:+b.dataset.i};shopStep("method")}
+  else if(a==="meth"){shopPick.m=+b.dataset.i;shopStep("pay")}
+  else if(a==="send"){const r=($("sref").value||"").trim();if(r.length<4){smsg("اكتب رقم العملية أو كود الكارت");return}
+    const p=c.packs[shopPick.i],m=c.methods[shopPick.m];b.disabled=true;
+    window.fbShop.submit({k:p.k,price:p.price,method:m.label,ref:r,email:typeof ACC!=="undefined"&&ACC?ACC.email:"",name:prof.name}).then(()=>shopStep("done")).catch(()=>{b.disabled=false;smsg("تعذّر الإرسال، تأكد من الإنترنت")})}
+  else if(a==="ok"||a==="no"){b.disabled=true;try{if(a==="ok")await window.fbShop.approve(b.dataset.u,b.dataset.id);else await window.fbShop.reject(b.dataset.u,b.dataset.id)}catch(_){}shopStep("admin")}
+}
+
+// ---------- لوحة المدير ----------
+const ADAYS=[[1,"يوم"],[2,"يومين"],[3,"3 أيام"],[7,"أسبوع"]];
+function fmtLeft(ms){const d=Math.floor(ms/864e5),h=Math.floor(ms%864e5/36e5),m=Math.floor(ms%36e5/6e4);return d?d+" يوم و "+h+" ساعة":h?h+" ساعة و "+m+" دقيقة":m+" دقيقة"}
+async function admStep(st){
+  if(!isAdm()){closeShop();return}
+  const x="<button class='hb g sm' data-a='close'>إغلاق</button>";
+  if(st==="adm"){shopPanel("<h3>🛠️ لوحة الإدارة</h3><button class='hb' data-a='admin'>📥 طلبات الشراء</button><button class='hb' data-a='players'>👤 اللاعبون</button>"+x)}
+  else if(st==="players"){shopPanel("<h3>👤 اللاعبون</h3><input id='sq' maxlength='40' placeholder='اسم اللاعب أو إيميله'><button class='hb' data-a='psearch'>🔍 بحث</button><div id='sres'></div><button class='hb g sm' data-a='adm'>↩ رجوع</button>")}
+  else if(st==="player"){const u=shopPick.u;shopPanel("<h3>جارٍ التحميل...</h3>");
+    try{const r=await window.fbShop.playerInfo(u);if(!shopEl)return;const p=r.prof||{},nm=esc(shopPick.name||p.name||"?"),em=esc(shopPick.email||""),
+      keys=Math.max(0,lvOf(p.goals|0)+(p.bonus|0)+(+r.credit||0)-(p.opened|0)),cards=Array.isArray(p.cards)?p.cards.filter(v=>v>0).length:0,
+      bn=r.ban&&r.ban.until>Date.now()?r.ban:null;
+      shopPanel("<h3>"+nm+"</h3><div class='kk'>"+em+"</div><div class='ord'><span>المستوى "+lvOf(p.goals|0)+" • الأهداف "+(p.goals|0)+"</span><span>🔑 المفاتيح: <b>"+keys+"</b> • (رصيد الإدارة/المشتريات: "+(+r.credit||0)+")</span><span>🃏 بطاقات مفتوحة: "+cards+" / 7</span><span>"+(bn?"⛔ محظور — باقي "+fmtLeft(bn.until-Date.now()):"✅ غير محظور")+"</span></div>"
+       +"<input id='kn' type='number' inputmode='numeric' placeholder='عدد المفاتيح'><div class='ord' style='background:none;padding:0'><div class='rowc'><button class='hb' data-a='kadd'>➕ إعطاء</button><button class='hb g' data-a='ksub'>➖ خصم</button></div></div>"
+       +"<div class='kk'>الحظر</div><div class='rowc'>"+ADAYS.map(d=>"<button class='hb g' data-a='ban' data-d='"+d[0]+"'>"+d[1]+"</button>").join("")+"</div>"
+       +(bn?"<button class='hb' data-a='unban'>🔓 رفع الحظر</button>":"")+"<div id='smsg'></div><button class='hb g sm' data-a='players'>↩ رجوع</button>")
+    }catch(_){shopPanel("<p>تعذّر تحميل الحساب</p><button class='hb g sm' data-a='players'>↩ رجوع</button>")}}
+}
+async function admClick(a,b){
+  if(!["adm","players","psearch","pick","kadd","ksub","ban","unban"].includes(a))return false;
+  if(!isAdm())return true;
+  if(a==="adm"||a==="players"){admStep(a);return true}
+  if(a==="psearch"){const q=($("sq").value||"").trim(),el=$("sres");el.innerHTML="<div class='kk'>جارٍ البحث...</div>";
+    try{const r=await window.fbShop.search(q);el.innerHTML=r.length?r.map(p=>"<button class='hb g' data-a='pick' data-u='"+esc(p.u)+"' data-n='"+esc(p.name||"")+"' data-e='"+esc(p.email||"")+"'>"+esc(p.name||"?")+" • "+esc(p.email||"")+"</button>").join(""):"<div class='kk'>ما لقيت أحد بهذا الاسم</div>"}catch(_){el.innerHTML="<div class='kk'>تعذّر البحث</div>"}return true}
+  if(a==="pick"){shopPick={u:b.dataset.u,name:b.dataset.n,email:b.dataset.e};admStep("player");return true}
+  const u=shopPick.u;if(!u)return true;
+  try{
+    if(a==="kadd"||a==="ksub"){const n=Math.floor(+($("kn").value||0));if(!(n>0&&n<=100000)){smsg("اكتب عدد صحيح موجب");return true}await window.fbShop.addKeys(u,a==="kadd"?n:-n)}
+    else if(a==="ban")await window.fbShop.ban(u,+b.dataset.d);
+    else if(a==="unban")await window.fbShop.unban(u);
+  }catch(_){smsg("فشلت العملية");return true}
+  admStep("player");return true}
+
 acInit();
 try{claude.use("room").then(r=>{R=r;syncPres();const n=$("nt");if(n&&state==="menu")n.textContent=r?"":"الأونلاين غير متاح هنا"}).catch(()=>{})}catch(_){}
 </script>
