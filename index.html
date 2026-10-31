@@ -320,14 +320,14 @@ function guestSync(){
   if(!h)return;const st=h.presence.st;
   if(Array.isArray(st)&&st!==lastSt){const first=!lastSt;lastSt=st;enterMatch();
     const[si,l,s0,s1,px,py,ox,oy,bx,by,k1,k2,ps,os,pf,of,g,gix]=st;
-    T={px,py,ox,oy,bx,by};const pm=score[1];score=[s0,s1];left=l;upd();clock();P.stun=ps;O.stun=os;P.fx=pf;O.fx=of;K.y=k1;K2.y=k2;
+    {const n=performance.now(),q=T,f=q?Math.min(8,Math.max(1,(n-q.t)/16.7)):1,vv=(a,b)=>q&&Math.abs(a-b)<120?(a-b)/f:0;T={px,py,ox,oy,bx,by,t:n,vpx:vv(px,q&&q.px),vpy:vv(py,q&&q.py),vox:vv(ox,q&&q.ox),voy:vv(oy,q&&q.oy),vbx:vv(bx,q&&q.bx),vby:vv(by,q&&q.by)}}const pm=score[1];score=[s0,s1];left=l;upd();clock();P.stun=ps;O.stun=os;P.fx=pf;O.fx=of;K.y=k1;K2.y=k2;
     if(first){Object.assign(P,{x:px,y:py});Object.assign(O,{x:ox,y:oy});Object.assign(B,{x:bx,y:by});gsSeen=g}
     if(si===1&&prevIdx!==1){state="play";hide();stopAll()}
     if(g!==gsSeen){gsSeen=g;state="goal";if(s1>pm)addGoal();celebrate(s1>pm?1:0);show(fimg(s1>pm?1:0)+(s1>pm?"هدف! ⚽🎉<small>سجّلت في مرمى الخصم</small>":"هدف للخصم 😬"),true)}
     if(si===3&&prevIdx!==3){state="end";stopAll();END.play().catch(()=>{});show(endHtml(s1,s0,false))}
     if(first&&si===1){state="play";hide()}
     prevIdx=si}
-  if(T){const a=.5;for(const[o,x,y]of[[P,T.px,T.py],[O,T.ox,T.oy],[B,T.bx,T.by]]){if(Math.hypot(x-o.x,y-o.y)>120){o.x=x;o.y=y}else{o.x+=(x-o.x)*a;o.y+=(y-o.y)*a}}}
+  if(T){const n=performance.now(),e=Math.min(5,(n-T.t)/16.7),a=.35;for(const[o,x,y,vx,vy]of[[P,T.px,T.py,T.vpx,T.vpy],[O,T.ox,T.oy,T.vox,T.voy],[B,T.bx,T.by,T.vbx,T.vby]]){const tx=x+vx*e,ty=y+vy*e;if(Math.hypot(tx-o.x,ty-o.y)>120){o.x=x;o.y=y}else{o.x+=(tx-o.x)*a;o.y+=(ty-o.y)*a}}}
   let ix=-((keys.ArrowRight||keys.KeyD?1:0)-(keys.ArrowLeft||keys.KeyA?1:0)+stick.x),iy=(keys.ArrowDown||keys.KeyS?1:0)-(keys.ArrowUp||keys.KeyW?1:0)+stick.y;
   const a=[Math.round(ix*100)/100,Math.round(iy*100)/100,(sprint||keys.ShiftLeft||keys.ShiftRight)?1:0,gk,gt],s=a.join();
   if(s!==lastInp){lastInp=s;R.presence({inp:a}).catch(()=>{})}
@@ -464,7 +464,7 @@ function loadCardFaces(){FPH.forEach((b,i)=>{const im=new Image();im.onload=()=>
   const d=document.createElement("canvas");d.width=d.height=128;const y=d.getContext("2d");y.save();y.beginPath();y.arc(64,64,56,0,7);y.clip();y.drawImage(im,0,0,128,128);y.restore();y.lineWidth=7;y.strokeStyle="#fff";y.beginPath();y.arc(64,64,57,0,7);y.stroke();
   cft[i]={f:new THREE.CanvasTexture(c),b:new THREE.CanvasTexture(d)};lastLook="";applyLooks()};im.src="data:image/jpeg;base64,"+b})}
 let lastLook="";
-function setFaces(){if(!ren)return;const s=prof.swap?1:0,ps=prof.sel,os=opSel(),fp=ps>=0&&cft[ps]?cft[ps]:{f:faceT[s],b:badgeT[s]},fo=role==="solo"?robotTex():os>=0&&cft[os]?cft[os]:{f:faceT[1-s],b:badgeT[1-s]};AV.P.setTex(fp.f,fp.b);AV.O.setTex(fo.f,fo.b);
+function setFaces(){if(!ren)return;const s=prof.swap?1:0,ps=prof.sel,os=opSel(),fp=ps>=0&&cft[ps]?cft[ps]:{f:faceT[s],b:badgeT[s]},fo=role==="solo"?robotTex():os>=0&&cft[os]?cft[os]:{f:faceT[1-s],b:badgeT[1-s]};const gg=role==="guest";AV.P.setTex((gg?fo:fp).f,(gg?fo:fp).b);AV.O.setTex((gg?fp:fo).f,(gg?fp:fo).b);
   if(!ant){ant=new THREE.Group();const m=new THREE.Mesh(new THREE.CylinderGeometry(.8,.8,9,8),new THREE.MeshStandardMaterial({color:0x99a4ae}));m.position.y=4.5;const b=new THREE.Mesh(new THREE.SphereGeometry(2.2,12,10),new THREE.MeshBasicMaterial({color:0xff3b3b}));b.position.y=10;ant.add(m,b);ant.position.set(0,70,0);AV.O.g.add(ant)}ant.visible=role==="solo"}
 let robT=null,ant=null;
 function robotTex(){if(robT)return robT;const c=document.createElement("canvas");c.width=c.height=256;const x=c.getContext("2d");let g=x.createLinearGradient(0,0,256,256);g.addColorStop(0,"#e8eef3");g.addColorStop(1,"#7f8c9a");x.fillStyle=g;x.fillRect(0,0,256,256);x.fillStyle="#0b1620";x.fillRect(34,78,188,70);x.fillStyle="#19e3ff";x.shadowColor="#19e3ff";x.shadowBlur=18;x.fillRect(58,96,48,34);x.fillRect(150,96,48,34);x.shadowBlur=0;x.fillStyle="#2c3a47";for(let i=0;i<5;i++)x.fillRect(70+i*26,176,16,34);const d=document.createElement("canvas");d.width=d.height=128;const y=d.getContext("2d");y.save();y.beginPath();y.arc(64,64,56,0,7);y.clip();y.drawImage(c,0,0,128,128);y.restore();y.lineWidth=7;y.strokeStyle="#19e3ff";y.beginPath();y.arc(64,64,57,0,7);y.stroke();robT={f:new THREE.CanvasTexture(c),b:new THREE.CanvasTexture(d),url:c.toDataURL()};return robT}
@@ -525,8 +525,8 @@ function initGL(){
   loadFaces();loadCardFaces()}
 function applyLooks(force){if(!ren)return;const ps=prof.sel,os=opSel(),g=role==="guest",sg=[ps,os,g,prof.swap,role].join();if(!force&&sg===lastLook)return;lastLook=sg;
   const BL={c:"b",base:0x2a6fdb,lt:0x8fb4f0},RD={c:"r",base:0xd93a3a,lt:0xf08a8a},YL={c:"y",base:0xf5c518,lt:0xfbe58a},KB={c:"b",base:0x1f4fd8,lt:0x8fb4f0},BK={c:"k",base:0x2b2b2b,lt:0x6a6a6a},GD={c:"g",base:0xffc21a,lt:0xfff0a0},kit=(s,d)=>s===6?GD:s>=3?KB:s>=0?YL:d;
-  const kp=kit(ps,g?RD:BL);let ko=kit(os,g?BL:RD);if(kp.c===ko.c)ko=ko.c==="b"?RD:ko.c==="y"?BK:BL;if(role==="solo")ko={c:"s",base:0x8a97a5,lt:0xd0d8e0};
-  Object.assign(AV.P,{base:kp.base,lt:kp.lt});Object.assign(AV.O,{base:ko.base,lt:ko.lt});AV.P.num=null;AV.P.gold=ps===6;AV.O.gold=os===6;setFaces()}
+  const sa=g?os:ps,sb2=g?ps:os,kp=kit(sa,BL);let ko=kit(sb2,RD);if(kp.c===ko.c)ko=ko.c==="b"?RD:ko.c==="y"?BK:BL;if(role==="solo")ko={c:"s",base:0x8a97a5,lt:0xd0d8e0};
+  Object.assign(AV.P,{base:kp.base,lt:kp.lt});Object.assign(AV.O,{base:ko.base,lt:ko.lt});AV.P.num=null;AV.P.gold=sa===6;AV.O.gold=sb2===6;setFaces()}
 function setColors(){applyLooks(true)}
 function celebrate(who){celeb={t:0,who};if(!conf)return;const p=conf.geometry.attributes.position.array,v=conf.userData.v;
   for(let i=0;i<CN;i++){p[i*3]=(Math.random()-.5)*700;p[i*3+1]=170+Math.random()*170;p[i*3+2]=(Math.random()-.5)*400;v[i*3]=(Math.random()-.5)*30;v[i*3+1]=-(28+Math.random()*40);v[i*3+2]=(Math.random()-.5)*30}

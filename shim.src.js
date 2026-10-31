@@ -2,6 +2,7 @@ import { initializeApp } from "firebase/app";
 import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, signOut } from "firebase/auth";
 import { getDatabase, ref, get, set, update, push, onValue, onChildAdded, onDisconnect } from "firebase/database";
 import { firebaseConfig } from "./firebase-config.js";
+import { createDcNet } from "./dcnet.js";
 
 const app = initializeApp(firebaseConfig), auth = getAuth(app), db = getDatabase(app);
 let uid = null, resolveReady; const ready = new Promise(r => resolveReady = r);
@@ -10,7 +11,7 @@ const LS = (k, v) => { try { if (v === undefined) return localStorage.getItem(k)
 // ---- واجهة تسجيل الدخول ----
 const ov = document.createElement("div");
 ov.style.cssText = "position:fixed;inset:0;z-index:99999;background:#0b1a12;color:#fff;display:flex;align-items:center;justify-content:center;font-family:system-ui,sans-serif;direction:rtl;touch-action:manipulation;user-select:text;-webkit-user-select:text;overflow:auto";
-ov.innerHTML = '<div style="width:min(92vw,360px);text-align:center;padding:16px"><h2 style="margin:0 0 14px">⚽ لعبة كرة القدم</h2><div id="gs">جارٍ التحميل...</div><div style="opacity:.4;font-size:.7em;margin-top:10px">v5</div><div id="gf" style="display:none"><input id="ge" type="email" placeholder="البريد الإلكتروني" autocomplete="email" style="direction:ltr"><input id="gp" type="password" placeholder="كلمة المرور (6 أحرف على الأقل)" autocomplete="current-password" style="direction:ltr"><button id="gl" class="gb">تسجيل الدخول</button><button id="gr" class="gb g">إنشاء حساب جديد</button><button id="gx" class="gb g" style="font-size:.8em">نسيت كلمة المرور؟</button><div id="gm" style="min-height:1.5em;margin-top:8px;color:#ffb4b4"></div></div></div>';
+ov.innerHTML = '<div style="width:min(92vw,360px);text-align:center;padding:16px"><h2 style="margin:0 0 14px">⚽ لعبة كرة القدم</h2><div id="gs">جارٍ التحميل...</div><div style="opacity:.4;font-size:.7em;margin-top:10px">v6</div><div id="gf" style="display:none"><input id="ge" type="email" placeholder="البريد الإلكتروني" autocomplete="email" style="direction:ltr"><input id="gp" type="password" placeholder="كلمة المرور (6 أحرف على الأقل)" autocomplete="current-password" style="direction:ltr"><button id="gl" class="gb">تسجيل الدخول</button><button id="gr" class="gb g">إنشاء حساب جديد</button><button id="gx" class="gb g" style="font-size:.8em">نسيت كلمة المرور؟</button><div id="gm" style="min-height:1.5em;margin-top:8px;color:#ffb4b4"></div></div></div>';
 const st = document.createElement("style");
 st.textContent = "#gf input{display:block;width:100%;margin:8px 0;padding:12px;border-radius:10px;border:0;font-size:16px;box-sizing:border-box}.gb{display:block;width:100%;margin:8px 0;padding:12px;border:0;border-radius:10px;background:#1f8a4c;color:#fff;font-size:16px;font-weight:700}.gb.g{background:rgba(255,255,255,.18)}";
 (document.head || document.documentElement).appendChild(st);
@@ -34,14 +35,26 @@ onAuthStateChanged(auth, u => {
 window.fbLogout = async () => { ["fb_acct", "fb_prof2", "fb_prof"].forEach(k => LS(k, null)); try { await signOut(auth) } catch (_) {} location.reload() };
 
 // ---- بديل claude.use: db / user / room عبر Firebase ----
-let roomObj = null;
+let roomObj = null, rebuildPeers = () => {};
+const net = createDcNet();
 function makeRoom() {
   if (roomObj) return roomObj;
-  const me = ref(db, "lobby/" + uid); let list = [];
+  const me = ref(db, "lobby/" + uid); let raw = {}, list = [];
   onValue(ref(db, ".info/connected"), s => { if (s.val()) onDisconnect(me).remove().catch(() => {}) });
-  onValue(ref(db, "lobby"), s => { const v = s.val() || {}; list = Object.keys(v).map(id => ({ id, isMe: id === uid, presence: v[id] })) });
+  rebuildPeers = () => {
+    const v = V;
+    list = Object.keys(raw).map(id => {
+      const p = raw[id], isMe = id === uid;
+      const pr = (!isMe && v && p && p.code === v.code && p.role && p.role !== v.role) ? net.overlay(p) : p;
+      return { id, isMe, presence: pr };
+    });
+  };
+  onValue(ref(db, "lobby"), s => { raw = s.val() || {}; rebuildPeers() });
   roomObj = {
-    presence(o) { const u = {}; for (const k in o) u[k] = o[k] === undefined ? null : o[k]; return update(me, u) },
+    presence(o) {
+      if (net.tryRoute(o)) return Promise.resolve();
+      const u = {}; for (const k in o) u[k] = o[k] === undefined ? null : o[k]; return update(me, u);
+    },
     peers: () => list
   };
   return roomObj;
@@ -75,19 +88,20 @@ mb.onclick = async () => {
   paint();
 };
 function vTeardown() {
-  micOff(); if (!V) return;
+  micOff(); net.detach(); if (!V) return;
   V.dead = true; V.unsubs.forEach(f => { try { f() } catch (_) {} });
   try { V.iceOff && V.iceOff() } catch (_) {} try { V.pc && V.pc.close() } catch (_) {}
   if (V.audio) { V.audio.srcObject = null; V.audio.remove() } V = null;
 }
 function vSetup(code, role) {
-  const base = "voice/" + code, S = { key: code + role, dead: false, unsubs: [], pc: null, sid: null, sender: null, audio: document.createElement("audio") };
+  const base = "voice/" + code, S = { code, role, key: code + role, dead: false, unsubs: [], pc: null, sid: null, sender: null, audio: document.createElement("audio") };
   V = S; S.audio.autoplay = true; S.audio.setAttribute("playsinline", ""); document.body.appendChild(S.audio);
   const rdDone = pc => { pc._rd = true; pc._q.splice(0).forEach(c => pc.addIceCandidate(c).catch(() => {})) };
   const newPC = (sid, mine, theirs) => {
     try { S.iceOff && S.iceOff() } catch (_) {} try { S.pc && S.pc.close() } catch (_) {}
     const pc = new RTCPeerConnection(ICE); pc._q = []; pc._rd = false; S.pc = pc; S.sid = sid;
     S.sender = pc.addTransceiver("audio", { direction: "sendrecv" }).sender;
+    if (role === "host") net.attach(pc.createDataChannel("g", { ordered: false, maxRetransmits: 0 }), rebuildPeers); else pc.ondatachannel = e => net.attach(e.channel, rebuildPeers);
     if (micTrack) S.sender.replaceTrack(micTrack).catch(() => {});
     pc.ontrack = e => { S.audio.srcObject = e.streams[0] || new MediaStream([e.track]); S.audio.play().catch(() => {}) };
     pc.onicecandidate = e => { if (e.candidate) push(ref(db, base + "/" + mine), { sid, c: JSON.stringify(e.candidate) }).catch(() => {}) };
