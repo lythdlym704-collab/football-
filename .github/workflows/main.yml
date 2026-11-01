@@ -21,7 +21,7 @@ jobs:
           mkdir -p www
           cp index.html www/index.html
           cp node_modules/three/build/three.min.js www/three.min.js
-          SRC=$(ls shim_src.js shim_src.js 2>/dev/null | head -1)
+          SRC=$(ls shim.src.js shim_src.js 2>/dev/null | head -1)
           echo "using $SRC"
           npx esbuild "$SRC" --bundle --minify --format=iife --outfile=www/shim.js
       - name: Create Android project
