@@ -172,7 +172,7 @@ const COLS=["#2a6fdb","#d93a3a","#8e44ad","#e67e22","#16a085","#c2185b"],PER=10,
 const OLDCN=["النجم الأول","النجم الثاني","النمر الأول","النمر الثاني","النمر الثالث","الكايلي الأول","الكايلي الثاني","الكايلي الثالث"],DEFCN=["حاتم","أثير","إياد","مصطفى","محمد","اياد","أثير الذهبي"],RT=[90,87,89,88,86,91,125],DEFSN=["🎉 احتفال","😏 استفزاز","😂 ضحك","👏 تشجيع","🔥 حماس"];
 const DEFUI={js:{x:12,y:79,s:1},bk:{x:91,y:82,s:1},bt:{x:70,y:88,s:1},bs:{x:80,y:88,s:1}},clone=o=>JSON.parse(JSON.stringify(o));
 let prof={name:"",goals:0,col:0,fps:60,swap:false,opened:0,bonus:0,gift:0,cards:[0,0,0,0,0,0,0],sel:-1,fid:"",friends:[],tk:[],tc:[],avatar:"",cn:DEFCN.slice(),sn:DEFSN.slice(),ui:clone(DEFUI)},du=null,dn="",dcn=[],dsn=[],drag=null;
-try{const j=JSON.parse(localStorage.getItem("fb_prof2")||"null");if(j&&typeof j==="object"){prof.name=String(j.name||"").slice(0,12);prof.goals=Math.max(0,j.goals|0);prof.col=(j.col|0)%COLS.length;prof.fps=[30,40,60,90].includes(j.fps|0)?j.fps|0:60;prof.swap=!!j.swap;prof.opened=Math.max(0,j.opened|0);prof.bonus=Math.max(0,j.bonus|0);prof.gift=j.gift|0;if(Array.isArray(j.cards)){prof.cards=[0,1,2,3,4,5,6].map(i=>Math.max(0,j.cards[i]|0));prof.sel=Number.isInteger(j.sel)&&j.sel>=0&&j.sel<7&&prof.cards[j.sel]>0?j.sel:-1};if(Array.isArray(j.cn))prof.cn=[0,1,2,3,4,5,6].map(i=>String(!j.cn[i]||OLDCN.includes(j.cn[i])?DEFCN[i]:j.cn[i]).slice(0,14));if(Array.isArray(j.sn))prof.sn=[0,1,2,3,4].map(i=>String(j.sn[i]||DEFSN[i]).slice(0,14));
+try{const j=JSON.parse(localStorage.getItem("fb_prof2")||"null");if(j&&typeof j==="object"){prof.name=String(j.name||"").slice(0,12);prof.goals=Math.max(0,j.goals|0);prof.col=(j.col|0)%COLS.length;prof.fps=[30,40,60,90].includes(j.fps|0)?j.fps|0:60;prof.swap=!!j.swap;prof.opened=Math.max(0,j.opened|0);prof.bonus=Math.max(0,j.bonus|0);prof.gift=j.gift|0;if(Array.isArray(j.cards)){prof.cards=Array.from({length:Math.max(7,j.cards.length)},(_,i)=>Math.max(0,j.cards[i]|0));prof.sel=Number.isInteger(j.sel)&&j.sel>=0&&j.sel<prof.cards.length&&prof.cards[j.sel]>0?j.sel:-1};if(Array.isArray(j.cn))prof.cn=[0,1,2,3,4,5,6].map(i=>String(!j.cn[i]||OLDCN.includes(j.cn[i])?DEFCN[i]:j.cn[i]).slice(0,14));if(Array.isArray(j.sn))prof.sn=[0,1,2,3,4].map(i=>String(j.sn[i]||DEFSN[i]).slice(0,14));
   for(const k in DEFUI){const c=j.ui&&j.ui[k];if(c&&isFinite(c.x)&&isFinite(c.y)&&isFinite(c.s))prof.ui[k]={x:Math.min(100,Math.max(0,+c.x)),y:Math.min(100,Math.max(0,+c.y)),s:Math.min(2,Math.max(.5,+c.s))}}}}catch(_){}
 let cloudSt="",CDB=null,CID=null,cTm=0;
 const cSet=t=>{cloudSt=t;const e=document.getElementById("cl");if(e)e.textContent=t};
@@ -184,11 +184,11 @@ let ACC=null,ADB=null,aTm=0,amsg="";try{ACC=JSON.parse(localStorage.getItem("fb_
 if(ACC)cloudSt="☁️ "+ACC.email;
 const adoc=id=>ADB.collection("accounts").doc(id);
 function cPush(){if(!ADB||!ACC)return;clearTimeout(aTm);aTm=setTimeout(async()=>{try{await adoc(ACC.id).update({json:JSON.stringify(prof),ts:prof.ts||Date.now()});cSet("☁️ "+ACC.email+" • محفوظ")}catch(_){cSet("⚠️ تعذّر الحفظ في الحساب")}},1500)}
-function applyCloud(x){try{const j=JSON.parse(x.json);Object.assign(prof,j);prof.cards=[0,1,2,3,4,5,6].map(i=>(prof.cards&&prof.cards[i])|0);prof.cn=DEFCN.map((d,i)=>(prof.cn&&prof.cn[i])||d);prof.ts=+x.ts||Date.now();fixGift();fixTemp();try{localStorage.setItem("fb_prof2",JSON.stringify(prof))}catch(_){}lastLook="";applyUI()}catch(_){}}
+function applyCloud(x){try{const j=JSON.parse(x.json);Object.assign(prof,j);prof.cards=Array.from({length:Math.max(7,(prof.cards||[]).length)},(_,i)=>(prof.cards&&prof.cards[i])|0);prof.cn=DEFCN.map((d,i)=>(prof.cn&&prof.cn[i])||d);prof.ts=+x.ts||Date.now();fixGift();fixTemp();try{localStorage.setItem("fb_prof2",JSON.stringify(prof))}catch(_){}lastLook="";applyUI()}catch(_){}}
 async function migOld(){const sc=p=>(p.goals|0)+(p.cards||[]).reduce((a,c)=>a+(c|0),0)*5;let best=null,bs=sc(prof);
   try{const o=JSON.parse(localStorage.getItem("fb_prof")||"null");if(o&&sc(o)>bs){best=o;bs=sc(o)}}catch(_){}
   try{const U=await claude.use("user"),uid=U&&await U.id();if(uid){const d=await ADB.collection("data/users/"+uid).doc("save").get();if(d.exists){const o=JSON.parse(d.data().json);if(sc(o)>bs){best=o;bs=sc(o)}}}}catch(_){}
-  if(best){const nm=prof.name;Object.assign(prof,best);if(!prof.name)prof.name=nm;prof.cards=[0,1,2,3,4,5,6].map(i=>(prof.cards&&prof.cards[i])|0);prof.cn=DEFCN.map((d,i)=>(prof.cn&&prof.cn[i])||d)}}
+  if(best){const nm=prof.name;Object.assign(prof,best);if(!prof.name)prof.name=nm;prof.cards=Array.from({length:Math.max(7,(prof.cards||[]).length)},(_,i)=>(prof.cards&&prof.cards[i])|0);prof.cn=DEFCN.map((d,i)=>(prof.cn&&prof.cn[i])||d)}}
 async function acAuth(reg){const em=($("ae").value||"").trim().toLowerCase(),pw=$("ap").value||"";
   if(!/^\S+@\S+\.\S+$/.test(em)||pw.length<6){amsg="أدخل بريداً صحيحاً وكلمة مرور 6 أحرف على الأقل";return}
   if(!ADB){amsg="الحسابات غير متاحة هنا (افتح الرابط من حساب Claude)";return}
@@ -217,7 +217,7 @@ let IB={list:[],unread:0};
 function tNow(){return window.fbNow?window.fbNow():Date.now()}
 function avOK(s){return typeof s==="string"&&s.length>40&&s.length<60000&&/^data:image\/jpeg;base64,[A-Za-z0-9+\/=]+$/.test(s)}
 function avHTML(ini){return avOK(prof.avatar)?"<div class='av' style='background:#000 url("+prof.avatar+") center/cover no-repeat'></div>":"<div class='av' style='background:"+COLS[prof.col]+"'>"+ini+"</div>"}
-function fixTemp(){if(!avOK(prof.avatar))prof.avatar="";prof.tk=(Array.isArray(prof.tk)?prof.tk:[]).filter(e=>e&&+e.n>0&&+e.u>0).slice(0,40).map(e=>({n:e.n|0,u:+e.u})).sort((a,b)=>a.u-b.u);prof.tc=(Array.isArray(prof.tc)?prof.tc:[]).filter(e=>e&&(e.c|0)>=0&&(e.c|0)<7&&+e.u>0).slice(0,14).map(e=>({c:e.c|0,u:+e.u}))}
+function fixTemp(){if(!avOK(prof.avatar))prof.avatar="";prof.tk=(Array.isArray(prof.tk)?prof.tk:[]).filter(e=>e&&+e.n>0&&+e.u>0).slice(0,40).map(e=>({n:e.n|0,u:+e.u})).sort((a,b)=>a.u-b.u);prof.tc=(Array.isArray(prof.tc)?prof.tc:[]).filter(e=>e&&(e.c|0)>=0&&(e.c|0)<999&&+e.u>0).slice(0,14).map(e=>({c:e.c|0,u:+e.u}))}
 function tkSum(){const t=tNow();let s=0;for(const e of prof.tk)if(e.u>t)s+=e.n;return s}
 function useTK(){const t=tNow();for(let i=0;i<prof.tk.length;i++){const e=prof.tk[i];if(e.u>t&&e.n>0){if(--e.n<=0)prof.tk.splice(i,1);return true}}return false}
 fixTemp();
@@ -227,11 +227,17 @@ const lvOf=g=>Math.min(MAXL,Math.floor(g/PER)),esc=s=>String(s).replace(/[&<>"']
 const home=$("home");let hk="menu",hx="";
 let flipI=0;
 const PKN={t:"🐯 النمور",k:"⚔️ الكايلار"},PKD={t:[0,1,2,6],k:[3,4,5]};
-let PKCFG={t:{c:PKD.t.slice(),u:0,w:null},k:{c:PKD.k.slice(),u:0,w:null}};
-function pkNorm(x){if(!x||typeof x!=="object")return;for(const id of["t","k"]){const p=x[id];if(!p||typeof p!=="object")continue;const a=Array.isArray(p.c)?p.c:Object.values(p.c||{}),c=[...new Set(a.map(Number).filter(i=>i>=0&&i<7))];if(c.length)PKCFG[id].c=c;PKCFG[id].u=Math.max(0,+p.u||0);if(p.w&&typeof p.w==="object"){const w={};for(const c of PKCFG[id].c){const v=+p.w[c];if(isFinite(v)&&p.w[c]!=null)w[c]=Math.max(0,Math.min(100,v))}PKCFG[id].w=Object.keys(w).length?w:null}else PKCFG[id].w=null}}
+let PKCFG={t:{c:PKD.t.slice(),u:0,w:null},k:{c:PKD.k.slice(),u:0,w:null}},CUST=[],CT={},CX=0;
+const NC=()=>7+CUST.length,isDel=i=>i>=7&&!!(CUST[i-7]&&CUST[i-7].del),allIdx=()=>Array.from({length:NC()},(_,i)=>i).filter(i=>!isDel(i)),ctm=i=>i<3?"y":i<6?"b":i===6?"g":(CT[i]||"y");
+function custNorm(a){a=Array.isArray(a)?a:Object.values(a||{});const r=[];for(const c of a){if(!c||typeof c!=="object")continue;const im=String(c.img||"");if(!/^[A-Za-z0-9+\/=]{100,120000}$/.test(im))continue;r.push({name:String(c.name||"").replace(/[\u0000-\u001f<>]/g,"").slice(0,14)||"لاعب",rt:Math.max(40,Math.min(150,c.rt|0||100)),img:im,team:["y","b","g"].includes(c.team)?c.team:"y",del:c.del?1:0})}if(r.length>=CUST.length)CUST=r}
+function cardsExtend(){for(;CX<CUST.length;CX++){const c=CUST[CX],i=7+CX,b=Math.max(40,Math.min(99,Math.round(c.rt*.75)));DEFCN[i]=c.name;RT[i]=c.rt;SS[i]=[b+3,b+2,b,b+4,b-12,b-3].map(v=>Math.max(30,Math.min(99,v)));FPH[i]=c.img;CT[i]=c.team;PH[i]="data:image/jpeg;base64,"+c.img;const im=new Image();im.onload=()=>{for(const k in cardC)delete cardC[k]};im.src=PH[i];FI[i]=im;if(prof.cn[i]==null)prof.cn[i]=c.name;if(window.__faces)loadCardFaces(i)}
+  while(prof.cards.length<NC())prof.cards.push(0)}
+function pkSave(){try{localStorage.setItem("fb_pkcfg",JSON.stringify({t:PKCFG.t,k:PKCFG.k,x:CUST}))}catch(_){}}
+setTimeout(cardsExtend,0);
+function pkNorm(x){if(!x||typeof x!=="object")return;if(x.x)custNorm(x.x);for(const id of["t","k"]){const p=x[id];if(!p||typeof p!=="object")continue;const a=Array.isArray(p.c)?p.c:Object.values(p.c||{}),c=[...new Set(a.map(Number).filter(i=>i>=0&&i<NC()&&!isDel(i)))];if(c.length)PKCFG[id].c=c;PKCFG[id].u=Math.max(0,+p.u||0);if(p.w&&typeof p.w==="object"){const w={};for(const c of PKCFG[id].c){const v=+p.w[c];if(isFinite(v)&&p.w[c]!=null)w[c]=Math.max(0,Math.min(100,v))}PKCFG[id].w=Object.keys(w).length?w:null}else PKCFG[id].w=null}}
 try{pkNorm(JSON.parse(localStorage.getItem("fb_pkcfg")||"null"))}catch(_){}
 const packOn=id=>{const u=PKCFG[id].u;return !u||u>tNow()},pkId=i=>i===1?"k":"t",pkCards=i=>PKCFG[pkId(i)].c,actPk=()=>[0,1].filter(i=>packOn(pkId(i)));
-const pkOrphans=()=>{const s=new Set();actPk().forEach(i=>pkCards(i).forEach(c=>s.add(c)));return[0,1,2,3,4,5,6].filter(i=>prof.cards[i]>0&&!s.has(i))};
+const pkOrphans=()=>{const s=new Set();actPk().forEach(i=>pkCards(i).forEach(c=>s.add(c)));return allIdx().filter(i=>prof.cards[i]>0&&!s.has(i))};
 function pkFix(){const a=actPk();if(a.length){if(!a.includes(pkSel))pkSel=a[0];if(!a.includes(flipI))flipI=a[0]}}
 function pkDefW(c){const g=c.includes(6)?9:0,o=c.filter(x=>x!==6),w={};if(g)w[6]=g;o.forEach(x=>w[x]=(50-g)/o.length);return w}
 function pkW(id){const c=PKCFG[id].c,d=pkDefW(c),w=PKCFG[id].w||{},r={};c.forEach(x=>r[x]=x in w?w[x]:(PKCFG[id].w?0:d[x]));return r}
@@ -239,7 +245,7 @@ const pkTot=id=>Object.values(pkW(id)).reduce((a,v)=>a+v,0);
 function pkRoll(r){const w=pkW(pkId(pkSel)),x=r*100;let acc=0;for(const c of pkCards(pkSel)){acc+=w[c]||0;if(x<acc)return c}return-1}
 function flipHTML(){pkFix();if(!actPk().length)return"<small>📦 لا توجد باكجات متاحة الآن</small>";const kz=flipI===1;return"<div class='pack"+(kz?" k":"")+"'><img src='"+(kz?KLOGO:LOGO)+"'>"+(kz?"الكايلار":"فريق النمور")+"</div><small>اضغط لفتح الباكج • 🔑 "+keysOf()+"</small>"}
 setInterval(()=>{const e=$("flip");if(!e||hk!=="menu")return;const a=actPk();if(a.length>1)flipI=flipI===a[0]?a[1]:a[0];e.innerHTML=flipHTML()},5000);
-function pkListen(){if(window.fbPacks&&!pkListen.on){pkListen.on=1;window.fbPacks.listen(v=>{if(!v)return;pkNorm(v);try{localStorage.setItem("fb_pkcfg",JSON.stringify(PKCFG))}catch(_){}pkFix()})}}
+function pkListen(){if(window.fbPacks&&!pkListen.on){pkListen.on=1;window.fbPacks.listen(v=>{if(!v)return;pkNorm(v);cardsExtend();pkSave();pkFix()})}}
 setInterval(pkListen,1500);
 let pkSig="";setInterval(()=>{pkFix();const g=actPk().join()+"|"+PKCFG.t.c.join()+"|"+PKCFG.k.c.join();if(g!==pkSig){const first=pkSig==="";pkSig=g;if(!first&&!pkBusy&&home.style.display!=="none"&&(hk==="menu"||hk==="packs")){pkRes=null;rh(hk,hx)}}},1000);
 function rh(k,x){revStop();hk=k;hx=x;kboxUpd();
@@ -274,7 +280,7 @@ home.addEventListener("click",e=>{const fb=e.target.closest("[data-f]");if(fb){p
   if(id==="avb"){$("avf").click();return}
   if(id==="avx"){prof.avatar="";saveProf();return rh(hk,hx)}
   if(id==="flip"){pkSel=flipI;pkRes=null;return rh("packs")}
-  if(id==="sell"){if(pkBusy)return;let n=0,m=0;prof.cards=prof.cards.map((c,i)=>{if(c>1){n+=c-1;m+=(c-1)*(i===6?10:1);return 1}return c});if(n){prof.bonus+=m;saveProf();toast("💰 بعت "+n+" مكرر • 🔑 +"+m)}return rh("packs")}
+  if(id==="sell"){if(pkBusy)return;let n=0,m=0;prof.cards=prof.cards.map((c,i)=>{if(c>1){n+=c-1;m+=(c-1)*(ctm(i)==="g"?10:1);return 1}return c});if(n){prof.bonus+=m;saveProf();toast("💰 بعت "+n+" مكرر • 🔑 +"+m)}return rh("packs")}
   if(id==="acb"){amsg="";return rh("acct")}
   if(id==="alo"){window.fbLogout&&window.fbLogout();return}
   if(id==="aln"||id==="arg"){const was=ACC;amsg="جاري التحقق…";const sm=document.querySelector("#hb small");if(sm)sm.textContent=amsg;acAuth(id==="arg").catch(()=>{amsg="حدث خطأ، حاول مرة أخرى"}).then(()=>rh(ACC&&ACC!==was?"menu":"acct"));return}
@@ -291,9 +297,9 @@ home.addEventListener("click",e=>{const fb=e.target.closest("[data-f]");if(fb){p
   {const g=/^(inv|del)_([A-Z0-9]{6})$/.exec(id);if(g){if(g[1]==="del"){prof.friends=prof.friends.filter(f=>f.id!==g[2]);saveProf();return rh("friends",hx)}return sendInvite(g[2],el)}}
   if(id==="selp"){if(pkRes!==null&&pkRes>=0&&prof.cards[pkRes]){prof.sel=pkRes;saveProf();refreshSel()}return}
   if(id==="unsel"){prof.sel=-1;saveProf();refreshSel();return}
-  {const g=/^gc(\d)$/.exec(id);if(g){const i=+g[1];if(pkBusy||!prof.cards[i])return;{const a=actPk(),f=a.find(p=>pkCards(p).includes(i));if(f!==undefined)pkSel=f}pkRes=i;return rh("packs")}}
+  {const g=/^gc(\d+)$/.exec(id);if(g){const i=+g[1];if(pkBusy||!prof.cards[i])return;{const a=actPk(),f=a.find(p=>pkCards(p).includes(i));if(f!==undefined)pkSel=f}pkRes=i;return rh("packs")}}
   if(id==="pks0"||id==="pks1"){if(pkBusy||!packOn(pkId(+id.slice(3))))return;pkSel=+id.slice(3);pkRes=null;return rh("packs")}
-  if(id==="opn"){if(pkBusy||keysOf()<=0)return;if(!packOn(pkId(pkSel))){pkFix();return rh("packs")}if(!useTK())prof.opened++;const r=Math.random(),res=pkRoll(r);if(res>=0)prof.cards[res]++;saveProf();pkBusy=true;pkRes=null;rh("packs");const pk=$("pk");pk&&pk.classList.add("shake");setTimeout(()=>{pkBusy=false;pkRes=res;if(hk==="packs")rh("packs")},1000);return}
+  if(id==="opn"){if(pkBusy||keysOf()<=0)return;if(!packOn(pkId(pkSel))){pkFix();return rh("packs")}if(!useTK())prof.opened++;const r=Math.random(),res=pkRoll(r);if(res>=0)prof.cards[res]=(prof.cards[res]|0)+1;saveProf();pkBusy=true;pkRes=null;rh("packs");const pk=$("pk");pk&&pk.classList.add("shake");setTimeout(()=>{pkBusy=false;pkRes=res;if(hk==="packs")rh("packs")},1000);return}
   if(id==="swf"){prof.swap=!prof.swap;saveProf();setFaces();return rh("set")}
   if(id==="av"){prof.col=(prof.col+1)%COLS.length;saveProf();return rh(hk,hx)}
   if(id==="sv"){const n=$("ni").value.replace(/[\u0000-\u001f<>]/g,"").trim().slice(0,12);if(!n)return;prof.name=n;saveProf();syncPres();return rh("menu")}
@@ -409,7 +415,7 @@ function drawIYI(x,cx,cy,h,col){x.save();x.strokeStyle=col;x.lineWidth=h*.15;x.l
   x.moveTo(cx-h*.3,cy-h/2);x.lineTo(cx,cy+h*.02);x.lineTo(cx+h*.3,cy-h/2);x.moveTo(cx,cy);x.lineTo(cx,cy+h/2);x.stroke();x.restore()}
 const KLOGO=(()=>{const c=document.createElement("canvas");c.width=200;c.height=120;drawIYI(c.getContext("2d"),100,60,84,"#fff");return c.toDataURL()})();
 function cardCanvas(i){
-  const c=document.createElement("canvas");c.width=300;c.height=440;const x=c.getContext("2d"),rt=RT[i],kz=i>=3&&i<6,gd=i===6;
+  const c=document.createElement("canvas");c.width=300;c.height=440;const x=c.getContext("2d"),rt=RT[i],kz=ctm(i)==="b",gd=ctm(i)==="g";
   const rr=()=>{x.beginPath();x.moveTo(30,4);x.arcTo(296,4,296,436,26);x.arcTo(296,436,4,436,26);x.arcTo(4,436,4,4,26);x.arcTo(4,4,296,4,26);x.closePath()};
   rr();x.save();x.clip();
   let g=x.createLinearGradient(0,0,300,440);if(gd){g.addColorStop(0,"#8a5a00");g.addColorStop(.5,"#2a1a00");g.addColorStop(1,"#a87300")}else if(kz){g.addColorStop(0,"#0a2a7a");g.addColorStop(.5,"#050b1f");g.addColorStop(1,"#0b3fb0")}else{g.addColorStop(0,"#2a1700");g.addColorStop(.5,"#0d0a06");g.addColorStop(1,"#3a1f00")}x.fillStyle=g;x.fillRect(0,0,300,440);
@@ -431,7 +437,7 @@ FPH.push(FPH[1]);
 let rev=null;
 function revStop(){if(!rev)return;cancelAnimationFrame(rev.raf);rev.dead=true;try{rev.ren.dispose();rev.ren.forceContextLoss()}catch(_){}rev=null}
 function startReveal(i){
-  const cv=$("rc"),card=$("rcard");if(!cv||!card)return;const kz=i>=3&&i<6,gd=i===6,ii=gd?1:i;
+  const cv=$("rc"),card=$("rcard");if(!cv||!card)return;const kz=ctm(i)==="b",gd=ctm(i)==="g",ii=i<7?(gd?1:i):(kz?3:gd?1:0);
   if(typeof THREE==="undefined"){card.classList.add("show");return}
   let r2;try{r2=new THREE.WebGLRenderer({canvas:cv,alpha:true,antialias:true})}catch(_){card.classList.add("show");return}
   const w=cv.clientWidth||420,h=cv.clientHeight||315;r2.setPixelRatio(Math.min(devicePixelRatio||1,2));r2.setSize(w,h,false);
@@ -478,9 +484,9 @@ function invTick(){if(!R||frame%30)return;
   if(state!=="menu"||wrap.style.display==="block")return;
   for(const p of ps){const a=p.presence.inv;if(!Array.isArray(a))continue;
     for(const e of a){if(!e||e.to!==prof.fid||p.presence.role!=="host"||p.presence.code!==e.c)continue;const k=p.presence.fid+":"+e.t;if(invSeen[k])continue;invSeen[k]=1;showInvite(p.presence.name||"صديقك",String(e.c))}}}
-function packsHTML(){pkFix();const act=actPk(),dup=prof.cards.reduce((a,c)=>a+Math.max(0,c-1),0),dk=prof.cards.reduce((a,c,i)=>a+Math.max(0,c-1)*(i===6?10:1),0),kk=keysOf(),kz=pkSel===1,b0=pkSel*3;
-  const top=pkRes===null?"<div class='pack"+(kz?" k":"")+"' id='pk'><img src='"+(kz?KLOGO:LOGO)+"'>"+(kz?"الكايلار":"فريق النمور")+"</div>":pkRes<0?"<div class='hz'>😅 حظ أوفر</div>":"<div class='stage' style='"+(pkRes===6?"--sg1:#7a5a00;--sg2:#1a1200;--sgl:rgba(255,215,0,.9)":pkRes>=3?"--sg1:#0d3a9c;--sg2:#050b24;--sgl:rgba(80,150,255,.6)":"--sg1:#5a3a00;--sg2:#140c02;--sgl:rgba(255,157,26,.6)")+"'><canvas id='rc'></canvas><img class='rcard"+(pkRes===6?" gold":"")+"' id='rcard' src='"+cardURL(pkRes)+"'></div>";
-  const grid=(act.length?pkCards(pkSel).concat(pkSel===act[0]?pkOrphans():[]):pkOrphans()).map(i=>{return"<div class='gi"+(i===6?" gold":"")+(prof.cards[i]?"":" lock")+(prof.sel===i?" sel":"")+"' id='gc"+i+"'><img src='"+cardURL(i)+"'><b>"+(prof.cards[i]?"×"+prof.cards[i]:"🔒")+"</b></div>"}).join("");
+function packsHTML(){pkFix();const act=actPk(),dup=prof.cards.reduce((a,c)=>a+Math.max(0,c-1),0),dk=prof.cards.reduce((a,c,i)=>a+Math.max(0,c-1)*(ctm(i)==="g"?10:1),0),kk=keysOf(),kz=pkSel===1,b0=pkSel*3;
+  const top=pkRes===null?"<div class='pack"+(kz?" k":"")+"' id='pk'><img src='"+(kz?KLOGO:LOGO)+"'>"+(kz?"الكايلار":"فريق النمور")+"</div>":pkRes<0?"<div class='hz'>😅 حظ أوفر</div>":"<div class='stage' style='"+(ctm(pkRes)==="g"?"--sg1:#7a5a00;--sg2:#1a1200;--sgl:rgba(255,215,0,.9)":ctm(pkRes)==="b"?"--sg1:#0d3a9c;--sg2:#050b24;--sgl:rgba(80,150,255,.6)":"--sg1:#5a3a00;--sg2:#140c02;--sgl:rgba(255,157,26,.6)")+"'><canvas id='rc'></canvas><img class='rcard"+(ctm(pkRes)==="g"?" gold":"")+"' id='rcard' src='"+cardURL(pkRes)+"'></div>";
+  const grid=(act.length?pkCards(pkSel).concat(pkSel===act[0]?pkOrphans():[]):pkOrphans()).map(i=>{return"<div class='gi"+(ctm(i)==="g"?" gold":"")+(prof.cards[i]?"":" lock")+(prof.sel===i?" sel":"")+"' id='gc"+i+"'><img src='"+cardURL(i)+"'><b>"+(prof.cards[i]?"×"+prof.cards[i]:"🔒")+"</b></div>"}).join("");
   if(!act.length)return"<div class='sec'><b>🎁 الباكجات</b><div class='keys'>🔑 "+kk+" مفتاح</div><div class='hz'>📦 لا توجد باكجات متاحة حالياً</div><div class='grid'>"+grid+"</div><small>اضغط على بطاقة لتشاهد لاعبها، ثم اختره ليلعب في المباراة</small><button class='hb g sm' id='unsel'"+(prof.sel>=0?"":" style='display:none'")+">إلغاء اللاعب المختار</button><button class='hb g sm' id='sell'"+(dup?"":" disabled")+">💰 بيع المكرر ("+dup+") ← 🔑 "+dk+"</button><button class='hb g' id='pkbk'>رجوع</button></div>";
   return"<div class='sec'><b>🎁 الباكجات</b><div class='fr'>"+act.map(i=>"<button class='fb"+(pkSel===i?" on":"")+"' id='pks"+i+"'>"+PKN[pkId(i)]+"</button>").join("")+"</div><div class='keys'>🔑 "+kk+" مفتاح</div>"+top+(pkRes!==null&&pkRes>=0?"<button class='hb' id='selp'"+(prof.sel===pkRes?" disabled":"")+">"+(prof.sel===pkRes?"✓ هذا لاعبك في المباراة":"⚽ العب بهذا اللاعب")+"</button>":"")+"<button class='hb' id='opn'"+(kk>0&&!pkBusy?"":" disabled")+">🔑 "+(pkRes===null?"افتح الباكج":"افتح باكج آخر")+"</button><small>كل مستوى جديد يعطيك مفتاح • "+Math.round(pkTot(pkId(pkSel)))+"% بطاقة و"+(100-Math.round(pkTot(pkId(pkSel))))+"% حظ أوفر"+(pkCards(pkSel).includes(6)?" • 👑 فرصة نادرة لأثير الذهبي":"")+"</small><div class='grid'>"+grid+"</div><small>اضغط على بطاقة لتشاهد لاعبها، ثم اختره ليلعب في المباراة</small><button class='hb g sm' id='unsel'"+(prof.sel>=0?"":" style='display:none'")+">إلغاء اللاعب المختار</button><button class='hb g sm' id='sell'"+(dup?"":" disabled")+">💰 بيع المكرر ("+dup+") ← 🔑 "+dk+"</button><button class='hb g' id='pkbk'>رجوع</button></div>"}
 function refreshSel(){const b=$("selp");if(b){const on=prof.sel===pkRes;b.textContent=on?"✓ هذا لاعبك في المباراة":"⚽ العب بهذا اللاعب";b.disabled=on}document.querySelectorAll(".gi").forEach(e=>e.classList.toggle("sel",+e.id.slice(2)===prof.sel));const u=$("unsel");if(u)u.style.display=prof.sel>=0?"":"none"}
@@ -508,8 +514,8 @@ function human(o){
   for(const a of[aL,aR])add(new THREE.Mesh(new THREE.SphereGeometry(o.glove?3.8:2.6,8,8),M(o.glove||o.skin)),0,-20,0,a);
   return{g,lL,lR,aL,aR,jm,f:0,ph:0,sp:0,px:0,pz:0,i:0,base:o.jc,lt:o.jc,patch,badge,setTex(f,b){if(!patch||!f)return;patch.material.map=f;patch.material.needsUpdate=true;patch.visible=true;badge.material.map=b;badge.material.needsUpdate=true;badge.visible=true}}}
 const cft=[];
-function opSel(){const p=online()?find(role==="host"?"guest":"host"):null,v=p&&p.presence.sel;return Number.isInteger(v)&&v>=0&&v<7?v:-1}
-function loadCardFaces(){FPH.forEach((b,i)=>{const im=new Image();im.onload=()=>{const c=document.createElement("canvas");c.width=c.height=256;const x=c.getContext("2d");x.drawImage(im,0,0,256,256);x.globalCompositeOperation="destination-in";const gr=x.createRadialGradient(128,128,70,128,128,128);gr.addColorStop(0,"rgba(0,0,0,1)");gr.addColorStop(1,"rgba(0,0,0,0)");x.fillStyle=gr;x.fillRect(0,0,256,256);
+function opSel(){const p=online()?find(role==="host"?"guest":"host"):null,v=p&&p.presence.sel;return Number.isInteger(v)&&v>=0&&v<NC()?v:-1}
+function loadCardFaces(from){window.__faces=1;FPH.forEach((b,i)=>{if(i<(from|0))return;const im=new Image();im.onload=()=>{const c=document.createElement("canvas");c.width=c.height=256;const x=c.getContext("2d");x.drawImage(im,0,0,256,256);x.globalCompositeOperation="destination-in";const gr=x.createRadialGradient(128,128,70,128,128,128);gr.addColorStop(0,"rgba(0,0,0,1)");gr.addColorStop(1,"rgba(0,0,0,0)");x.fillStyle=gr;x.fillRect(0,0,256,256);
   const d=document.createElement("canvas");d.width=d.height=128;const y=d.getContext("2d");y.save();y.beginPath();y.arc(64,64,56,0,7);y.clip();y.drawImage(im,0,0,128,128);y.restore();y.lineWidth=7;y.strokeStyle="#fff";y.beginPath();y.arc(64,64,57,0,7);y.stroke();
   cft[i]={f:new THREE.CanvasTexture(c),b:new THREE.CanvasTexture(d)};lastLook="";applyLooks()};im.src="data:image/jpeg;base64,"+b})}
 let lastLook="";
@@ -573,7 +579,7 @@ function initGL(){
   conf=new THREE.Points(cg,new THREE.PointsMaterial({size:7,vertexColors:true}));conf.frustumCulled=false;conf.visible=false;conf.userData={v:new Float32Array(CN*3),t:0};scene.add(conf);
   loadFaces();loadCardFaces()}
 function applyLooks(force){if(!ren)return;const ps=prof.sel,os=opSel(),g=role==="guest",sg=[ps,os,g,prof.swap,role].join();if(!force&&sg===lastLook)return;lastLook=sg;
-  const BL={c:"b",base:0x2a6fdb,lt:0x8fb4f0},RD={c:"r",base:0xd93a3a,lt:0xf08a8a},YL={c:"y",base:0xf5c518,lt:0xfbe58a},KB={c:"b",base:0x1f4fd8,lt:0x8fb4f0},BK={c:"k",base:0x2b2b2b,lt:0x6a6a6a},GD={c:"g",base:0xffc21a,lt:0xfff0a0},kit=(s,d)=>s===6?GD:s>=3?KB:s>=0?YL:d;
+  const BL={c:"b",base:0x2a6fdb,lt:0x8fb4f0},RD={c:"r",base:0xd93a3a,lt:0xf08a8a},YL={c:"y",base:0xf5c518,lt:0xfbe58a},KB={c:"b",base:0x1f4fd8,lt:0x8fb4f0},BK={c:"k",base:0x2b2b2b,lt:0x6a6a6a},GD={c:"g",base:0xffc21a,lt:0xfff0a0},kit=(s,d)=>s<0?d:ctm(s)==="g"?GD:ctm(s)==="b"?KB:YL;
   const sa=g?os:ps,sb2=g?ps:os,kp=kit(sa,BL);let ko=kit(sb2,RD);if(kp.c===ko.c)ko=ko.c==="b"?RD:ko.c==="y"?BK:BL;if(role==="solo")ko={c:"s",base:0x8a97a5,lt:0xd0d8e0};
   Object.assign(AV.P,{base:kp.base,lt:kp.lt});Object.assign(AV.O,{base:ko.base,lt:ko.lt});AV.P.num=null;AV.P.gold=sa===6;AV.O.gold=sb2===6;setFaces()}
 function setColors(){applyLooks(true)}
@@ -710,23 +716,32 @@ async function shopClick(e){
   if(a==="imsg"){inboxStep("msg",b.dataset.id);return}
   if(a==="iclaim"){iClaim(b.dataset.id,b);return}
   await admClick(a,b)}
-function shopChange(e){const t=e.target;if(t.id==="gk"){$("gnw").style.display=t.value==="keys"?"":"none";$("gcw").style.display=t.value==="card"?"":"none"}else if(t.id==="gt")$("gdw").style.display=t.value==="1"?"":"none"}
+function shopChange(e){const t=e.target;if(t.id==="gk"){$("gnw").style.display=t.value==="keys"?"":"none";$("gcw").style.display=t.value==="card"?"":"none"}else if(t.id==="gt")$("gdw").style.display=t.value==="1"?"":"none";else if(t.id==="nf")ncPick(t.files&&t.files[0])}
 
 // ---------- لوحة المدير ----------
-const PKA=["pkg","pkgs","pkdur","pkfor","pkhide","pkrm","pkad","pkw","pkwr"];let pkgP="t";
-function pkgPanel(x){const id=pkgP,p=PKCFG[id],on=packOn(id),opt=(i)=>"<option value='"+i+"'>"+(i<3?"🐯 ":i<6?"⚔️ ":"👑 ")+esc(DEFCN[i])+"</option>",rest=[0,1,2,3,4,5,6].filter(i=>!p.c.includes(i));
+const PKA=["pkg","pkgs","pkdur","pkfor","pkhide","pkrm","pkad","pkw","pkwr","ncn","ncsave","ncdel"];let ncImg="";let pkgP="t";
+function pkgPanel(x){const id=pkgP,p=PKCFG[id],on=packOn(id),opt=(i)=>"<option value='"+i+"'>"+(i<3?"🐯 ":i<6?"⚔️ ":"👑 ")+esc(DEFCN[i])+"</option>",rest=allIdx().filter(i=>!p.c.includes(i));
   shopPanel("<h3>📦 إدارة الباكجات</h3><div class='rowc'><button class='hb"+(id==="t"?"":" g")+"' data-a='pkgs' data-p='t'>🐯 النمور</button><button class='hb"+(id==="k"?"":" g")+"' data-a='pkgs' data-p='k'>⚔️ الكايلار</button></div>"
   +"<div class='ord'><span>الحالة: "+(on?(p.u?"✅ ظاهر — يختفي بعد "+fmtLeft(p.u-tNow()):"✅ ظاهر دائماً"):"🙈 مخفي")+"</span><span>🃏 بطاقات الباكج: "+p.c.map(i=>esc(DEFCN[i])).join("، ")+"</span></div>"
   +"<div class='kk'>⏳ مدة ظهور الباكج (تبدأ من الآن ثم يختفي)</div><select id='pkd'>"+DURS.map(d=>"<option value='"+d[0]+"'>"+d[1]+"</option>").join("")+"</select><button class='hb' data-a='pkdur'>⏱️ تحديد المدة</button><div class='rowc'><button class='hb g' data-a='pkfor'>♾️ إظهار دائم</button><button class='hb g' data-a='pkhide'>🙈 إخفاء الآن</button></div>"
   +"<div class='kk'>➖ إزالة بطاقة من الباكج</div><select id='pkr'>"+p.c.map(opt).join("")+"</select><button class='hb' data-a='pkrm'>إزالة من الباكج</button>"
   +"<div class='kk'>➕ إضافة بطاقة للباكج</div>"+(rest.length?"<select id='pka'>"+rest.map(opt).join("")+"</select><button class='hb' data-a='pkad'>إضافة للباكج</button>":"<div class='kk'>كل البطاقات موجودة في هذا الباكج</div>")
   +"<div class='kk'>🎲 حظ البطاقات (نسبة ظهور كل بطاقة % من كل فتحة)</div>"+p.c.map(i=>"<div class='ord' style='background:none;padding:0'><div class='rowc'><span style='flex:1;align-self:center'>"+esc(DEFCN[i])+"</span><input id='pw"+i+"' type='number' inputmode='decimal' min='0' max='100' step='0.5' value='"+(Math.round(pkW(id)[i]*100)/100)+"' style='width:90px'></div></div>").join("")+"<div class='kk'>المجموع الحالي: "+(Math.round(pkTot(id)*100)/100)+"% • حظ أوفر: "+(Math.round((100-pkTot(id))*100)/100)+"%</div><div class='rowc'><button class='hb' data-a='pkw'>💾 حفظ الحظ</button><button class='hb g' data-a='pkwr'>↩ الافتراضي</button></div>"
-  +"<div class='kk'>اللاعبون يحتفظون ببطاقاتهم حتى لو أُزيلت من الباكج</div><div id='smsg'></div><button class='hb g sm' data-a='adm'>↩ رجوع</button>")}
+  +"<button class='hb' data-a='ncn'>🆕 بطاقة جديدة من خارج اللعبة</button><div class='kk'>اللاعبون يحتفظون ببطاقاتهم حتى لو أُزيلت من الباكج</div><div id='smsg'></div><button class='hb g sm' data-a='adm'>↩ رجوع</button>")}
+function newcPanel(x){const cu=CUST.map((c,k)=>c.del?"":"<div class='ord' style='background:none;padding:0'><div class='rowc'><span style='flex:1;align-self:center'>"+esc(c.name)+" • "+c.rt+"</span><button class='hb g' data-a='ncdel' data-i='"+(7+k)+"'>🗑️ حذف</button></div></div>").join("");
+  shopPanel("<h3>🆕 بطاقة جديدة</h3><input id='nn' maxlength='14' placeholder='اسم اللاعب'><input id='nr' type='number' inputmode='numeric' min='40' max='150' placeholder='مستوى البطاقة (مثال 100)' value='100'><select id='nt'><option value='y'>🐯 قميص أصفر</option><option value='b'>⚔️ قميص أزرق</option><option value='g'>👑 ذهبي متوهج</option></select><select id='np'><option value='t'>إضافتها لباكج النمور</option><option value='k'>إضافتها لباكج الكايلار</option><option value=''>بدون إضافة لباكج الآن</option></select><div class='kk'>📷 صورة اللاعب (وجه واضح)</div><input id='nf' type='file' accept='image/*'><div id='npv'></div><div id='smsg'></div><button class='hb' data-a='ncsave'>💾 حفظ البطاقة</button>"+(cu?"<div class='kk'>البطاقات المضافة</div>"+cu:"")+"<button class='hb g sm' data-a='pkg'>↩ رجوع</button>")}
+function ncPick(f){ncImg="";const pv=$("npv");if(!f){if(pv)pv.innerHTML="";return}const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const c=document.createElement("canvas");c.width=c.height=256;const g=c.getContext("2d"),m=Math.min(im.width,im.height);g.drawImage(im,(im.width-m)/2,(im.height-m)/2,m,m,0,0,256,256);let u=c.toDataURL("image/jpeg",.8);if(u.length>110000)u=c.toDataURL("image/jpeg",.6);ncImg=u.split(",")[1]||"";if(pv)pv.innerHTML="<img src='"+u+"' style='width:90px;height:90px;border-radius:12px'>"};im.onerror=()=>smsg("تعذّر قراءة الصورة");im.src=r.result};r.readAsDataURL(f)}
 async function pkgAct(a,b){if(!isAdm())return true;
   if(a==="pkg"){admStep("pkg");return true}
   if(a==="pkgs"){pkgP=b.dataset.p==="k"?"k":"t";admStep("pkg");return true}
-  const cp=q=>({c:q.c.slice(),u:q.u,w:q.w?{...q.w}:null}),nx={t:cp(PKCFG.t),k:cp(PKCFG.k)},p=nx[pkgP];
-  if(a==="pkdur")p.u=tNow()+(+$("pkd").value||0);
+  if(a==="ncn"){ncImg="";admStep("newc");return true}
+  const cp=q=>({c:q.c.slice(),u:q.u,w:q.w?{...q.w}:null}),nx={t:cp(PKCFG.t),k:cp(PKCFG.k),x:CUST.map(c=>({...c}))},p=nx[pkgP];
+  if(a==="ncsave"){const nm=($("nn").value||"").trim().slice(0,14),rt=Math.floor(+$("nr").value||0),tm=$("nt").value,tg=$("np").value;
+    if(!nm){smsg("اكتب اسم اللاعب");return true}if(!(rt>=40&&rt<=150)){smsg("المستوى لازم بين 40 و150");return true}if(!ncImg){smsg("اختر صورة للاعب");return true}if(CUST.length>=40){smsg("وصلت للحد الأقصى من البطاقات المضافة");return true}
+    const id=7+CUST.length;nx.x.push({name:nm,rt,img:ncImg,team:tm,del:0});
+    if(tg){const q=nx[tg],w=pkW(tg),sum=Object.values(w).reduce((u,v)=>u+v,0);q.w=w;q.c.push(id);q.w[id]=Math.max(0,Math.min(5,100-sum))}}
+  else if(a==="ncdel"){const id=+b.dataset.i,e=nx.x[id-7];if(!e)return true;for(const k of["t","k"]){const q=nx[k];if(q.c.includes(id)){if(q.c.length<=1){smsg("هذه آخر بطاقة في أحد الباكجات — أضف بطاقة أخرى أولاً");return true}q.c=q.c.filter(c=>c!==id);if(q.w)delete q.w[id]}}e.del=1}
+  else if(a==="pkdur")p.u=tNow()+(+$("pkd").value||0);
   else if(a==="pkfor")p.u=0;
   else if(a==="pkhide")p.u=Math.max(1,tNow()-1000);
   else if(a==="pkrm"){const v=+$("pkr").value;if(p.c.length<=1){smsg("لازم تبقى بطاقة واحدة على الأقل في الباكج");return true}p.c=p.c.filter(c=>c!==v);if(p.w)delete p.w[v]}
@@ -734,14 +749,14 @@ async function pkgAct(a,b){if(!isAdm())return true;
   else if(a==="pkwr")p.w=null
   else if(a==="pkw"){const w={};let sum=0;for(const c of p.c){const v=+($("pw"+c).value);if(!isFinite(v)||v<0||v>100){smsg("اكتب نسبة صحيحة بين 0 و100");return true}w[c]=Math.round(v*100)/100;sum+=w[c]}if(sum>100.001){smsg("مجموع النسب لازم ما يزيد عن 100% (الآن "+Math.round(sum*100)/100+"%)");return true}if(sum<=0){smsg("لازم يكون لبطاقة واحدة على الأقل نسبة أكبر من 0");return true}p.w=w}
   try{if(!window.fbPacks)throw new Error("shim");await window.fbPacks.set(nx)}catch(e){const c=String(e&&(e.code||e.message)||"");smsg(c==="shim"?"ملف shim لم يُحدَّث — أعد بناء التطبيق بالملفات الجديدة":/permission/i.test(c)?"القواعد ترفض الحفظ (PERMISSION_DENIED) — أضف قاعدة packcfg":/admin only/.test(c)?"هذا الحساب ليس حساب الأدمن":"فشل الحفظ: "+c.slice(0,80));return true}
-  PKCFG=nx;try{localStorage.setItem("fb_pkcfg",JSON.stringify(PKCFG))}catch(_){}pkFix();admStep("pkg");smsg("✅ تم الحفظ وسيظهر لكل اللاعبين");return true}
+  PKCFG={t:nx.t,k:nx.k};CUST=nx.x;cardsExtend();pkSave();pkFix();if(a==="ncsave"||a==="ncdel"){ncImg="";admStep("newc");smsg("✅ تم الحفظ وسيظهر لكل اللاعبين")}else{admStep("pkg");smsg("✅ تم الحفظ وسيظهر لكل اللاعبين")}return true}
 
 const ADAYS=[[1,"يوم"],[2,"يومين"],[3,"3 أيام"],[7,"أسبوع"]];
 function fmtLeft(ms){const d=Math.floor(ms/864e5),h=Math.floor(ms%864e5/36e5),m=Math.floor(ms%36e5/6e4);return d?d+" يوم و "+h+" ساعة":h?h+" ساعة و "+m+" دقيقة":m+" دقيقة"}
 async function admStep(st){
   if(!isAdm()){closeShop();return}
   const x="<button class='hb g sm' data-a='close'>إغلاق</button>";
-  if(st==="pkg"){pkgPanel(x)}else if(st==="adm"){shopPanel("<h3>🛠️ لوحة الإدارة</h3><button class='hb' data-a='players'>👤 اللاعبون</button><button class='hb' data-a='bmsg'>📢 رسالة لجميع اللاعبين</button><button class='hb' data-a='bgift'>🎁 هدية لجميع اللاعبين</button><button class='hb' data-a='pkg'>📦 إدارة الباكجات</button>"+x)}
+  if(st==="pkg"){pkgPanel(x)}else if(st==="newc"){newcPanel(x)}else if(st==="adm"){shopPanel("<h3>🛠️ لوحة الإدارة</h3><button class='hb' data-a='players'>👤 اللاعبون</button><button class='hb' data-a='bmsg'>📢 رسالة لجميع اللاعبين</button><button class='hb' data-a='bgift'>🎁 هدية لجميع اللاعبين</button><button class='hb' data-a='pkg'>📦 إدارة الباكجات</button>"+x)}
   else if(st==="players"){shopPanel("<h3>👤 اللاعبون</h3><input id='sq' maxlength='40' placeholder='جزء من الاسم أو الإيميل (أو اتركه فارغًا لعرض الجميع)'><button class='hb' data-a='psearch'>🔍 بحث</button><div id='sres'></div><button class='hb g sm' data-a='reidx'>🔄 فهرسة اللاعبين القدامى</button><button class='hb g sm' data-a='adm'>↩ رجوع</button>")}
   else if(st==="player"){const u=shopPick.u;shopPanel("<h3>جارٍ التحميل...</h3>");
     try{const r=await window.fbShop.playerInfo(u);if(!shopEl)return;const p=r.prof||{},nm=esc(shopPick.name||p.name||"?"),em=esc(shopPick.email||""),tn=tNow(),
