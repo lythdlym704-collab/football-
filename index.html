@@ -111,6 +111,7 @@ body{background:radial-gradient(ellipse at 50% 0,#14532d 0,#07150d 70%)}
 #shop .sm{font-size:.9rem}#smsg{min-height:1.3em;color:#ffb4b4;font-size:.9rem}
 #ibox{position:absolute;top:12px;right:66px;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.14);font-size:1.25rem;padding:0;z-index:3;display:none;align-items:center;justify-content:center}
 #idot{position:absolute;top:4px;right:4px;width:13px;height:13px;border-radius:50%;background:#e53935;border:2px solid #0b1a12;display:none}
+.avs{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center}.avp{width:72px;height:72px;border-radius:50%;overflow:hidden;flex:none}.avp .av{font-size:28px;border-width:2px}
 #shop textarea,#shop select{width:100%;padding:12px;border-radius:10px;border:0;font-size:16px;font-family:inherit;box-sizing:border-box}#shop textarea{resize:none}
 #shop .im{display:flex;flex-direction:column;gap:4px;width:100%;color:#fff;border:0;font:inherit}#shop .im.un{outline:2px solid #e53935}
 </style>
@@ -170,7 +171,7 @@ function clock(){const t=Math.ceil(left);$("tm").textContent=Math.floor(t/60)+":
 const COLS=["#2a6fdb","#d93a3a","#8e44ad","#e67e22","#16a085","#c2185b"],PER=10,MAXL=100;
 const OLDCN=["النجم الأول","النجم الثاني","النمر الأول","النمر الثاني","النمر الثالث","الكايلي الأول","الكايلي الثاني","الكايلي الثالث"],DEFCN=["حاتم","أثير","إياد","مصطفى","محمد","اياد","أثير الذهبي"],RT=[90,87,89,88,86,91,125],DEFSN=["🎉 احتفال","😏 استفزاز","😂 ضحك","👏 تشجيع","🔥 حماس"];
 const DEFUI={js:{x:12,y:79,s:1},bk:{x:91,y:82,s:1},bt:{x:70,y:88,s:1},bs:{x:80,y:88,s:1}},clone=o=>JSON.parse(JSON.stringify(o));
-let prof={name:"",goals:0,col:0,fps:60,swap:false,opened:0,bonus:0,gift:0,cards:[0,0,0,0,0,0,0],sel:-1,fid:"",friends:[],tk:[],tc:[],cn:DEFCN.slice(),sn:DEFSN.slice(),ui:clone(DEFUI)},du=null,dn="",dcn=[],dsn=[],drag=null;
+let prof={name:"",goals:0,col:0,fps:60,swap:false,opened:0,bonus:0,gift:0,cards:[0,0,0,0,0,0,0],sel:-1,fid:"",friends:[],tk:[],tc:[],avatar:"",cn:DEFCN.slice(),sn:DEFSN.slice(),ui:clone(DEFUI)},du=null,dn="",dcn=[],dsn=[],drag=null;
 try{const j=JSON.parse(localStorage.getItem("fb_prof2")||"null");if(j&&typeof j==="object"){prof.name=String(j.name||"").slice(0,12);prof.goals=Math.max(0,j.goals|0);prof.col=(j.col|0)%COLS.length;prof.fps=[30,40,60,90].includes(j.fps|0)?j.fps|0:60;prof.swap=!!j.swap;prof.opened=Math.max(0,j.opened|0);prof.bonus=Math.max(0,j.bonus|0);prof.gift=j.gift|0;if(Array.isArray(j.cards)){prof.cards=[0,1,2,3,4,5,6].map(i=>Math.max(0,j.cards[i]|0));prof.sel=Number.isInteger(j.sel)&&j.sel>=0&&j.sel<7&&prof.cards[j.sel]>0?j.sel:-1};if(Array.isArray(j.cn))prof.cn=[0,1,2,3,4,5,6].map(i=>String(!j.cn[i]||OLDCN.includes(j.cn[i])?DEFCN[i]:j.cn[i]).slice(0,14));if(Array.isArray(j.sn))prof.sn=[0,1,2,3,4].map(i=>String(j.sn[i]||DEFSN[i]).slice(0,14));
   for(const k in DEFUI){const c=j.ui&&j.ui[k];if(c&&isFinite(c.x)&&isFinite(c.y)&&isFinite(c.s))prof.ui[k]={x:Math.min(100,Math.max(0,+c.x)),y:Math.min(100,Math.max(0,+c.y)),s:Math.min(2,Math.max(.5,+c.s))}}}}catch(_){}
 let cloudSt="",CDB=null,CID=null,cTm=0;
@@ -208,13 +209,15 @@ async function cInit(){try{const U=await claude.use("user"),D=await claude.use("
     if(lts>cts){cPush();return}
     cSet("☁️ محفوظ في حسابك");return}
   if(prof.name){prof.ts=prof.ts||Date.now();cPush()}else cSet("☁️ سيتم الحفظ في حسابك تلقائياً")}catch(_){cSet("☁️ الحفظ السحابي غير متاح")}}
-try{const j=JSON.parse(localStorage.getItem("fb_prof2")||"null");if(j&&typeof j==="object"){prof.fid=/^[A-Z0-9]{6}$/.test(j.fid)?j.fid:"";if(Array.isArray(j.friends))prof.friends=j.friends.filter(f=>f&&/^[A-Z0-9]{6}$/.test(f.id)).slice(0,50).map(f=>({id:f.id,name:String(f.name||"صديق").replace(/[\u0000-\u001f<>]/g,"").slice(0,14)}))}}catch(_){}
+try{const j=JSON.parse(localStorage.getItem("fb_prof2")||"null");if(j&&typeof j==="object"){prof.tk=j.tk;prof.tc=j.tc;prof.avatar=j.avatar;prof.fid=/^[A-Z0-9]{6}$/.test(j.fid)?j.fid:"";if(Array.isArray(j.friends))prof.friends=j.friends.filter(f=>f&&/^[A-Z0-9]{6}$/.test(f.id)).slice(0,50).map(f=>({id:f.id,name:String(f.name||"صديق").replace(/[\u0000-\u001f<>]/g,"").slice(0,14)}))}}catch(_){}
 if(!prof.fid){const al="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";let f="";for(let i=0;i<6;i++)f+=al[Math.floor(Math.random()*al.length)];prof.fid=f;saveProf()}
 function fixGift(){if(prof.gift<4){const g=prof.gift|0;prof.bonus=Math.max(0,(prof.bonus|0)-(g>=1?100:0)-(g>=2?100:0)-(g>=3?1000:0))+5;prof.gift=4}}
 fixGift();
 let IB={list:[],unread:0};
 function tNow(){return window.fbNow?window.fbNow():Date.now()}
-function fixTemp(){prof.tk=(Array.isArray(prof.tk)?prof.tk:[]).filter(e=>e&&+e.n>0&&+e.u>0).slice(0,40).map(e=>({n:e.n|0,u:+e.u})).sort((a,b)=>a.u-b.u);prof.tc=(Array.isArray(prof.tc)?prof.tc:[]).filter(e=>e&&(e.c|0)>=0&&(e.c|0)<7&&+e.u>0).slice(0,14).map(e=>({c:e.c|0,u:+e.u}))}
+function avOK(s){return typeof s==="string"&&s.length>40&&s.length<60000&&/^data:image\/jpeg;base64,[A-Za-z0-9+\/=]+$/.test(s)}
+function avHTML(ini){return avOK(prof.avatar)?"<div class='av' style='background:#000 url("+prof.avatar+") center/cover no-repeat'></div>":"<div class='av' style='background:"+COLS[prof.col]+"'>"+ini+"</div>"}
+function fixTemp(){if(!avOK(prof.avatar))prof.avatar="";prof.tk=(Array.isArray(prof.tk)?prof.tk:[]).filter(e=>e&&+e.n>0&&+e.u>0).slice(0,40).map(e=>({n:e.n|0,u:+e.u})).sort((a,b)=>a.u-b.u);prof.tc=(Array.isArray(prof.tc)?prof.tc:[]).filter(e=>e&&(e.c|0)>=0&&(e.c|0)<7&&+e.u>0).slice(0,14).map(e=>({c:e.c|0,u:+e.u}))}
 function tkSum(){const t=tNow();let s=0;for(const e of prof.tk)if(e.u>t)s+=e.n;return s}
 function useTK(){const t=tNow();for(let i=0;i<prof.tk.length;i++){const e=prof.tk[i];if(e.u>t&&e.n>0){if(--e.n<=0)prof.tk.splice(i,1);return true}}return false}
 fixTemp();
@@ -227,7 +230,7 @@ function flipHTML(){const kz=flipI===1;return"<div class='pack"+(kz?" k":"")+"'>
 setInterval(()=>{const e=$("flip");if(!e||hk!=="menu")return;flipI^=1;e.innerHTML=flipHTML()},5000);
 function rh(k,x){revStop();hk=k;hx=x;kboxUpd();
   const lv=lvOf(prof.goals),pct=lv>=MAXL?100:(prof.goals%PER)/PER*100,ini=prof.name?esc([...prof.name][0]):"👤";
-  let h="<div class='card'><div class='ring' id='av' style='--p:"+pct+";--c:"+COLS[prof.col]+"'><div class='av' style='background:"+COLS[prof.col]+"'>"+ini+"</div><span class='lv'>"+lv+"</span></div><div class='pn'><b>"+esc(prof.name||"لاعب جديد")+"</b><span>المستوى "+lv+(lv>=MAXL?" 🏆":"")+"</span><div class='bar'><i style='width:"+pct+"%'></i></div><small>"+(lv>=MAXL?"المستوى الأقصى":(prof.goals%PER)+"/"+PER+" هدف للمستوى التالي")+" • مجموع أهدافك "+prof.goals+"</small></div></div><h1>⚽ كرة القدم</h1>";
+  let h="<div class='card'><div class='ring' id='av' style='--p:"+pct+";--c:"+COLS[prof.col]+"'>"+avHTML(ini)+"<span class='lv'>"+lv+"</span></div><div class='pn'><b>"+esc(prof.name||"لاعب جديد")+"</b><span>المستوى "+lv+(lv>=MAXL?" 🏆":"")+"</span><div class='bar'><i style='width:"+pct+"%'></i></div><small>"+(lv>=MAXL?"المستوى الأقصى":(prof.goals%PER)+"/"+PER+" هدف للمستوى التالي")+" • مجموع أهدافك "+prof.goals+"</small></div></div><h1>⚽ كرة القدم</h1>";
   if(k==="name")h+="<div class='sec'>اكتب اسمك<input id='ni' maxlength='12' placeholder='اسم اللاعب' value='"+esc(prof.name)+"'><button class='hb' id='sv'>حفظ</button></div>";
   else if(k==="menu")h+="<div id='flip'>"+flipHTML()+"</div><div class='sec'><button class='hb' id='m1'>🤖 ضد الكمبيوتر</button><button class='hb' id='m2'>👥 أنشئ غرفة مع صديق</button><button class='hb g' id='frb'>👥 الأصدقاء</button><button class='hb g' id='pkb'>🎁 الباكجات"+(keysOf()?" 🔑"+keysOf():"")+"</button><div class='or'>أو ادخل غرفة صديقك</div><div class='rowc'><input id='ci' inputmode='numeric' maxlength='4' placeholder='الرمز'><button class='hb g' id='m3'>ادخل</button></div><small id='nt'>"+(R?"":"جاري تجهيز الأونلاين…")+(ren?"":" ⚠️ المجسّم ثلاثي الأبعاد غير متاح")+"</small><small id='cl'>"+cloudSt+"</small></div>";
   else if(k==="lobby")h+="<div class='sec'>رمز الدعوة<div class='code'>"+esc(x)+"</div><button class='hb g' id='cpc'>📋 نسخ رمز الدعوة</button><button class='hb' id='afr'>👥 إضافة صديق إلى الغرفة</button><small>أرسل رمز الدعوة لصديقك ليدخله، أو اختر صديقًا من قائمتك<br>بانتظار الصديق…</small><button class='hb g' id='bk2'>إلغاء</button></div>";
@@ -240,14 +243,22 @@ function rh(k,x){revStop();hk=k;hx=x;kboxUpd();
   $("hb").innerHTML=h;if(k==="set")paintPV();if(k==="packs"&&pkRes!==null&&pkRes>=0)startReveal(pkRes)}
 const LB={js:"الجويستيك",bk:"التسديد",bt:"قطع الكرة",bs:"الركض"},BASE={js:144,bk:74,bt:48,bs:48};
 function setHTML(){const K=Object.keys(LB);
-  return"<div class='sec'><b>⚙️ الإعدادات</b>اسم اللاعب<input id='ni' maxlength='12' value='"+esc(dn)+"'>اسحب الأزرار لتغيير مكانها وحرّك الشريط لتغيير الحجم<div id='pv'>"+K.map(c=>"<div class='pi' data-k='"+c+"'>"+(c==="js"?"":LB[c])+"</div>").join("")+"</div>"+"أسماء الأصوات"+[0,1,2,3,4].map(i=>"<input id='sn"+i+"' maxlength='14' value='"+esc(dsn[i])+"'>").join("")+"الإطارات في الثانية<div class='fr'>"+[30,40,60,90].map(f=>"<button class='fb"+(prof.fps===f?" on":"")+"' data-f='"+f+"'>"+f+"</button>").join("")+"</div><button class='hb g sm' id='swf'>🔁 تبديل وجهي اللاعبين"+(prof.swap?" ✓":"")+"</button>"+K.map(c=>"<label class='sl'>"+LB[c]+"<input type='range' min='50' max='200' step='5' data-k='"+c+"' value='"+Math.round(du[c].s*100)+"'></label>").join("")+"<button class='hb g' id='acb'>🔐 "+(ACC?esc(ACC.email):"تسجيل الدخول / حساب")+"</button><button class='hb' id='svset'>💾 حفظ</button><button class='hb g' id='rstui'>↺ الإعدادات الافتراضية</button><button class='hb g' id='bkm'>رجوع</button></div>"}
+  return"<div class='sec'><b>⚙️ الإعدادات</b>اسم اللاعب<input id='ni' maxlength='12' value='"+esc(dn)+"'><div class='avs'><div class='avp'>"+avHTML(esc([...(prof.name||"؟")][0]))+"</div><button class='hb g sm' id='avb'>📷 صورة الحساب</button>"+(avOK(prof.avatar)?"<button class='hb g sm' id='avx'>🗑 حذف الصورة</button>":"")+"<input type='file' id='avf' accept='image/*' hidden></div>اسحب الأزرار لتغيير مكانها وحرّك الشريط لتغيير الحجم<div id='pv'>"+K.map(c=>"<div class='pi' data-k='"+c+"'>"+(c==="js"?"":LB[c])+"</div>").join("")+"</div>"+"أسماء الأصوات"+[0,1,2,3,4].map(i=>"<input id='sn"+i+"' maxlength='14' value='"+esc(dsn[i])+"'>").join("")+"الإطارات في الثانية<div class='fr'>"+[30,40,60,90].map(f=>"<button class='fb"+(prof.fps===f?" on":"")+"' data-f='"+f+"'>"+f+"</button>").join("")+"</div><button class='hb g sm' id='swf'>🔁 تبديل وجهي اللاعبين"+(prof.swap?" ✓":"")+"</button>"+K.map(c=>"<label class='sl'>"+LB[c]+"<input type='range' min='50' max='200' step='5' data-k='"+c+"' value='"+Math.round(du[c].s*100)+"'></label>").join("")+"<button class='hb g' id='acb'>🔐 "+(ACC?esc(ACC.email):"تسجيل الدخول / حساب")+"</button><button class='hb' id='svset'>💾 حفظ</button><button class='hb g' id='rstui'>↺ الإعدادات الافتراضية</button><button class='hb g' id='bkm'>رجوع</button></div>"}
 function paintPV(){const pv=$("pv");if(!pv)return;const f=pv.clientWidth/800;pv.querySelectorAll(".pi").forEach(e=>{const k=e.dataset.k,c=du[k],w=BASE[k]*f*c.s;e.style.width=e.style.height=w+"px";e.style.left=c.x+"%";e.style.top=c.y+"%";e.style.fontSize=Math.max(8,w*.28)+"px"})}
 function applyUI(){for(const k in DEFUI){const e=$(k),c=prof.ui[k];e.style.left=c.x+"%";e.style.top=c.y+"%";e.style.transform="translate(-50%,-50%) scale("+c.s+")"}}
 home.addEventListener("input",e=>{const t=e.target;if(t.id==="ni")dn=t.value;else if(/^cn\d$/.test(t.id))dcn[+t.id.slice(2)]=t.value;else if(/^sn\d$/.test(t.id))dsn[+t.id.slice(2)]=t.value;else if(t.type==="range"&&t.dataset.k){du[t.dataset.k].s=t.value/100;paintPV()}});
 home.addEventListener("pointerdown",e=>{const el=e.target.closest(".pi");if(!el)return;drag=el.dataset.k;el.setPointerCapture(e.pointerId);e.preventDefault()});
 home.addEventListener("pointermove",e=>{if(!drag)return;const r=$("pv").getBoundingClientRect();du[drag].x=Math.max(4,Math.min(96,(e.clientX-r.left)/r.width*100));du[drag].y=Math.max(4,Math.min(96,(e.clientY-r.top)/r.height*100));paintPV()});
+home.addEventListener("change",e=>{if(e.target.id==="avf")pickAvatar(e.target.files&&e.target.files[0])});
+function pickAvatar(f){if(!f)return;const u=URL.createObjectURL(f),im=new Image();
+  im.onload=()=>{try{const n=Math.min(im.naturalWidth,im.naturalHeight);if(!n)throw 0;const c=document.createElement("canvas");c.width=c.height=128;c.getContext("2d").drawImage(im,(im.naturalWidth-n)/2,(im.naturalHeight-n)/2,n,n,0,0,128,128);
+    let q=.85,d=c.toDataURL("image/jpeg",q);while(d.length>45000&&q>.4){q-=.15;d=c.toDataURL("image/jpeg",q)}
+    if(!avOK(d))throw 0;prof.avatar=d;saveProf();rh(hk,hx);toast("📷 تم تحديث صورة حسابك")}catch(_){toast("تعذّر استخدام هذه الصورة")}URL.revokeObjectURL(u)};
+  im.onerror=()=>{URL.revokeObjectURL(u);toast("تعذّر فتح الصورة")};im.src=u}
 home.addEventListener("pointerup",()=>drag=null);home.addEventListener("pointercancel",()=>drag=null);
 home.addEventListener("click",e=>{const fb=e.target.closest("[data-f]");if(fb){prof.fps=+fb.dataset.f;saveProf();return rh("set")}const el=e.target.closest("[id]"),id=el&&el.id;if(!id)return;
+  if(id==="avb"){$("avf").click();return}
+  if(id==="avx"){prof.avatar="";saveProf();return rh(hk,hx)}
   if(id==="flip"){pkSel=flipI;pkRes=null;return rh("packs")}
   if(id==="sell"){if(pkBusy)return;let n=0,m=0;prof.cards=prof.cards.map((c,i)=>{if(c>1){n+=c-1;m+=(c-1)*(i===6?10:1);return 1}return c});if(n){prof.bonus+=m;saveProf();toast("💰 بعت "+n+" مكرر • 🔑 +"+m)}return rh("packs")}
   if(id==="acb"){amsg="";return rh("acct")}
@@ -700,7 +711,7 @@ async function admStep(st){
       keys=Math.max(0,lvOf(p.goals|0)+(p.bonus|0)+(+r.credit||0)-(p.opened|0))+tk,cards=Array.isArray(p.cards)?p.cards.filter(v=>v>0).length:0,
       bn=r.ban&&r.ban.until>Date.now()?r.ban:null;
       shopPanel("<h3>"+nm+"</h3><div class='kk'>"+em+"</div><div class='ord'><span>المستوى "+lvOf(p.goals|0)+" • الأهداف "+(p.goals|0)+"</span><span>🔑 المفاتيح: <b>"+keys+"</b>"+(tk?" (منها "+tk+" مؤقت)":"")+" • (رصيد الإدارة: "+(+r.credit||0)+")</span><span>🃏 بطاقات مفتوحة: "+cards+" / 7</span><span>"+(bn?"⛔ محظور — باقي "+fmtLeft(bn.until-Date.now()):"✅ غير محظور")+"</span></div>"
-       +"<div class='kk'>🔑 إعطاء مفاتيح مباشرة (اكتب الرقم)</div><input id='kn' type='number' inputmode='numeric' placeholder='عدد المفاتيح'><div class='ord' style='background:none;padding:0'><div class='rowc'><button class='hb' data-a='kadd'>➕ إعطاء</button><button class='hb g' data-a='ksub'>➖ خصم</button></div></div>"
+       +"<div class='kk'>🔑 إعطاء مفاتيح مباشرة (اكتب الرقم)</div><input id='kcnt' type='number' inputmode='numeric' placeholder='عدد المفاتيح'><div class='ord' style='background:none;padding:0'><div class='rowc'><button class='hb' data-a='kadd'>➕ إعطاء</button><button class='hb g' data-a='ksub'>➖ خصم</button></div></div>"
        +"<div class='kk'>الوارد</div><div class='ord' style='background:none;padding:0'><div class='rowc'><button class='hb' data-a='pmsg'>✉️ إرسال رسالة</button><button class='hb' data-a='pgift'>🎁 إرسال هدية</button></div></div>"
        +"<div class='kk'>الحظر</div><div class='rowc'>"+ADAYS.map(d=>"<button class='hb g' data-a='ban' data-d='"+d[0]+"'>"+d[1]+"</button>").join("")+"</div>"
        +(bn?"<button class='hb' data-a='unban'>🔓 رفع الحظر</button>":"")+"<div id='smsg'></div><button class='hb g sm' data-a='players'>↩ رجوع</button>")
@@ -736,7 +747,7 @@ async function admClick(a,b){
   if(a==="pick"){shopPick={u:b.dataset.u,name:b.dataset.n,email:b.dataset.e};admStep("player");return true}
   const u=shopPick.u;if(!u)return true;
   try{
-    if(a==="kadd"||a==="ksub"){const n=Math.floor(+($("kn").value||0));if(!(n>0&&n<=100000)){smsg("اكتب عدد صحيح موجب");return true}await window.fbShop.addKeys(u,a==="kadd"?n:-n)}
+    if(a==="kadd"||a==="ksub"){const n=Math.floor(+($("kcnt").value||0));if(!(n>0&&n<=100000)){smsg("اكتب عدد صحيح موجب");return true}await window.fbShop.addKeys(u,a==="kadd"?n:-n)}
     else if(a==="ban")await window.fbShop.ban(u,+b.dataset.d);
     else if(a==="unban")await window.fbShop.unban(u);
   }catch(_){smsg("فشلت العملية");return true}
