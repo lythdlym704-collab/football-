@@ -150,11 +150,37 @@ window.fbShop = {
 const nl = x => String(x || "").trim().toLowerCase();
 Object.assign(window.fbShop, {
   reg: async (name, email) => { await set(ref(db, "d/players/" + uid), { name: String(name).slice(0, 30), nameL: nl(name).slice(0, 30), email: nl(email).slice(0, 80), t: Date.now() }) },
+  // بحث يلقى اللاعب حتى لو كان خارج اللعبة: يطابق أي جزء من الاسم أو الإيميل (بدون حساسية للحروف)، وإذا تُرك فارغًا يعرض الجميع
   search: async q => {
-    q = nl(q); if (!q) return [];
-    const run = async f => { const s = await get(query(ref(db, "d/players"), orderByChild(f), startAt(q), endAt(q + "\uf8ff"), limitToFirst(20))); const r = []; s.forEach(c => { r.push({ u: c.key, ...c.val() }) }); return r };
-    const r = await run("nameL"); for (const x of await run("email")) if (!r.some(y => y.u === x.u)) r.push(x);
-    return r;
+    q = nl(q);
+    const s = await get(query(ref(db, "d/players"), limitToFirst(2000))), r = [];
+    s.forEach(c => { const v = c.val() || {}; if (!q || nl(v.nameL || v.name).includes(q) || nl(v.email).includes(q) || c.key === String(q)) r.push({ u: c.key, ...v }) });
+    r.sort((a, b) => ((nl(a.nameL || a.name).startsWith(q) ? 0 : 1) - (nl(b.nameL || b.name).startsWith(q) ? 0 : 1)) || nl(a.name).localeCompare(nl(b.name)));
+    return r.slice(0, 30);
+  },
+  // فهرسة اللاعبين القدامى الذين لم يفتحوا النسخة الجديدة بعد (تُسجَّل أسماؤهم ليظهروا في البحث). للأدمن فقط
+  reindex: async cb => {
+    if (!isAdm()) throw new Error("admin only");
+    const tok = await auth.currentUser.getIdToken(), res = await fetch(firebaseConfig.databaseURL + "/d/accounts.json?shallow=true&auth=" + encodeURIComponent(tok));
+    if (!res.ok) throw new Error("http " + res.status);
+    const keys = Object.keys((await res.json()) || {}), have = new Set();
+    (await get(query(ref(db, "d/players"), limitToFirst(3000)))).forEach(c => { have.add(c.key) });
+    const todo = keys.filter(k => !have.has(k)); let done = 0, added = 0;
+    const work = async () => {
+      while (todo.length) {
+        const u = todo.pop();
+        try {
+          if (!(await get(ref(db, "d/players/" + u))).exists()) {
+            let p = {}; try { p = JSON.parse((await get(ref(db, "d/accounts/" + u + "/json"))).val() || "{}") } catch (_) {}
+            const n = String(p.name || "").slice(0, 30);
+            if (n) { await set(ref(db, "d/players/" + u), { name: n, nameL: nl(n), email: "", t: Date.now() }); added++ }
+          }
+        } catch (_) {}
+        done++; if (cb) cb(done, todo.length + done);
+      }
+    };
+    await Promise.all([work(), work(), work(), work()]);
+    return { total: keys.length, added };
   },
   playerInfo: async u => {
     const [a, c, b] = await Promise.all([get(ref(db, "d/accounts/" + u + "/json")), get(ref(db, "d/shop_credit/" + u + "/total")), get(ref(db, "d/bans/" + u))]);

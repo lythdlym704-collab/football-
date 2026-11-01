@@ -693,7 +693,7 @@ async function admStep(st){
   if(!isAdm()){closeShop();return}
   const x="<button class='hb g sm' data-a='close'>إغلاق</button>";
   if(st==="adm"){shopPanel("<h3>🛠️ لوحة الإدارة</h3><button class='hb' data-a='players'>👤 اللاعبون</button><button class='hb' data-a='bmsg'>📢 رسالة لجميع اللاعبين</button><button class='hb' data-a='bgift'>🎁 هدية لجميع اللاعبين</button>"+x)}
-  else if(st==="players"){shopPanel("<h3>👤 اللاعبون</h3><input id='sq' maxlength='40' placeholder='اسم اللاعب أو إيميله'><button class='hb' data-a='psearch'>🔍 بحث</button><div id='sres'></div><button class='hb g sm' data-a='adm'>↩ رجوع</button>")}
+  else if(st==="players"){shopPanel("<h3>👤 اللاعبون</h3><input id='sq' maxlength='40' placeholder='جزء من الاسم أو الإيميل (أو اتركه فارغًا لعرض الجميع)'><button class='hb' data-a='psearch'>🔍 بحث</button><div id='sres'></div><button class='hb g sm' data-a='reidx'>🔄 فهرسة اللاعبين القدامى</button><button class='hb g sm' data-a='adm'>↩ رجوع</button>")}
   else if(st==="player"){const u=shopPick.u;shopPanel("<h3>جارٍ التحميل...</h3>");
     try{const r=await window.fbShop.playerInfo(u);if(!shopEl)return;const p=r.prof||{},nm=esc(shopPick.name||p.name||"?"),em=esc(shopPick.email||""),tn=tNow(),
       tk=Array.isArray(p.tk)?p.tk.reduce((a,e)=>a+(e&&e.u>tn?e.n|0:0),0):0,
@@ -718,17 +718,21 @@ async function sendCompose(b){
   else{if(!ti&&!tx){smsg("اكتب عنوانًا أو نصًا");return}if(!m.title)m.title="رسالة من الإدارة"}
   if(cmp.to==="all"&&!b.dataset.cf){b.dataset.cf="1";b.textContent="⚠️ اضغط مرة ثانية للإرسال للجميع";setTimeout(()=>{if(b.isConnected){delete b.dataset.cf;b.textContent="إرسال"}},4000);return}
   b.disabled=true;smsg("جارٍ الإرسال...");
-  try{if(cmp.to==="all")await window.fbInbox.broadcast(m);else await window.fbInbox.sendTo(cmp.to,m)}catch(_){if(b.isConnected){b.disabled=false;delete b.dataset.cf;b.textContent="إرسال";smsg("فشل الإرسال — تأكد من الإنترنت ومن قواعد قاعدة البيانات")}return}
+  try{if(cmp.to==="all")await window.fbInbox.broadcast(m);else await window.fbInbox.sendTo(cmp.to,m)}catch(e){if(b.isConnected){b.disabled=false;delete b.dataset.cf;b.textContent="إرسال";const c=String(e&&(e.code||e.message)||"");
+    smsg(!window.fbInbox?"ملف shim لم يُحدَّث — أعد بناء التطبيق بالملفات الجديدة":/permission/i.test(c)?"القواعد ترفض الإرسال (PERMISSION_DENIED) — انشر القواعد الجديدة":/admin only/.test(c)?"هذا الحساب ليس حساب الأدمن":/network|offline|timeout|fetch/i.test(c)?"لا يوجد اتصال بالإنترنت":"فشل الإرسال: "+c.slice(0,80))}return}
   shopPanel("<h3>✅ تم الإرسال</h3><div class='kk'>"+(cmp.to==="all"?"وصلت لجميع اللاعبين":"وصلت إلى "+esc(cmp.name||"اللاعب"))+"</div><button class='hb g' data-a='"+(cmp.to==="all"?"adm":"player")+"'>↩ رجوع</button>")}
 async function admClick(a,b){
-  if(!["adm","players","psearch","pick","player","kadd","ksub","ban","unban","bmsg","bgift","pmsg","pgift","csend"].includes(a))return false;
+  if(!["adm","players","psearch","pick","player","kadd","ksub","ban","unban","reidx","bmsg","bgift","pmsg","pgift","csend"].includes(a))return false;
   if(!isAdm())return true;
   if(a==="adm"||a==="players"||a==="player"){admStep(a);return true}
   if(a==="bmsg"||a==="bgift"){cmp={to:"all",mode:a==="bgift"?"gift":"msg"};admStep("compose");return true}
   if(a==="pmsg"||a==="pgift"){if(!shopPick.u)return true;cmp={to:shopPick.u,name:shopPick.name,mode:a==="pgift"?"gift":"msg"};admStep("compose");return true}
   if(a==="csend"){await sendCompose(b);return true}
   if(a==="psearch"){const q=($("sq").value||"").trim(),el=$("sres");el.innerHTML="<div class='kk'>جارٍ البحث...</div>";
-    try{const r=await window.fbShop.search(q);el.innerHTML=r.length?r.map(p=>"<button class='hb g' data-a='pick' data-u='"+esc(p.u)+"' data-n='"+esc(p.name||"")+"' data-e='"+esc(p.email||"")+"'>"+esc(p.name||"?")+" • "+esc(p.email||"")+"</button>").join(""):"<div class='kk'>ما لقيت أحد بهذا الاسم</div>"}catch(_){el.innerHTML="<div class='kk'>تعذّر البحث</div>"}return true}
+    try{const r=await window.fbShop.search(q);el.innerHTML=r.length?r.map(p=>"<button class='hb g' data-a='pick' data-u='"+esc(p.u)+"' data-n='"+esc(p.name||"")+"' data-e='"+esc(p.email||"")+"'>"+esc(p.name||"?")+(p.email?" • "+esc(p.email):"")+"</button>").join(""):"<div class='kk'>ما لقيت أحد — جرّب جزءًا من الاسم، أو اضغط «فهرسة اللاعبين القدامى»</div>"}catch(_){el.innerHTML="<div class='kk'>تعذّر البحث — تأكد من الإنترنت ومن نشر قواعد قاعدة البيانات الجديدة</div>"}return true}
+  if(a==="reidx"){const el=$("sres");b.disabled=true;el.innerHTML="<div class='kk'>جارٍ الفهرسة...</div>";
+    try{const r=await window.fbShop.reindex((d,t)=>{if(el.isConnected&&(d%5===0||d===t))el.innerHTML="<div class='kk'>الفهرسة "+d+" / "+t+"</div>"});if(el.isConnected)el.innerHTML="<div class='kk'>✅ تمت: أُضيف "+r.added+" لاعب (من "+r.total+" حساب)</div>"}catch(_){if(el.isConnected)el.innerHTML="<div class='kk'>تعذّرت الفهرسة — تأكد من نشر القواعد الجديدة</div>"}
+    if(b.isConnected)b.disabled=false;return true}
   if(a==="pick"){shopPick={u:b.dataset.u,name:b.dataset.n,email:b.dataset.e};admStep("player");return true}
   const u=shopPick.u;if(!u)return true;
   try{
