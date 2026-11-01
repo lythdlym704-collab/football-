@@ -21,7 +21,9 @@ jobs:
           mkdir -p www
           cp index.html www/index.html
           cp node_modules/three/build/three.min.js www/three.min.js
-          npx esbuild shim_src.js --bundle --minify --format=iife --outfile=www/shim.js
+          SRC=$(ls shim.src.js shim_src.js 2>/dev/null | head -1)
+          echo "using $SRC"
+          npx esbuild "$SRC" --bundle --minify --format=iife --outfile=www/shim.js
       - name: Create Android project
         run: |
           echo '{"appId":"com.football.game","appName":"Football Game","webDir":"www"}' > capacitor.config.json
@@ -38,3 +40,4 @@ jobs:
         with:
           name: football-game-apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
+
