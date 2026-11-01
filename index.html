@@ -226,8 +226,22 @@ const keysOf=()=>Math.max(0,lvOf(prof.goals)+prof.bonus+shopCredit-prof.opened)+
 const lvOf=g=>Math.min(MAXL,Math.floor(g/PER)),esc=s=>String(s).replace(/[&<>"']/g,c=>"&#"+c.charCodeAt(0)+";");
 const home=$("home");let hk="menu",hx="";
 let flipI=0;
-function flipHTML(){const kz=flipI===1;return"<div class='pack"+(kz?" k":"")+"'><img src='"+(kz?KLOGO:LOGO)+"'>"+(kz?"الكايلار":"فريق النمور")+"</div><small>اضغط لفتح الباكج • 🔑 "+keysOf()+"</small>"}
-setInterval(()=>{const e=$("flip");if(!e||hk!=="menu")return;flipI^=1;e.innerHTML=flipHTML()},5000);
+const PKN={t:"🐯 النمور",k:"⚔️ الكايلار"},PKD={t:[0,1,2,6],k:[3,4,5]};
+let PKCFG={t:{c:PKD.t.slice(),u:0,w:null},k:{c:PKD.k.slice(),u:0,w:null}};
+function pkNorm(x){if(!x||typeof x!=="object")return;for(const id of["t","k"]){const p=x[id];if(!p||typeof p!=="object")continue;const a=Array.isArray(p.c)?p.c:Object.values(p.c||{}),c=[...new Set(a.map(Number).filter(i=>i>=0&&i<7))];if(c.length)PKCFG[id].c=c;PKCFG[id].u=Math.max(0,+p.u||0);if(p.w&&typeof p.w==="object"){const w={};for(const c of PKCFG[id].c){const v=+p.w[c];if(isFinite(v)&&p.w[c]!=null)w[c]=Math.max(0,Math.min(100,v))}PKCFG[id].w=Object.keys(w).length?w:null}else PKCFG[id].w=null}}
+try{pkNorm(JSON.parse(localStorage.getItem("fb_pkcfg")||"null"))}catch(_){}
+const packOn=id=>{const u=PKCFG[id].u;return !u||u>tNow()},pkId=i=>i===1?"k":"t",pkCards=i=>PKCFG[pkId(i)].c,actPk=()=>[0,1].filter(i=>packOn(pkId(i)));
+const pkOrphans=()=>{const s=new Set();actPk().forEach(i=>pkCards(i).forEach(c=>s.add(c)));return[0,1,2,3,4,5,6].filter(i=>prof.cards[i]>0&&!s.has(i))};
+function pkFix(){const a=actPk();if(a.length){if(!a.includes(pkSel))pkSel=a[0];if(!a.includes(flipI))flipI=a[0]}}
+function pkDefW(c){const g=c.includes(6)?9:0,o=c.filter(x=>x!==6),w={};if(g)w[6]=g;o.forEach(x=>w[x]=(50-g)/o.length);return w}
+function pkW(id){const c=PKCFG[id].c,d=pkDefW(c),w=PKCFG[id].w||{},r={};c.forEach(x=>r[x]=x in w?w[x]:(PKCFG[id].w?0:d[x]));return r}
+const pkTot=id=>Object.values(pkW(id)).reduce((a,v)=>a+v,0);
+function pkRoll(r){const w=pkW(pkId(pkSel)),x=r*100;let acc=0;for(const c of pkCards(pkSel)){acc+=w[c]||0;if(x<acc)return c}return-1}
+function flipHTML(){pkFix();if(!actPk().length)return"<small>📦 لا توجد باكجات متاحة الآن</small>";const kz=flipI===1;return"<div class='pack"+(kz?" k":"")+"'><img src='"+(kz?KLOGO:LOGO)+"'>"+(kz?"الكايلار":"فريق النمور")+"</div><small>اضغط لفتح الباكج • 🔑 "+keysOf()+"</small>"}
+setInterval(()=>{const e=$("flip");if(!e||hk!=="menu")return;const a=actPk();if(a.length>1)flipI=flipI===a[0]?a[1]:a[0];e.innerHTML=flipHTML()},5000);
+function pkListen(){if(window.fbPacks&&!pkListen.on){pkListen.on=1;window.fbPacks.listen(v=>{if(!v)return;pkNorm(v);try{localStorage.setItem("fb_pkcfg",JSON.stringify(PKCFG))}catch(_){}pkFix()})}}
+setInterval(pkListen,1500);
+let pkSig="";setInterval(()=>{pkFix();const g=actPk().join()+"|"+PKCFG.t.c.join()+"|"+PKCFG.k.c.join();if(g!==pkSig){const first=pkSig==="";pkSig=g;if(!first&&!pkBusy&&home.style.display!=="none"&&(hk==="menu"||hk==="packs")){pkRes=null;rh(hk,hx)}}},1000);
 function rh(k,x){revStop();hk=k;hx=x;kboxUpd();
   const lv=lvOf(prof.goals),pct=lv>=MAXL?100:(prof.goals%PER)/PER*100,ini=prof.name?esc([...prof.name][0]):"👤";
   let h="<div class='card'><div class='ring' id='av' style='--p:"+pct+";--c:"+COLS[prof.col]+"'>"+avHTML(ini)+"<span class='lv'>"+lv+"</span></div><div class='pn'><b>"+esc(prof.name||"لاعب جديد")+"</b><span>المستوى "+lv+(lv>=MAXL?" 🏆":"")+"</span><div class='bar'><i style='width:"+pct+"%'></i></div><small>"+(lv>=MAXL?"المستوى الأقصى":(prof.goals%PER)+"/"+PER+" هدف للمستوى التالي")+" • مجموع أهدافك "+prof.goals+"</small></div></div><h1>⚽ كرة القدم</h1>";
@@ -277,9 +291,9 @@ home.addEventListener("click",e=>{const fb=e.target.closest("[data-f]");if(fb){p
   {const g=/^(inv|del)_([A-Z0-9]{6})$/.exec(id);if(g){if(g[1]==="del"){prof.friends=prof.friends.filter(f=>f.id!==g[2]);saveProf();return rh("friends",hx)}return sendInvite(g[2],el)}}
   if(id==="selp"){if(pkRes!==null&&pkRes>=0&&prof.cards[pkRes]){prof.sel=pkRes;saveProf();refreshSel()}return}
   if(id==="unsel"){prof.sel=-1;saveProf();refreshSel();return}
-  {const g=/^gc(\d)$/.exec(id);if(g){const i=+g[1];if(pkBusy||!prof.cards[i])return;pkSel=i>=3&&i<6?1:0;pkRes=i;return rh("packs")}}
-  if(id==="pks0"||id==="pks1"){if(pkBusy)return;pkSel=+id.slice(3);pkRes=null;return rh("packs")}
-  if(id==="opn"){if(pkBusy||keysOf()<=0)return;if(!useTK())prof.opened++;const r=Math.random(),res=r<.5?(pkSel===0&&r<.09?6:pkSel*3+Math.floor(r*6)):-1;if(res>=0)prof.cards[res]++;saveProf();pkBusy=true;pkRes=null;rh("packs");const pk=$("pk");pk&&pk.classList.add("shake");setTimeout(()=>{pkBusy=false;pkRes=res;if(hk==="packs")rh("packs")},1000);return}
+  {const g=/^gc(\d)$/.exec(id);if(g){const i=+g[1];if(pkBusy||!prof.cards[i])return;{const a=actPk(),f=a.find(p=>pkCards(p).includes(i));if(f!==undefined)pkSel=f}pkRes=i;return rh("packs")}}
+  if(id==="pks0"||id==="pks1"){if(pkBusy||!packOn(pkId(+id.slice(3))))return;pkSel=+id.slice(3);pkRes=null;return rh("packs")}
+  if(id==="opn"){if(pkBusy||keysOf()<=0)return;if(!packOn(pkId(pkSel))){pkFix();return rh("packs")}if(!useTK())prof.opened++;const r=Math.random(),res=pkRoll(r);if(res>=0)prof.cards[res]++;saveProf();pkBusy=true;pkRes=null;rh("packs");const pk=$("pk");pk&&pk.classList.add("shake");setTimeout(()=>{pkBusy=false;pkRes=res;if(hk==="packs")rh("packs")},1000);return}
   if(id==="swf"){prof.swap=!prof.swap;saveProf();setFaces();return rh("set")}
   if(id==="av"){prof.col=(prof.col+1)%COLS.length;saveProf();return rh(hk,hx)}
   if(id==="sv"){const n=$("ni").value.replace(/[\u0000-\u001f<>]/g,"").trim().slice(0,12);if(!n)return;prof.name=n;saveProf();syncPres();return rh("menu")}
@@ -464,10 +478,11 @@ function invTick(){if(!R||frame%30)return;
   if(state!=="menu"||wrap.style.display==="block")return;
   for(const p of ps){const a=p.presence.inv;if(!Array.isArray(a))continue;
     for(const e of a){if(!e||e.to!==prof.fid||p.presence.role!=="host"||p.presence.code!==e.c)continue;const k=p.presence.fid+":"+e.t;if(invSeen[k])continue;invSeen[k]=1;showInvite(p.presence.name||"صديقك",String(e.c))}}}
-function packsHTML(){const dup=prof.cards.reduce((a,c)=>a+Math.max(0,c-1),0),dk=prof.cards.reduce((a,c,i)=>a+Math.max(0,c-1)*(i===6?10:1),0),kk=keysOf(),kz=pkSel===1,b0=pkSel*3;
+function packsHTML(){pkFix();const act=actPk(),dup=prof.cards.reduce((a,c)=>a+Math.max(0,c-1),0),dk=prof.cards.reduce((a,c,i)=>a+Math.max(0,c-1)*(i===6?10:1),0),kk=keysOf(),kz=pkSel===1,b0=pkSel*3;
   const top=pkRes===null?"<div class='pack"+(kz?" k":"")+"' id='pk'><img src='"+(kz?KLOGO:LOGO)+"'>"+(kz?"الكايلار":"فريق النمور")+"</div>":pkRes<0?"<div class='hz'>😅 حظ أوفر</div>":"<div class='stage' style='"+(pkRes===6?"--sg1:#7a5a00;--sg2:#1a1200;--sgl:rgba(255,215,0,.9)":pkRes>=3?"--sg1:#0d3a9c;--sg2:#050b24;--sgl:rgba(80,150,255,.6)":"--sg1:#5a3a00;--sg2:#140c02;--sgl:rgba(255,157,26,.6)")+"'><canvas id='rc'></canvas><img class='rcard"+(pkRes===6?" gold":"")+"' id='rcard' src='"+cardURL(pkRes)+"'></div>";
-  const grid=(pkSel===1?[3,4,5]:[0,1,2,6]).map(i=>{return"<div class='gi"+(i===6?" gold":"")+(prof.cards[i]?"":" lock")+(prof.sel===i?" sel":"")+"' id='gc"+i+"'><img src='"+cardURL(i)+"'><b>"+(prof.cards[i]?"×"+prof.cards[i]:"🔒")+"</b></div>"}).join("");
-  return"<div class='sec'><b>🎁 الباكجات</b><div class='fr'><button class='fb"+(pkSel===0?" on":"")+"' id='pks0'>🐯 النمور</button><button class='fb"+(pkSel===1?" on":"")+"' id='pks1'>⚔️ الكايلار</button></div><div class='keys'>🔑 "+kk+" مفتاح</div>"+top+(pkRes!==null&&pkRes>=0?"<button class='hb' id='selp'"+(prof.sel===pkRes?" disabled":"")+">"+(prof.sel===pkRes?"✓ هذا لاعبك في المباراة":"⚽ العب بهذا اللاعب")+"</button>":"")+"<button class='hb' id='opn'"+(kk>0&&!pkBusy?"":" disabled")+">🔑 "+(pkRes===null?"افتح الباكج":"افتح باكج آخر")+"</button><small>كل مستوى جديد يعطيك مفتاح • 50% بطاقة و50% حظ أوفر"+(pkSel===0?" • 👑 فرصة نادرة لأثير الذهبي":"")+"</small><div class='grid'>"+grid+"</div><small>اضغط على بطاقة لتشاهد لاعبها، ثم اختره ليلعب في المباراة</small><button class='hb g sm' id='unsel'"+(prof.sel>=0?"":" style='display:none'")+">إلغاء اللاعب المختار</button><button class='hb g sm' id='sell'"+(dup?"":" disabled")+">💰 بيع المكرر ("+dup+") ← 🔑 "+dk+"</button><button class='hb g' id='pkbk'>رجوع</button></div>"}
+  const grid=(act.length?pkCards(pkSel).concat(pkSel===act[0]?pkOrphans():[]):pkOrphans()).map(i=>{return"<div class='gi"+(i===6?" gold":"")+(prof.cards[i]?"":" lock")+(prof.sel===i?" sel":"")+"' id='gc"+i+"'><img src='"+cardURL(i)+"'><b>"+(prof.cards[i]?"×"+prof.cards[i]:"🔒")+"</b></div>"}).join("");
+  if(!act.length)return"<div class='sec'><b>🎁 الباكجات</b><div class='keys'>🔑 "+kk+" مفتاح</div><div class='hz'>📦 لا توجد باكجات متاحة حالياً</div><div class='grid'>"+grid+"</div><small>اضغط على بطاقة لتشاهد لاعبها، ثم اختره ليلعب في المباراة</small><button class='hb g sm' id='unsel'"+(prof.sel>=0?"":" style='display:none'")+">إلغاء اللاعب المختار</button><button class='hb g sm' id='sell'"+(dup?"":" disabled")+">💰 بيع المكرر ("+dup+") ← 🔑 "+dk+"</button><button class='hb g' id='pkbk'>رجوع</button></div>";
+  return"<div class='sec'><b>🎁 الباكجات</b><div class='fr'>"+act.map(i=>"<button class='fb"+(pkSel===i?" on":"")+"' id='pks"+i+"'>"+PKN[pkId(i)]+"</button>").join("")+"</div><div class='keys'>🔑 "+kk+" مفتاح</div>"+top+(pkRes!==null&&pkRes>=0?"<button class='hb' id='selp'"+(prof.sel===pkRes?" disabled":"")+">"+(prof.sel===pkRes?"✓ هذا لاعبك في المباراة":"⚽ العب بهذا اللاعب")+"</button>":"")+"<button class='hb' id='opn'"+(kk>0&&!pkBusy?"":" disabled")+">🔑 "+(pkRes===null?"افتح الباكج":"افتح باكج آخر")+"</button><small>كل مستوى جديد يعطيك مفتاح • "+Math.round(pkTot(pkId(pkSel)))+"% بطاقة و"+(100-Math.round(pkTot(pkId(pkSel))))+"% حظ أوفر"+(pkCards(pkSel).includes(6)?" • 👑 فرصة نادرة لأثير الذهبي":"")+"</small><div class='grid'>"+grid+"</div><small>اضغط على بطاقة لتشاهد لاعبها، ثم اختره ليلعب في المباراة</small><button class='hb g sm' id='unsel'"+(prof.sel>=0?"":" style='display:none'")+">إلغاء اللاعب المختار</button><button class='hb g sm' id='sell'"+(dup?"":" disabled")+">💰 بيع المكرر ("+dup+") ← 🔑 "+dk+"</button><button class='hb g' id='pkbk'>رجوع</button></div>"}
 function refreshSel(){const b=$("selp");if(b){const on=prof.sel===pkRes;b.textContent=on?"✓ هذا لاعبك في المباراة":"⚽ العب بهذا اللاعب";b.disabled=on}document.querySelectorAll(".gi").forEach(e=>e.classList.toggle("sel",+e.id.slice(2)===prof.sel));const u=$("unsel");if(u)u.style.display=prof.sel>=0?"":"none"}
 const sx=x=>(role==="guest"?W-x:x)-W/2,sz=y=>y-H/2;
 const ip=o=>{const dx=o.x-o.x0,dy=o.y-o.y0;return dx*dx+dy*dy>6400?[o.x,o.y]:[o.x0+dx*al,o.y0+dy*al]};
@@ -698,12 +713,35 @@ async function shopClick(e){
 function shopChange(e){const t=e.target;if(t.id==="gk"){$("gnw").style.display=t.value==="keys"?"":"none";$("gcw").style.display=t.value==="card"?"":"none"}else if(t.id==="gt")$("gdw").style.display=t.value==="1"?"":"none"}
 
 // ---------- لوحة المدير ----------
+const PKA=["pkg","pkgs","pkdur","pkfor","pkhide","pkrm","pkad","pkw","pkwr"];let pkgP="t";
+function pkgPanel(x){const id=pkgP,p=PKCFG[id],on=packOn(id),opt=(i)=>"<option value='"+i+"'>"+(i<3?"🐯 ":i<6?"⚔️ ":"👑 ")+esc(DEFCN[i])+"</option>",rest=[0,1,2,3,4,5,6].filter(i=>!p.c.includes(i));
+  shopPanel("<h3>📦 إدارة الباكجات</h3><div class='rowc'><button class='hb"+(id==="t"?"":" g")+"' data-a='pkgs' data-p='t'>🐯 النمور</button><button class='hb"+(id==="k"?"":" g")+"' data-a='pkgs' data-p='k'>⚔️ الكايلار</button></div>"
+  +"<div class='ord'><span>الحالة: "+(on?(p.u?"✅ ظاهر — يختفي بعد "+fmtLeft(p.u-tNow()):"✅ ظاهر دائماً"):"🙈 مخفي")+"</span><span>🃏 بطاقات الباكج: "+p.c.map(i=>esc(DEFCN[i])).join("، ")+"</span></div>"
+  +"<div class='kk'>⏳ مدة ظهور الباكج (تبدأ من الآن ثم يختفي)</div><select id='pkd'>"+DURS.map(d=>"<option value='"+d[0]+"'>"+d[1]+"</option>").join("")+"</select><button class='hb' data-a='pkdur'>⏱️ تحديد المدة</button><div class='rowc'><button class='hb g' data-a='pkfor'>♾️ إظهار دائم</button><button class='hb g' data-a='pkhide'>🙈 إخفاء الآن</button></div>"
+  +"<div class='kk'>➖ إزالة بطاقة من الباكج</div><select id='pkr'>"+p.c.map(opt).join("")+"</select><button class='hb' data-a='pkrm'>إزالة من الباكج</button>"
+  +"<div class='kk'>➕ إضافة بطاقة للباكج</div>"+(rest.length?"<select id='pka'>"+rest.map(opt).join("")+"</select><button class='hb' data-a='pkad'>إضافة للباكج</button>":"<div class='kk'>كل البطاقات موجودة في هذا الباكج</div>")
+  +"<div class='kk'>🎲 حظ البطاقات (نسبة ظهور كل بطاقة % من كل فتحة)</div>"+p.c.map(i=>"<div class='ord' style='background:none;padding:0'><div class='rowc'><span style='flex:1;align-self:center'>"+esc(DEFCN[i])+"</span><input id='pw"+i+"' type='number' inputmode='decimal' min='0' max='100' step='0.5' value='"+(Math.round(pkW(id)[i]*100)/100)+"' style='width:90px'></div></div>").join("")+"<div class='kk'>المجموع الحالي: "+(Math.round(pkTot(id)*100)/100)+"% • حظ أوفر: "+(Math.round((100-pkTot(id))*100)/100)+"%</div><div class='rowc'><button class='hb' data-a='pkw'>💾 حفظ الحظ</button><button class='hb g' data-a='pkwr'>↩ الافتراضي</button></div>"
+  +"<div class='kk'>اللاعبون يحتفظون ببطاقاتهم حتى لو أُزيلت من الباكج</div><div id='smsg'></div><button class='hb g sm' data-a='adm'>↩ رجوع</button>")}
+async function pkgAct(a,b){if(!isAdm())return true;
+  if(a==="pkg"){admStep("pkg");return true}
+  if(a==="pkgs"){pkgP=b.dataset.p==="k"?"k":"t";admStep("pkg");return true}
+  const cp=q=>({c:q.c.slice(),u:q.u,w:q.w?{...q.w}:null}),nx={t:cp(PKCFG.t),k:cp(PKCFG.k)},p=nx[pkgP];
+  if(a==="pkdur")p.u=tNow()+(+$("pkd").value||0);
+  else if(a==="pkfor")p.u=0;
+  else if(a==="pkhide")p.u=Math.max(1,tNow()-1000);
+  else if(a==="pkrm"){const v=+$("pkr").value;if(p.c.length<=1){smsg("لازم تبقى بطاقة واحدة على الأقل في الباكج");return true}p.c=p.c.filter(c=>c!==v);if(p.w)delete p.w[v]}
+  else if(a==="pkad"){const e=$("pka");if(!e)return true;{const w=pkW(pkgP),sum=Object.values(w).reduce((x,y)=>x+y,0);p.w=w;p.c.push(+e.value);p.w[+e.value]=Math.max(0,Math.min(5,100-sum))}}
+  else if(a==="pkwr")p.w=null
+  else if(a==="pkw"){const w={};let sum=0;for(const c of p.c){const v=+($("pw"+c).value);if(!isFinite(v)||v<0||v>100){smsg("اكتب نسبة صحيحة بين 0 و100");return true}w[c]=Math.round(v*100)/100;sum+=w[c]}if(sum>100.001){smsg("مجموع النسب لازم ما يزيد عن 100% (الآن "+Math.round(sum*100)/100+"%)");return true}if(sum<=0){smsg("لازم يكون لبطاقة واحدة على الأقل نسبة أكبر من 0");return true}p.w=w}
+  try{if(!window.fbPacks)throw new Error("shim");await window.fbPacks.set(nx)}catch(e){const c=String(e&&(e.code||e.message)||"");smsg(c==="shim"?"ملف shim لم يُحدَّث — أعد بناء التطبيق بالملفات الجديدة":/permission/i.test(c)?"القواعد ترفض الحفظ (PERMISSION_DENIED) — أضف قاعدة packcfg":/admin only/.test(c)?"هذا الحساب ليس حساب الأدمن":"فشل الحفظ: "+c.slice(0,80));return true}
+  PKCFG=nx;try{localStorage.setItem("fb_pkcfg",JSON.stringify(PKCFG))}catch(_){}pkFix();admStep("pkg");smsg("✅ تم الحفظ وسيظهر لكل اللاعبين");return true}
+
 const ADAYS=[[1,"يوم"],[2,"يومين"],[3,"3 أيام"],[7,"أسبوع"]];
 function fmtLeft(ms){const d=Math.floor(ms/864e5),h=Math.floor(ms%864e5/36e5),m=Math.floor(ms%36e5/6e4);return d?d+" يوم و "+h+" ساعة":h?h+" ساعة و "+m+" دقيقة":m+" دقيقة"}
 async function admStep(st){
   if(!isAdm()){closeShop();return}
   const x="<button class='hb g sm' data-a='close'>إغلاق</button>";
-  if(st==="adm"){shopPanel("<h3>🛠️ لوحة الإدارة</h3><button class='hb' data-a='players'>👤 اللاعبون</button><button class='hb' data-a='bmsg'>📢 رسالة لجميع اللاعبين</button><button class='hb' data-a='bgift'>🎁 هدية لجميع اللاعبين</button>"+x)}
+  if(st==="pkg"){pkgPanel(x)}else if(st==="adm"){shopPanel("<h3>🛠️ لوحة الإدارة</h3><button class='hb' data-a='players'>👤 اللاعبون</button><button class='hb' data-a='bmsg'>📢 رسالة لجميع اللاعبين</button><button class='hb' data-a='bgift'>🎁 هدية لجميع اللاعبين</button><button class='hb' data-a='pkg'>📦 إدارة الباكجات</button>"+x)}
   else if(st==="players"){shopPanel("<h3>👤 اللاعبون</h3><input id='sq' maxlength='40' placeholder='جزء من الاسم أو الإيميل (أو اتركه فارغًا لعرض الجميع)'><button class='hb' data-a='psearch'>🔍 بحث</button><div id='sres'></div><button class='hb g sm' data-a='reidx'>🔄 فهرسة اللاعبين القدامى</button><button class='hb g sm' data-a='adm'>↩ رجوع</button>")}
   else if(st==="player"){const u=shopPick.u;shopPanel("<h3>جارٍ التحميل...</h3>");
     try{const r=await window.fbShop.playerInfo(u);if(!shopEl)return;const p=r.prof||{},nm=esc(shopPick.name||p.name||"?"),em=esc(shopPick.email||""),tn=tNow(),
@@ -733,6 +771,7 @@ async function sendCompose(b){
     smsg(!window.fbInbox?"ملف shim لم يُحدَّث — أعد بناء التطبيق بالملفات الجديدة":/permission/i.test(c)?"القواعد ترفض الإرسال (PERMISSION_DENIED) — انشر القواعد الجديدة":/admin only/.test(c)?"هذا الحساب ليس حساب الأدمن":/network|offline|timeout|fetch/i.test(c)?"لا يوجد اتصال بالإنترنت":"فشل الإرسال: "+c.slice(0,80))}return}
   shopPanel("<h3>✅ تم الإرسال</h3><div class='kk'>"+(cmp.to==="all"?"وصلت لجميع اللاعبين":"وصلت إلى "+esc(cmp.name||"اللاعب"))+"</div><button class='hb g' data-a='"+(cmp.to==="all"?"adm":"player")+"'>↩ رجوع</button>")}
 async function admClick(a,b){
+  if(PKA.includes(a))return pkgAct(a,b);
   if(!["adm","players","psearch","pick","player","kadd","ksub","ban","unban","reidx","bmsg","bgift","pmsg","pgift","csend"].includes(a))return false;
   if(!isAdm())return true;
   if(a==="adm"||a==="players"||a==="player"){admStep(a);return true}
