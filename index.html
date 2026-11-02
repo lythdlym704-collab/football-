@@ -15,7 +15,7 @@ body{margin:0;height:100%;overflow:hidden;position:relative;background:var(--bg)
 canvas{width:100%;height:100%;display:block;border-radius:.5em;background:#2f9e5b}
 #hud{position:absolute;top:.3em;left:50%;transform:translateX(-50%);background:var(--glass);border-radius:.6em;padding:.15em .9em;text-align:center;direction:ltr;pointer-events:none;line-height:1.15}
 #hud b{font-size:1.1em}#hud small{display:block;font-size:.55em;opacity:.85}
-#rst{position:absolute;top:.3em;right:.4em;width:1.8em;height:1.8em;border-radius:50%;border:0;background:var(--glass);color:#fff;font-size:1em;padding:0}
+#rst{position:absolute;top:2.5em;right:.4em;width:1.8em;height:1.8em;border-radius:50%;border:0;background:var(--glass);color:#fff;font-size:1em;padding:0}
 #msg{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,0,0,.55);border-radius:.5em;font-size:1.7em;font-weight:800;text-align:center;gap:.2em;z-index:5}
 #msg small{font-size:.5em;font-weight:500}
 button{font:inherit;font-weight:700;border:0;cursor:pointer}
@@ -63,7 +63,7 @@ button{font:inherit;font-weight:700;border:0;cursor:pointer}
 #chat{position:absolute;left:.4em;top:36%;width:2em;height:2em;border-radius:50%;background:var(--glass);color:#fff;font-size:1.1em;padding:0;z-index:4}
 #sb{position:absolute;left:.4em;top:10%;max-height:64%;width:10.5em;background:rgba(10,20,14,.94);border-radius:.7em;padding:.4em;display:none;flex-direction:column;gap:.3em;z-index:7;overflow:auto;font-size:.7em;text-align:center}
 #sb button{background:rgba(255,255,255,.14);color:#fff;border-radius:.6em;padding:.55em .4em;font-size:1em}
-#fp{position:absolute;top:3.3em;left:.45em;font-size:.4em;opacity:.85;color:#fff;pointer-events:none;direction:ltr;z-index:6}
+#fp{position:absolute;top:4.7em;left:.45em;font-size:.4em;opacity:.85;color:#fff;pointer-events:none;direction:ltr;z-index:6}
 #msg.banner{inset:auto;top:15%;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.4);padding:.3em 1em;border-radius:.8em;pointer-events:none;width:max-content;max-width:92%;flex-direction:row;gap:.5em}
 .gf{width:2.2em;height:2.2em;border-radius:50%;border:3px solid #f5c518;object-fit:cover}
 .fr{display:flex;gap:8px;width:100%}.fb{flex:1;padding:12px 0;border-radius:12px;background:rgba(255,255,255,.14);color:#fff;font-size:1rem}.fb.on{background:var(--accent)}
@@ -81,7 +81,7 @@ button{font:inherit;font-weight:700;border:0;cursor:pointer}
 @keyframes frs{0%{background-position:160% 0}100%{background-position:-60% 0}}
 
 .mav{position:relative;width:96px;height:96px;margin:6px auto 2px;cursor:pointer;flex:none}.mav .av{border:3px solid #f5c518;box-shadow:0 0 14px rgba(245,197,24,.45);font-size:38px}.mav.hasfr{margin:36px auto 32px}
-.mbd{position:absolute;top:.25em;left:.4em;display:flex;align-items:center;gap:.4em;z-index:5;pointer-events:none;direction:ltr}.mbd.r{left:auto;right:2.7em;flex-direction:row-reverse}
+.mbd{position:absolute;top:.25em;left:.4em;display:flex;align-items:center;gap:.4em;z-index:5;pointer-events:none;direction:ltr}.mbd.r{left:auto;right:.4em;flex-direction:row-reverse}
 .mbd .mv{position:relative;width:1.7em;height:1.7em;flex:none}.mbd .av{font-size:.8em;border-width:2px}.mbd span{font-size:.5em;font-weight:700;background:var(--glass);border-radius:.5em;padding:.15em .55em;max-width:8em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#fff}
 .pfx{position:relative;width:100%;max-width:440px;border-radius:26px;padding:16px 14px 18px;background:linear-gradient(180deg,rgba(32,25,14,.93),rgba(12,10,8,.97));border:3px solid var(--tb,#c9a227);box-shadow:inset 0 0 0 2px rgba(0,0,0,.6),0 0 22px rgba(201,162,39,.25);text-align:center;color:#ffe9b0}
 .pfx1{font:800 2.2rem Georgia,"Times New Roman",serif;background:linear-gradient(180deg,#fff0b0,#c9921a);-webkit-background-clip:text;background-clip:text;color:transparent;line-height:1.1}
@@ -115,6 +115,12 @@ body.th1 .pfx:before{top:-9px}body.th1 .pfx:after{bottom:-9px}
 body.th2 .pfx{background:radial-gradient(ellipse at 50% 0,rgba(120,10,18,.92),rgba(14,6,8,.97));border:3px solid #f2c14e;box-shadow:inset 0 0 0 3px #7a0e16,inset 0 0 0 5px #f2c14e,0 0 24px rgba(255,70,50,.55);animation:thGlow 1.8s ease-in-out infinite alternate}
 @keyframes thGlow{0%{box-shadow:0 0 6px rgba(255,60,40,.5),inset 0 0 6px rgba(255,200,80,.3)}100%{box-shadow:0 0 18px rgba(255,90,60,1),inset 0 0 12px rgba(255,220,120,.6)}}
 @keyframes thSheen{to{left:130%}}
+
+.fpic{flex:none;cursor:pointer;padding:6px}.fav{position:relative;flex:none}.fav .av{border-width:2px}
+.frow{position:relative}.fmw{position:relative;flex:none}.fdots{width:42px!important;padding:8px 0!important;font-size:1.3rem;font-weight:900;line-height:1}
+.fmenu{position:absolute;top:100%;left:0;z-index:20;min-width:140px;background:#10261a;border:1px solid rgba(255,255,255,.25);border-radius:12px;padding:6px;display:flex;flex-direction:column;gap:4px;box-shadow:0 10px 24px rgba(0,0,0,.55)}
+.fmenu button{background:rgba(255,255,255,.1);color:#fff;border-radius:9px;padding:10px;font-size:.92rem;text-align:start}.fmenu .dz{color:#ff9a9a}
+.fres{border:2px solid #f5c518}.freq{display:flex!important;flex-direction:row!important;align-items:center;gap:8px;text-align:start}.frq{flex:1;display:flex;flex-direction:column;gap:4px}.frq .rowc .hb{flex:1;padding:9px 4px;font-size:.9rem}
 @keyframes gl{0%{box-shadow:0 0 10px 2px rgba(255,200,0,.55);filter:brightness(1)}100%{box-shadow:0 0 26px 9px rgba(255,235,120,.95);filter:brightness(1.18)}}
 .pack.g{background:linear-gradient(160deg,#ffe27a 0,#c8900a 45%,#3a2400 100%);border-color:#fff3b0;box-shadow:0 8px 24px rgba(0,0,0,.5),0 0 30px rgba(255,215,0,.85)}
 .grid{flex-wrap:wrap}
@@ -286,6 +292,35 @@ function badges(){const p=role==="solo"?null:find(role==="host"?"guest":"host"),
   const mk=(img,col,ini,fr,nm)=>"<div class='mv'>"+(img?"<div class='av' style=\"background:#000 url("+img+") center/cover no-repeat\"></div>":"<div class='av' style='background:"+col+"'>"+ini+"</div>")+frameHTML(fr,.97)+"</div><span>"+esc(nm)+"</span>";
   $("pl1").innerHTML=mk(avOK(prof.avatar)?prof.avatar:"",COLS[prof.col],esc([...me][0]||"👤"),prof.frame,me);
   $("pl2").innerHTML=mk(oa,COLS[(pr.col|0)%COLS.length],role==="solo"?"🤖":esc([...on][0]||"👤"),of,on)}
+
+// ---------- friends: requests, public profiles ----------
+let REQ={},FPC={},fmOpen=-1,fsRes=null,pubSig="",fridOk=false;
+const FFB=()=>window.fbFriends&&window.fbFriends.me&&window.fbFriends.me();
+const cleanN=v=>String(v||"").replace(/[\u0000-\u001f<>]/g,"").slice(0,14);
+function pubData(){const own=[];prof.cards.forEach((c,i)=>{if(c>0&&!isDel(i))own.push(i)});return{name:cleanN(prof.name)||"لاعب",av:getAv64(),fr:prof.frame,lv:lvOf(prof.goals),goals:prof.goals|0,wins:prof.wins|0,fid:prof.fid,cards:own,t:Date.now()}}
+function pubTick(){if(!FFB())return;const F=window.fbFriends;if(!fridOk){fridOk=true;F.regFid(prof.fid).catch(()=>{fridOk=false})}
+  const d=pubData(),sg=JSON.stringify({...d,t:0});if(sg!==pubSig){pubSig=sg;F.pub(d).catch(()=>{pubSig=""})}}
+setInterval(pubTick,5000);
+const fpP={};function fpGet(u,cb){if(!u||!window.fbFriends||fpP[u])return;fpP[u]=1;window.fbFriends.get(u).finally(()=>{delete fpP[u]}).then(v=>{if(v){FPC[u]=v;const f=prof.friends.find(x=>x.u===u);if(f&&v.name&&f.name!==cleanN(v.name)){f.name=cleanN(v.name);saveProf()}cb&&cb(v)}}).catch(()=>{})}
+function faceHTML(d,sz){d=d||{};const img=avOK64(d.av)?d.av:"",nm=cleanN(d.name)||"؟";return"<div class='fav' style='width:"+sz+"px;height:"+sz+"px'>"+(img?"<div class='av' style=\"background:#000 url("+img+") center/cover no-repeat\"></div>":"<div class='av' style='background:#2a6fdb;font-size:"+Math.round(sz*.42)+"px'>"+esc([...nm][0])+"</div>")+frameHTML(Number.isInteger(d.fr)?d.fr:-1,.97)+"</div>"}
+function reqN(){return Object.keys(REQ).length}
+function frStart(){if(frStart.d||!window.fbFriends)return;frStart.d=1;const F=window.fbFriends;
+  F.listenReq(v=>{const old=reqN();REQ={};for(const u in v){const r=v[u];if(r&&typeof r==="object"&&u!==FFB()&&!prof.friends.some(f=>f.u===u))REQ[u]={name:cleanN(r.name)||"لاعب",av:r.av,fr:r.fr,fid:r.fid,t:+r.t||0}}if(reqN()>old)toast("👥 وصلك طلب صداقة جديد ✉️");kboxUpd();if(shopEl&&ibView==="list")inboxStep("list")});
+  F.listenFr(v=>{let ch=false;for(const u in v){if(prof.friends.some(f=>f.u===u))continue;const lg=prof.friends.find(f=>!f.u&&FPC[u]&&f.id===FPC[u].fid);if(lg){lg.u=u;ch=true;continue}
+      F.get(u).then(p=>{if(!p||prof.friends.some(f=>f.u===u))return;FPC[u]=p;const ex=prof.friends.find(f=>f.id===p.fid);if(ex)ex.u=u;else{if(prof.friends.length>=50)return;prof.friends.push({id:/^[A-Z0-9]{6}$/.test(p.fid)?p.fid:"U"+u.slice(0,5).toUpperCase(),name:cleanN(p.name)||"صديق",u});toast("✅ "+(cleanN(p.name)||"صديقك")+" أصبح صديقك")}saveProf();if(home.style.display!=="none"&&hk==="friends")rh("friends",hx)}).catch(()=>{})}
+    const before=prof.friends.length;prof.friends=prof.friends.filter(f=>!f.u||v[f.u]);if(prof.friends.length!==before)ch=true;
+    if(ch){saveProf();if(home.style.display!=="none"&&hk==="friends")rh("friends",hx)}})}
+setInterval(frStart,1500);
+async function frResolve(f){if(f.u||!window.fbFriends)return f.u;try{const u=await window.fbFriends.lookup(f.id);if(u){f.u=u;saveProf()}}catch(_){}return f.u}
+function fprofHTML(u){const d=FPC[u];if(!d)return"<div class='sec'><b>جاري تحميل الملف…</b><button class='hb g' id='fpbk'>رجوع</button></div>";
+  const lv=d.lv|0,cards=Array.isArray(d.cards)?d.cards.filter(i=>Number.isInteger(i)&&i>=0&&i<NC()&&!isDel(i)):[];
+  const tiles=cards.map(i=>"<div class='pfxt"+(ctm(i)==="g"?" gold":ctm(i)==="u"?" bglow":"")+"' style='cursor:default'><img src='"+cardURL(i)+"'></div>").join("");
+  const isF=prof.friends.some(f=>f.u===u);
+  return"<div class='pfx'><div class='pfx1'>Profile</div><div class='pfx2'>ملف صديقك</div><div class='pfxh'><div class='mav"+(Number.isInteger(d.fr)&&d.fr>=0?" hasfr":"")+"' style='cursor:default'>"+faceHTML(d,96).replace(/^<div class='fav'[^>]*>/,"").replace(/<\/div>$/,"")+"</div><div class='pfxn'>"+esc(cleanN(d.name)||"لاعب")+"</div></div>"
+   +"<div class='pfxc'><div class='pfxl'>المستوى "+lv+"</div><div class='pfxb'><i style='width:"+(lv>=MAXL?100:((d.goals|0)%PER)/PER*100)+"%'></i><span>LVL "+lv+"</span></div><div class='pfxr'><span>الأهداف</span><b>"+(d.goals|0)+"</b></div><div class='pfxr'><span>الانتصارات</span><b>"+(d.wins|0)+"</b></div><div class='pfxr'><span>الترتيب</span><b class='rk'>"+rankOf(lv)+"</b></div><div class='pfxr'><span>رمز الصداقة</span><b style='direction:ltr'>"+esc(String(d.fid||""))+"</b></div></div>"
+   +(isF?"":"<button class='hb' id='fsend' data-u='"+esc(u)+"'>➕ إرسال طلب صداقة</button>")
+   +"<div class='pfx3'>بطاقات صديقك</div><div class='pfxg'>"+(tiles||"<small style='grid-column:1/-1'>لا توجد بطاقات بعد</small>")+"</div><button class='hb g' id='fpbk' style='margin-top:12px'>↩ رجوع</button></div>"}
+function openFprof(u){if(!u)return;fpGet(u,()=>{if(hk==="fprof"&&hx===u)rh("fprof",u)});rh("fprof",u)}
 function fshopHTML(){fixFr();const kk=keysOf(),ini=esc([...(prof.name||"؟")][0]);
   return"<div class='sec'><b>🛒 المتجر — الإطارات والأنماط</b><div class='keys'>🔑 "+kk+" مفتاح</div>"+FRD.map((f,i)=>{const own=prof.fr[i],eq=prof.frame===i;return"<div style='background:rgba(255,255,255,.07);border-radius:16px;padding:8px 10px;margin:6px 0;text-align:center'><div class='fpv'>"+avHTML(ini)+frameHTML(i,.97)+"</div><b>"+f.n+(f.an?" ✨":"")+"</b>"+(own?(eq?"<button class='hb g' id='fx"+i+"'>✓ مجهّز — اضغط للإزالة</button>":"<button class='hb' id='fb"+i+"'>تجهيز الإطار</button>"):"<button class='hb' id='fb"+i+"'"+(kk>=f.p?"":" style='opacity:.55'")+">🔑 "+f.p+" شراء</button>")+"</div>"}).join("")+themesShopHTML()+"<button class='hb g' id='pkbk'>رجوع</button></div>"}
 function fixTemp(){fixFr();if(!avOK(prof.avatar))prof.avatar="";prof.tk=(Array.isArray(prof.tk)?prof.tk:[]).filter(e=>e&&+e.n>0&&+e.u>0).slice(0,40).map(e=>({n:e.n|0,u:+e.u})).sort((a,b)=>a.u-b.u);prof.tc=(Array.isArray(prof.tc)?prof.tc:[]).filter(e=>e&&(e.c|0)>=0&&(e.c|0)<999&&+e.u>0).slice(0,14).map(e=>({c:e.c|0,u:+e.u}))}
@@ -322,14 +357,14 @@ let pkSig="";setInterval(()=>{pkFix();const g=actPk().join()+"|"+PKCFG.t.c.join(
 function rh(k,x){revStop();hk=k;hx=x;kboxUpd();
   const lv=lvOf(prof.goals),pct=lv>=MAXL?100:(prof.goals%PER)/PER*100,ini=prof.name?esc([...prof.name][0]):"👤";
   applyTheme();getAv64();
-  let h=k==="prof"?"":"<div class='mav"+(prof.frame>=0?" hasfr":"")+"' id='av'>"+avHTML(ini)+frameHTML(prof.frame,.97)+"</div><h1>⚽ كرة القدم</h1>";
+  let h=k==="prof"||k==="fprof"?"":"<div class='mav"+(prof.frame>=0?" hasfr":"")+"' id='av'>"+avHTML(ini)+frameHTML(prof.frame,.97)+"</div><h1>⚽ كرة القدم</h1>";
   if(k==="name")h+="<div class='sec'>اكتب اسمك<input id='ni' maxlength='12' placeholder='اسم اللاعب' value='"+esc(prof.name)+"'><button class='hb' id='sv'>حفظ</button></div>";
   else if(k==="menu")h+="<div id='flip'>"+flipHTML()+"</div><div class='sec'><button class='hb' id='m1'>🤖 ضد الكمبيوتر</button><button class='hb' id='m2'>👥 أنشئ غرفة مع صديق</button><button class='hb g' id='frb'>👥 الأصدقاء</button><button class='hb g' id='fsb'>🛒 المتجر</button><button class='hb g' id='pkb'>🎁 الباكجات"+(keysOf()?" 🔑"+keysOf():"")+"</button><div class='or'>أو ادخل غرفة صديقك</div><div class='rowc'><input id='ci' inputmode='numeric' maxlength='4' placeholder='الرمز'><button class='hb g' id='m3'>ادخل</button></div><small id='nt'>"+(R?"":"جاري تجهيز الأونلاين…")+(ren?"":" ⚠️ المجسّم ثلاثي الأبعاد غير متاح")+"</small><small id='cl'>"+cloudSt+"</small></div>";
   else if(k==="lobby")h+="<div class='sec'>رمز الدعوة<div class='code'>"+esc(x)+"</div><button class='hb g' id='cpc'>📋 نسخ رمز الدعوة</button><button class='hb' id='afr'>👥 إضافة صديق إلى الغرفة</button><small>أرسل رمز الدعوة لصديقك ليدخله، أو اختر صديقًا من قائمتك<br>بانتظار الصديق…</small><button class='hb g' id='bk2'>إلغاء</button></div>";
   else if(k==="join")h+="<div class='sec'>جاري الاتصال بالغرفة "+esc(x)+"…<button class='hb g' id='bk2'>إلغاء</button></div>";
   else if(k==="packs")h+=packsHTML();
   else if(k==="friends")h+=friendsHTML(x);
-  else if(k==="prof")h+=profHTML();   else if(k==="fshop")h+=fshopHTML();   else if(k==="acct")h+="<div class='sec'>"+(ACC?"✅ "+esc(ACC.email)+"<button class='hb g' id='alo'>تسجيل خروج</button>":"<input id='ae' type='email' placeholder='البريد الإلكتروني' style='direction:ltr'><input id='ap' type='password' placeholder='كلمة المرور' style='direction:ltr'><button class='hb' id='aln'>تسجيل دخول</button><button class='hb g' id='arg'>إنشاء حساب جديد</button>")+"<small>"+esc(amsg)+"</small><button class='hb g' id='bk2'>رجوع</button></div>";
+  else if(k==="prof")h+=profHTML();   else if(k==="fprof")h+=fprofHTML(x);   else if(k==="fshop")h+=fshopHTML();   else if(k==="acct")h+="<div class='sec'>"+(ACC?"✅ "+esc(ACC.email)+"<button class='hb g' id='alo'>تسجيل خروج</button>":"<input id='ae' type='email' placeholder='البريد الإلكتروني' style='direction:ltr'><input id='ap' type='password' placeholder='كلمة المرور' style='direction:ltr'><button class='hb' id='aln'>تسجيل دخول</button><button class='hb g' id='arg'>إنشاء حساب جديد</button>")+"<small>"+esc(amsg)+"</small><button class='hb g' id='bk2'>رجوع</button></div>";
   else if(k==="fail")h+="<div class='sec'>ما لقيت غرفة بهذا الرمز 😕<button class='hb g' id='bk2'>رجوع</button></div>";
   if(k==="set")h=h.replace("<h1>⚽ كرة القدم</h1>","")+setHTML();
   $("hb").innerHTML=h;if(k==="set")paintPV();if(k==="packs"&&pkRes!==null&&pkRes>=0)startReveal(pkRes)}
@@ -371,7 +406,7 @@ home.addEventListener("click",e=>{const fb=e.target.closest("[data-f]");if(fb){p
     prof.frame=i;saveProf();return rh("fshop")}}
   if(id==="pkb"){pkRes=null;return rh("packs")}
   if(id==="pkbk")return rh("menu");
-  if(id==="frb"){fmsg="";return rh("friends","")}
+  if(id==="frb"){fmsg="";fmOpen=-1;fsRes=null;return rh("friends","")}
   if(id==="afr"){fmsg="";return rh("friends","lobby")}
   if(id==="frbk")return hx==="lobby"?rh("lobby",code):rh(prof.name?"menu":"name");
   if(id==="cpf")return copyTxt(prof.fid,el);
@@ -379,7 +414,15 @@ home.addEventListener("click",e=>{const fb=e.target.closest("[data-f]");if(fb){p
   if(id==="addf")return addFriend($("fi").value);
   if(id==="inj"){const c=el.dataset.c,b=$("invb");b&&b.remove();return joinRoom(c)}
   if(id==="ind"){const b=$("invb");b&&b.remove();return}
-  {const g=/^(inv|del)_([A-Z0-9]{6})$/.exec(id);if(g){if(g[1]==="del"){prof.friends=prof.friends.filter(f=>f.id!==g[2]);saveProf();return rh("friends",hx)}return sendInvite(g[2],el)}}
+  {const g=/^inv_([A-Z0-9]{6})$/.exec(id);if(g)return sendInvite(g[1],el)}
+  {const g=/^f([mvd])_(\d+)$/.exec(id);if(g){const i=+g[2],f=prof.friends[i];if(!f)return;
+    if(g[1]==="m"){fmOpen=fmOpen===i?-1:i;return rh("friends",hx)}
+    fmOpen=-1;
+    if(g[1]==="d"){if(f.u&&window.fbFriends)window.fbFriends.remove(f.u).catch(()=>{});prof.friends.splice(i,1);saveProf();toast("🗑 تم حذف "+f.name);return rh("friends",hx)}
+    if(f.u)return openFprof(f.u);fmsg="جاري فتح الملف…";rh("friends",hx);frResolve(f).then(u=>{if(u)openFprof(u);else{fmsg="صديقك لم يحدّث اللعبة بعد، لا يوجد ملف";rh("friends",hx)}});return}}
+  if(id==="fsv"){if(fsRes)return openFprof(fsRes.u);return}
+  if(id==="fsend")return sendReq(el.dataset.u,el);
+  if(id==="fpbk")return rh(hx&&prof.friends.some(f=>f.u===hx)||fsRes?"friends":"menu","");
   if(id==="selp"){if(pkRes!==null&&pkRes>=0&&prof.cards[pkRes]){prof.sel=pkRes;saveProf();refreshSel()}return}
   if(id==="unsel"){prof.sel=-1;saveProf();refreshSel();return}
   {const g=/^gc(\d+)$/.exec(id);if(g){const i=+g[1];if(pkBusy||!prof.cards[i])return;{const a=actPk(),f=a.find(p=>pkCards(p).includes(i));if(f!==undefined)pkSel=f}pkRes=i;return rh("packs")}}
@@ -401,7 +444,7 @@ home.addEventListener("click",e=>{const fb=e.target.closest("[data-f]");if(fb){p
     else{const c=$("ci").value.trim();if(c.length!==4)return;role="guest";code=c;state="join";lostT=0;lastSt=null;joinT=0;R.presence({code,role:"guest",...mp});rh("join",c)}}});
 msg.addEventListener("click",e=>{const id=e.target.id;if(id==="bk2")toMenu();else if(id==="again")role==="host"?startMatch():startSolo()});
 function enterMatch(){if(wrap.style.display!=="block"){home.style.display="none";wrap.style.display="block";lockLand()}fit();names();setColors()}
-function names(){badges();const p=role==="solo"?null:find(role==="host"?"guest":"host");$("nm").textContent=(role==="solo"?"الكمبيوتر":(p&&p.presence.name)||"الخصم")+"  ⚔  "+(prof.name||"أنت")}
+let avSent="";function names(){badges();if(R&&online()){const a=getAv64(),k=a.length+"|"+prof.frame;if(k!==avSent){avSent=k;try{R.presence({av:a,fr:prof.frame}).catch(()=>{avSent=""})}catch(_){avSent=""}}}const p=role==="solo"?null:find(role==="host"?"guest":"host");$("nm").textContent=(role==="solo"?"الكمبيوتر":(p&&p.presence.name)||"الخصم")+"  ⚔  "+(prof.name||"أنت")}
 function toast(s){const e=$("toast");e.textContent=s;e.style.opacity=1;clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.opacity=0,3000)}
 function addGoal(){const o=lvOf(prof.goals);prof.goals++;saveProf();const n=lvOf(prof.goals);if(n>o)toast("🎉 المستوى "+n+" • 🔑 مفتاح باكج جديد")}
 function startSolo(){role="solo";score=[0,0];left=MATCH;upd();resetPos();state="play";hide();enterMatch()}
@@ -445,8 +488,9 @@ function step(){
   if(B.y<B.r){B.y=B.r;B.vy*=-.8}if(B.y>H-B.r){B.y=H-B.r;B.vy*=-.8}
   const crY=ln=>{const d=B.x-pbx;if(!d)return B.y;const t=Math.max(0,Math.min(1,(ln-pbx)/d));return pby+(B.y-pby)*t};
   let inMouth=Math.abs(B.y-GY)<GH;
-  if(B.x>W+B.r&&inMouth){if(own||Math.abs(crY(W)-GY)<GH)return goal(0);B.x=W-B.r;B.vx=-Math.abs(B.vx)*.6;own=null;pickCd=15}
-  if(B.x<-B.r&&inMouth){if(own||Math.abs(crY(0)-GY)<GH)return goal(1);B.x=B.r;B.vx=Math.abs(B.vx)*.6;own=null;pickCd=15}
+  const fwd=(dir)=>Math.sign(B.vx||dir)===dir&&Math.abs(B.vx)>=Math.abs(B.vy)*.7;
+  if(B.x>W+B.r&&inMouth){if(pbx<=W+B.r&&Math.abs(crY(W)-GY)<GH-B.r&&fwd(1))return goal(0);B.x=W-B.r;B.vx=-Math.abs(B.vx)*.6;own=null;pickCd=15}
+  if(B.x<-B.r&&inMouth){if(pbx>=-B.r&&Math.abs(crY(0)-GY)<GH-B.r&&fwd(-1))return goal(1);B.x=B.r;B.vx=Math.abs(B.vx)*.6;own=null;pickCd=15}
   if(B.x<B.r&&!inMouth){B.x=B.r;B.vx*=-.8}
   if(B.x>W-B.r&&!inMouth){B.x=W-B.r;B.vx*=-.8}
 }
@@ -554,16 +598,21 @@ function syncPres(){if(R&&!online())try{R.presence({fid:prof.fid,name:prof.name}
 function copyTxt(t,btn){const o=btn.textContent,ok=()=>{btn.textContent="✓ تم النسخ";setTimeout(()=>{btn.textContent=o},1500)},fb=()=>{try{const a=document.createElement("textarea");a.value=t;a.style.cssText="position:fixed;opacity:0";document.body.appendChild(a);a.select();const r=document.execCommand("copy");a.remove();r?ok():btn.textContent="انسخ الرمز يدويًا"}catch(_){btn.textContent="انسخ الرمز يدويًا"}};
   try{navigator.clipboard.writeText(t).then(ok,fb)}catch(_){fb()}}
 function friendsHTML(x){const lob=x==="lobby",fl=prof.friends||[];
-  const rows=fl.map(f=>"<div class='frow'><div class='pn'><b>"+esc(f.name)+"</b><small>"+(isOnline(f.id)?"🟢 متصل الآن":"⚪ غير متصل")+"</small></div>"+(lob?"<button class='hb' id='inv_"+f.id+"'>🎮 دعوة</button>":"")+"<button class='hb g' id='del_"+f.id+"' aria-label='حذف'>🗑</button></div>").join("");
-  return"<div class='sec'><b>👥 الأصدقاء</b>"+(lob?"<small>اختر صديقًا لدعوته إلى غرفتك • رمز الدعوة: <b>"+esc(code)+"</b></small>":"")+"<small>رمز صداقتك (أعطه لأصدقائك ليضيفوك)</small><div class='code' style='font-size:2rem'>"+esc(prof.fid)+"</div><button class='hb g sm' id='cpf'>📋 نسخ رمز صداقتي</button><div class='rowc'><input id='fi' maxlength='6' placeholder='رمز صديقك'><button class='hb' id='addf'>➕ إضافة</button></div><small>"+esc(fmsg)+"</small>"+(fl.length?rows:"<div class='or'>ليس لديك أصدقاء حاليًا</div>")+"<button class='hb g' id='frbk'>رجوع</button></div>"}
-function addFriend(raw){const id=String(raw||"").toUpperCase().replace(/[^A-Z0-9]/g,"");
-  if(id.length!==6)fmsg="رمز الصديق مكوّن من 6 خانات";else if(id===prof.fid)fmsg="هذا رمزك أنت 😄";else if(prof.friends.some(f=>f.id===id))fmsg="هو صديقك أصلًا";else if(prof.friends.length>=50)fmsg="وصلت للحد الأقصى من الأصدقاء";
-  else{const p=R&&peersL().find(p=>!p.isMe&&p.presence&&p.presence.fid===id),nm=String((p&&p.presence.name)||"صديق "+id).replace(/[\u0000-\u001f<>]/g,"").slice(0,14);prof.friends.push({id,name:nm});saveProf();fmsg="✓ تمت إضافة "+nm}
-  rh("friends",hx)}
+  fl.forEach(f=>{if(f.u&&!FPC[f.u]){fpGet(f.u,()=>{if(hk==="friends")rh("friends",hx)})}});
+  const rows=fl.map((f,i)=>{const d=f.u&&FPC[f.u]?FPC[f.u]:{name:f.name};return"<div class='frow'><div class='fpic' id='fv_"+i+"'>"+faceHTML(d,46)+"</div><div class='pn'><b>"+esc(f.name)+"</b><small>"+(isOnline(f.id)?"🟢 متصل الآن":"⚪ غير متصل")+"</small></div>"+(lob?"<button class='hb' id='inv_"+f.id+"'>🎮 دعوة</button>":"")+"<div class='fmw'><button class='hb g fdots' id='fm_"+i+"' aria-label='خيارات'>⋮</button>"+(fmOpen===i?"<div class='fmenu'><button id='fv_"+i+"'>👤 عرض الملف</button><button id='fd_"+i+"' class='dz'>🗑 حذف</button></div>":"")+"</div></div>"}).join("");
+  const sr=fsRes?"<div class='frow fres'><div class='fpic' id='fsv'>"+faceHTML(fsRes.d,52)+"</div><div class='pn'><b>"+esc(cleanN(fsRes.d.name)||"لاعب")+"</b><small>المستوى "+(fsRes.d.lv|0)+" • "+esc(fsRes.fid)+"</small></div>"+(prof.friends.some(f=>f.u===fsRes.u)?"<small>صديقك ✓</small>":"<button class='hb' id='fsend' data-u='"+esc(fsRes.u)+"'>➕ طلب صداقة</button>")+"</div>":"";
+  return"<div class='sec'><b>👥 الأصدقاء</b>"+(lob?"<small>اختر صديقًا لدعوته إلى غرفتك • رمز الدعوة: <b>"+esc(code)+"</b></small>":"")+"<small>رمز صداقتك (أعطه لأصدقائك ليضيفوك)</small><div class='code' style='font-size:2rem'>"+esc(prof.fid)+"</div><button class='hb g sm' id='cpf'>📋 نسخ رمز صداقتي</button><div class='rowc'><input id='fi' maxlength='6' placeholder='رمز صديقك'><button class='hb' id='addf'>🔍 بحث</button></div><small>"+esc(fmsg)+"</small>"+sr+(fl.length?rows:"<div class='or'>ليس لديك أصدقاء حاليًا</div>")+"<button class='hb g' id='frbk'>رجوع</button></div>"}
+function addFriend(raw){const id=String(raw||"").toUpperCase().replace(/[^A-Z0-9]/g,"");fsRes=null;
+  if(id.length!==6){fmsg="رمز الصديق مكوّن من 6 خانات";return rh("friends",hx)}if(id===prof.fid){fmsg="هذا رمزك أنت 😄";return rh("friends",hx)}
+  if(!window.fbFriends||!FFB()){fmsg="❌ ملف shim قديم أو لا يوجد اتصال — أعد بناء التطبيق";return rh("friends",hx)}
+  fmsg="🔍 جاري البحث…";rh("friends",hx);
+  window.fbFriends.lookup(id).then(u=>{if(!u){fmsg="ما لقيت لاعب بهذا الرمز";return rh("friends",hx)}return window.fbFriends.get(u).then(d=>{FPC[u]=d||{fid:id};fsRes={u,fid:id,d:d||{name:"لاعب "+id}};fmsg="";rh("friends",hx)})}).catch(e=>{fmsg=/permission/i.test(String(e&&(e.code||e.message)))?"القواعد ترفض البحث — انشر قواعد Firebase الجديدة":"تعذّر البحث، تأكد من الإنترنت";rh("friends",hx)})}
+function sendReq(u,btn){if(!u||!window.fbFriends)return;if(prof.friends.length>=50){toast("وصلت للحد الأقصى من الأصدقاء");return}btn&&(btn.disabled=true);
+  const d=pubData();window.fbFriends.request(u,{name:d.name,av:d.av,fr:d.fr,fid:d.fid,t:Date.now()}).then(()=>{if(btn){btn.textContent="✓ أُرسل الطلب"}toast("📨 أُرسل طلب الصداقة")}).catch(e=>{btn&&(btn.disabled=false);toast(/permission/i.test(String(e&&(e.code||e.message)))?"القواعد ترفض الطلب — انشر قواعد Firebase":"تعذّر الإرسال")})}
 function sendInvite(fid,btn){if(!R||state!=="lobby"){fmsg="الأونلاين غير متاح هنا";return rh("friends",hx)}
   myInv=myInv.filter(e=>e.to!==fid).slice(-5);myInv.push({to:fid,c:code,t:Date.now()});try{R.presence({inv:myInv}).catch(()=>{})}catch(_){}
   btn.textContent=isOnline(fid)?"✓ تمت الدعوة":"✓ أُرسلت (غير متصل الآن)";btn.disabled=true}
-function joinRoom(c){unlock();goFS();if(!R)return;role="guest";code=c;state="join";lostT=0;lastSt=null;joinT=0;R.presence({code,role:"guest",name:prof.name,col:prof.col,lv:lvOf(prof.goals),sel:prof.sel});rh("join",c)}
+function joinRoom(c){unlock();goFS();if(!R)return;role="guest";code=c;state="join";lostT=0;lastSt=null;joinT=0;R.presence({code,role:"guest",name:prof.name,col:prof.col,lv:lvOf(prof.goals),sel:prof.sel,av:getAv64(),fr:prof.frame});rh("join",c)}
 function showInvite(name,c){const o=$("invb");o&&o.remove();const d=document.createElement("div");d.id="invb";d.innerHTML="<b>🎮 "+esc(name)+" يدعوك للعب</b><div class='rowc'><button class='hb' id='inj' data-c='"+esc(c)+"'>انضم</button><button class='hb g' id='ind'>تجاهل</button></div>";home.appendChild(d);setTimeout(()=>{d.isConnected&&d.remove()},45000)}
 function invTick(){if(!R||frame%30)return;
   const ps=peersL().filter(p=>!p.isMe&&p.presence);
@@ -746,7 +795,7 @@ upd();clock();applyUI();rh(prof.name?"menu":"name");
 // ---------- المفاتيح والوارد ولوحة الإدارة ----------
 function kboxUpd(){const ab=$("abox");if(ab)ab.style.display=(hk==="menu"&&isAdm())?"flex":"none";
   const ib=$("ibox");if(ib){const d=hk==="menu"?"flex":"none";if(ib.style.display!==d)ib.style.display=d}
-  const dt=$("idot");if(dt){const d=IB.unread>0?"block":"none";if(dt.style.display!==d)dt.style.display=d}
+  const dt=$("idot");if(dt){const d=(IB.unread+reqN())>0?"block":"none";if(dt.style.display!==d)dt.style.display=d}
   const b=$("kbox");if(!b)return;b.style.display=hk==="menu"?"flex":"none";const t="🔑 "+keysOf();if(b.textContent!==t)b.textContent=t;
   const e=$("pkb");if(e){const u="🎁 الباكجات"+(keysOf()?" 🔑"+keysOf():"");if(e.textContent!==u)e.textContent=u}}
 function loadCredit(){if(!window.fbShop)return;window.fbShop.credit().then(v=>{v=+v||0;if(v!==shopCredit){shopCredit=v;try{localStorage.setItem("fb_credit",String(v))}catch(_){}kboxUpd()}}).catch(()=>{})}
@@ -784,7 +833,8 @@ function openInbox(){openShop();inboxStep("list")}
 function openAdmin(){if(!isAdm())return;openShop();admStep("adm")}
 function inboxStep(st,id){if(!shopEl)return;const x="<button class='hb g sm' data-a='close'>إغلاق</button>";
   if(st==="list"){ibView="list";ibRes="";const L=IB.list;
-    shopPanel("<h3>✉️ الوارد</h3>"+(L.length?L.map(m=>"<button class='ord im"+(m.r?"":" un")+"' data-a='imsg' data-id='"+esc(m.id)+"'><b>"+(m.gift?"🎁 ":"✉️ ")+esc(m.title||"رسالة")+(m.r?"":" 🔴")+"</b><span>"+fmtDate(m.t)+(m.gift&&!m.c?" • بانتظار الاستلام":"")+"</span></button>").join(""):"<p>لا توجد رسائل</p>")+x)}
+    const RQ=Object.keys(REQ).sort((a,b)=>REQ[b].t-REQ[a].t).map(u=>{const r=REQ[u];return"<div class='ord freq'><div class='fpic' data-a='frv' data-u='"+esc(u)+"'>"+faceHTML(r,56)+"</div><div class='frq'><b>"+esc(r.name)+"</b><span>👥 يريد إضافتك صديقًا</span><div class='rowc'><button class='hb' data-a='facc' data-u='"+esc(u)+"'>✅ قبول</button><button class='hb g' data-a='frej' data-u='"+esc(u)+"'>❌ رفض</button></div></div></div>"}).join("");
+     shopPanel("<h3>✉️ الوارد</h3>"+(RQ?"<div class='kk'>طلبات الصداقة</div>"+RQ+"<div class='kk'>الرسائل</div>":"")+(L.length?L.map(m=>"<button class='ord im"+(m.r?"":" un")+"' data-a='imsg' data-id='"+esc(m.id)+"'><b>"+(m.gift?"🎁 ":"✉️ ")+esc(m.title||"رسالة")+(m.r?"":" 🔴")+"</b><span>"+fmtDate(m.t)+(m.gift&&!m.c?" • بانتظار الاستلام":"")+"</span></button>").join(""):"<p>لا توجد رسائل</p>")+x)}
   else if(st==="msg"){const m=IB.list.find(v=>v.id===id);if(!m)return inboxStep("list");ibView="msg:"+id;
     if(!m.r&&window.fbInbox)window.fbInbox.markRead(id);
     shopPanel("<h3>"+(m.gift?"🎁 ":"✉️ ")+esc(m.title||"رسالة")+"</h3><div class='kk'>من الإدارة • "+fmtDate(m.t)+"</div>"+(m.text?"<div class='info'>"+esc(m.text)+"</div>":"")
@@ -802,6 +852,10 @@ async function shopClick(e){
   if(a==="ilist"){inboxStep("list");return}
   if(a==="imsg"){inboxStep("msg",b.dataset.id);return}
   if(a==="iclaim"){iClaim(b.dataset.id,b);return}
+  if(a==="frv"){const u=b.dataset.u,r=REQ[u];if(r)FPC[u]=FPC[u]||{...r};closeShop();home.style.display!=="none"&&openFprof(u);return}
+  if(a==="facc"||a==="frej"){const u=b.dataset.u,r=REQ[u];if(!u||!window.fbFriends)return;b.disabled=true;
+    try{if(a==="facc"){await window.fbFriends.accept(u);if(r&&!prof.friends.some(f=>f.u===u)&&prof.friends.length<50){prof.friends.push({id:/^[A-Z0-9]{6}$/.test(r.fid)?r.fid:"U"+u.slice(0,5).toUpperCase(),name:r.name,u});saveProf()}toast("✅ أصبحتما أصدقاء")}else{await window.fbFriends.reject(u);toast("تم رفض الطلب")}}catch(e){b.disabled=false;smsg(/permission/i.test(String(e&&(e.code||e.message)))?"القواعد ترفض العملية — انشر قواعد Firebase الجديدة":"تعذّرت العملية، تأكد من الإنترنت");return}
+    delete REQ[u];kboxUpd();inboxStep("list");return}
   await admClick(a,b)}
 function shopChange(e){const t=e.target;if(t.id==="gk"){$("gnw").style.display=t.value==="keys"?"":"none";$("gcw").style.display=t.value==="card"?"":"none"}else if(t.id==="gt")$("gdw").style.display=t.value==="1"?"":"none";else if(t.id==="nf")ncPick(t.files&&t.files[0])}
 
