@@ -1055,7 +1055,7 @@ function bsSeen(){let a=[];try{a=JSON.parse(localStorage.getItem("fb_bsseen")||"
 function bsDeal(ci){const seen=bsSeen(),n=BCATS[ci].p.length,key=i=>ci+"-"+i,fresh=bsShuf(n).filter(i=>!seen.includes(key(i))),old=bsShuf(n).filter(i=>seen.includes(key(i))).sort((a,b)=>seen.indexOf(key(a))-seen.indexOf(key(b)));
   const pick=fresh.concat(old).slice(0,3),pk=pick.map(key);try{localStorage.setItem("fb_bsseen",JSON.stringify(seen.filter(k=>!pk.includes(k)).concat(pk).slice(-150)))}catch(_){}return pick}
 function bsCatPick(){let rc=[];try{rc=JSON.parse(localStorage.getItem("fb_bscats")||"[]")}catch(_){}if(!Array.isArray(rc))rc=[];const all=bsShuf(BCATS.length),cats=all.filter(c=>!rc.includes(c)).concat(all.filter(c=>rc.includes(c))).slice(0,BR);
-  try{localStorage.setItem("fb_bscats",JSON.stringify(cats))}catch(_){}return bsShuf(cats.length).map(i=>cats[i])}
+  try{localStorage.setItem("fb_bscats",JSON.stringify(cats))}catch(_){}const av=c=>{const p=BCATS[c].p;return p.reduce((a,x)=>a+x[3]+x[4],0)/p.length};return cats.slice().sort((a,b)=>av(a)-av(b))}
 function bsNew(oppName){const cats=bsCatPick();return{g:"bs",n:1,r:0,ph:"intro",cat:cats,c:bsDeal(cats[0]),own:[-1,-1,-1],turn:0,w:[0,0],used:[{sw:0,ex:0,x2:0},{sw:0,ex:0,x2:0}],sub:[null,null],res:null,tl:BT.intro,nm:[cleanN(prof.name)||"أنت",oppName],win:-2}}
 function bsSet(ph,ms){BS.ph=ph;BS.n++;bsDL=Date.now()+ms;BS.tl=ms;bsPub()}
 function bsPub(){if(role==="host"&&R){BS.tl=Math.max(0,bsDL-Date.now());try{R.presence({bs:JSON.parse(JSON.stringify(BS))}).catch(()=>{})}catch(_){}}bsRender(true)}
@@ -1128,9 +1128,9 @@ const SFX={
  confirm(){tone(660,.08,{type:"triangle"});tone(990,.14,{at:.08,v:.12})},
  flip(){noise(.2,{f0:2200,f1:500,v:.18});tone(220,.12,{type:"triangle",at:.05,v:.08})},
  up(i){for(let k=0;k<3;k++)coin(k*.055+Math.random()*.03,2000+Math.random()*1800+i*60,.07)},
- dn(i){wah(0,262*Math.pow(.97,i),.32,.1)},
+ dn(i){tone(660*Math.pow(.965,i),.16,{type:"sine",to:520*Math.pow(.965,i),v:.06});tone(330*Math.pow(.965,i),.2,{type:"triangle",at:.02,v:.035})},
  gain(){for(let k=0;k<16;k++)coin(k*.06+Math.random()*.04,1800+Math.random()*2600,.09);[784,1046,1318].forEach((f,i)=>tone(f,.35,{type:"triangle",at:.9+i*.08,v:.1}))},
- loss(){[294,277,262].forEach((f,i)=>wah(i*.42,f,.38,.13));wah(1.26,247,1.0,.13)},
+ loss(){[587,523,440,392].forEach((f,i)=>tone(f,.5,{type:"sine",at:i*.18,v:.08}));tone(196,1.1,{type:"triangle",at:.7,to:174,v:.06})},
  flat(){tone(600,.25,{v:.08});tone(600,.25,{at:.2,v:.06})},
  swap(){noise(.35,{f0:300,f1:3000,v:.2});tone(480,.3,{type:"triangle",to:960,at:.08,v:.08})},
  board(){[392,494,587].forEach((f,i)=>tone(f,.7,{at:i*.09,v:.08}))},
