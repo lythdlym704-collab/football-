@@ -121,6 +121,21 @@ body.th2 .pfx{background:radial-gradient(ellipse at 50% 0,rgba(120,10,18,.92),rg
 .fmenu{position:absolute;top:100%;left:0;z-index:20;min-width:140px;background:#10261a;border:1px solid rgba(255,255,255,.25);border-radius:12px;padding:6px;display:flex;flex-direction:column;gap:4px;box-shadow:0 10px 24px rgba(0,0,0,.55)}
 .fmenu button{background:rgba(255,255,255,.1);color:#fff;border-radius:9px;padding:10px;font-size:.92rem;text-align:start}.fmenu .dz{color:#ff9a9a}
 .fres{border:2px solid #f5c518}.freq{display:flex!important;flex-direction:row!important;align-items:center;gap:8px;text-align:start}.frq{flex:1;display:flex;flex-direction:column;gap:4px}.frq .rowc .hb{flex:1;padding:9px 4px;font-size:.9rem}
+
+.lbinfo{width:100%;background:rgba(245,197,24,.12);border:1px solid rgba(245,197,24,.4);border-radius:12px;padding:8px;font-size:.92rem}
+.lbr{display:flex;align-items:center;gap:8px;width:100%;background:rgba(255,255,255,.08);border-radius:14px;padding:4px 10px}.lbr.me{outline:2px solid #2ecc71}
+.lbr.t0{background:linear-gradient(90deg,rgba(255,200,0,.35),rgba(255,255,255,.06))}.lbr.t1{background:linear-gradient(90deg,rgba(200,200,210,.3),rgba(255,255,255,.06))}.lbr.t2{background:linear-gradient(90deg,rgba(205,127,50,.32),rgba(255,255,255,.06))}
+.lbn{width:30px;font-weight:800;font-size:1.1rem;text-align:center}.lbm{flex:1;text-align:start;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.lbg{font-weight:800;color:#ffd35a}
+#home .fb[data-f]{background:#000!important;color:#fff!important;border:1px solid rgba(255,255,255,.28)!important;border-radius:12px!important;clip-path:none!important;animation:none!important;position:relative;overflow:visible}
+#home .fb[data-f]:before{display:none!important}
+#home .fb[data-f].on{border-color:#2ecc71!important;box-shadow:0 0 8px rgba(46,204,113,.6)}
+#home .fb[data-f].on:after{content:"✅";position:absolute;top:-8px;right:-6px;left:auto;bottom:auto;width:auto;height:auto;background:none!important;font-size:.8rem;animation:none!important;transform:none;margin:0;border:0}
+#home .fb[data-f],body.th0 #home .fb[data-f],body.th1 #home .fb[data-f],body.th2 #home .fb[data-f]{position:relative;background:#0b0b0b!important;color:#fff!important;border:2px solid #333!important;border-radius:12px!important;clip-path:none!important;animation:none!important;box-shadow:0 3px 8px rgba(0,0,0,.5)!important;overflow:visible!important}
+#home .fb[data-f].on{border-color:#2ecc71!important}#home .fb[data-f]:before{display:none!important}
+#home .fb[data-f].on:after{content:"✅";position:absolute;top:-7px;right:-6px;left:auto;bottom:auto;width:auto;height:auto;background:none!important;font-size:.85rem;line-height:1;animation:none!important;transform:none}
+.lbch{width:100%;display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 10px 12px;border-radius:18px;background:radial-gradient(ellipse at 50% 30%,rgba(255,210,60,.35),rgba(255,255,255,.04) 70%);border:2px solid #f5c518;box-shadow:0 0 18px rgba(245,197,24,.35);cursor:pointer}
+.lbch .fav{margin:22px 0 18px}.lbch b{font-size:1.35rem;color:#ffd96a}.lbch span{font-size:.9rem;opacity:.9}.lbcr{font-size:2rem;line-height:1;margin-bottom:-14px;z-index:5}
+.lbp{display:flex;align-items:center;gap:10px;cursor:pointer;text-align:start}.lbp .fav{margin:6px}
 @keyframes gl{0%{box-shadow:0 0 10px 2px rgba(255,200,0,.55);filter:brightness(1)}100%{box-shadow:0 0 26px 9px rgba(255,235,120,.95);filter:brightness(1.18)}}
 .pack.g{background:linear-gradient(160deg,#ffe27a 0,#c8900a 45%,#3a2400 100%);border-color:#fff3b0;box-shadow:0 8px 24px rgba(0,0,0,.5),0 0 30px rgba(255,215,0,.85)}
 .grid{flex-wrap:wrap}
@@ -186,7 +201,7 @@ const online=()=>role==="host"||role==="guest",me=()=>role==="guest"?1:0;
 let ROT=false;
 function fit(){const w=document.body.clientWidth,h=document.body.clientHeight,inM=wrap.style.display==="block";ROT=inM&&w<h;const s=ROT?Math.min(w/480,h/800):Math.min(w/800,h/480);wrap.style.transform=(ROT?"rotate(90deg) ":"")+"scale("+s+")"}
 addEventListener("resize",fit);addEventListener("orientationchange",fit);fit();
-function resetPos(){own=null;pickCd=0;Object.assign(P,{x:200,y:GY,vx:0,vy:0,stun:0});Object.assign(O,{x:600,y:GY,vx:0,vy:0,stun:0});Object.assign(B,{x:W/2,y:GY,vx:0,vy:0});K.y=K2.y=GY}
+function resetPos(){own=null;pickCd=0;Object.assign(P,{x:200,y:GY,vx:0,vy:0,stun:0});Object.assign(O,{x:600,y:GY,vx:0,vy:0,stun:0});Object.assign(B,{x:W/2,y:GY,vx:0,vy:0});K.y=K2.y=GY;K.x=W-14;K2.x=14}
 function unlock(){if(started)return;started=true;ALL.forEach(a=>{a.muted=true;a.play().then(()=>{a.pause();a.currentTime=0;a.muted=false}).catch(()=>{a.muted=false})});
 }
 function goFS(){try{const e=document.documentElement;e.requestFullscreen&&!document.fullscreenElement&&e.requestFullscreen().catch(()=>{})}catch(_){}}
@@ -260,7 +275,7 @@ async function cInit(){try{const U=await claude.use("user"),D=await claude.use("
     if(lts>cts){cPush();return}
     cSet("☁️ محفوظ في حسابك");return}
   if(prof.name){prof.ts=prof.ts||Date.now();cPush()}else cSet("☁️ سيتم الحفظ في حسابك تلقائياً")}catch(_){cSet("☁️ الحفظ السحابي غير متاح")}}
-try{const j=JSON.parse(localStorage.getItem("fb_prof2")||"null");if(j&&typeof j==="object"){prof.tk=j.tk;prof.tc=j.tc;prof.avatar=j.avatar;prof.fr=j.fr;prof.frame=j.frame;prof.th=j.th;prof.theme=j.theme;prof.wins=j.wins;prof.fid=/^[A-Z0-9]{6}$/.test(j.fid)?j.fid:"";if(Array.isArray(j.friends))prof.friends=j.friends.filter(f=>f&&/^[A-Z0-9]{6}$/.test(f.id)).slice(0,50).map(f=>({id:f.id,name:String(f.name||"صديق").replace(/[\u0000-\u001f<>]/g,"").slice(0,14)}))}}catch(_){}
+try{const j=JSON.parse(localStorage.getItem("fb_prof2")||"null");if(j&&typeof j==="object"){prof.tk=j.tk;prof.tc=j.tc;prof.avatar=j.avatar;prof.fr=j.fr;prof.frame=j.frame;prof.th=j.th;prof.theme=j.theme;prof.wins=j.wins;prof.wk=j.wk;prof.wg=j.wg;prof.lbc=j.lbc;prof.fid=/^[A-Z0-9]{6}$/.test(j.fid)?j.fid:"";if(Array.isArray(j.friends))prof.friends=j.friends.filter(f=>f&&/^[A-Z0-9]{6}$/.test(f.id)).slice(0,50).map(f=>({id:f.id,name:String(f.name||"صديق").replace(/[\u0000-\u001f<>]/g,"").slice(0,14)}))}}catch(_){}
 if(!prof.fid){const al="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";let f="";for(let i=0;i<6;i++)f+=al[Math.floor(Math.random()*al.length)];prof.fid=f;saveProf()}
 function fixGift(){if(prof.gift<4){const g=prof.gift|0;prof.bonus=Math.max(0,(prof.bonus|0)-(g>=1?100:0)-(g>=2?100:0)-(g>=3?1000:0))+5;prof.gift=4}}
 fixGift();
@@ -320,6 +335,23 @@ function fprofHTML(u){const d=FPC[u];if(!d)return"<div class='sec'><b>جاري �
    +"<div class='pfxc'><div class='pfxl'>المستوى "+lv+"</div><div class='pfxb'><i style='width:"+(lv>=MAXL?100:((d.goals|0)%PER)/PER*100)+"%'></i><span>LVL "+lv+"</span></div><div class='pfxr'><span>الأهداف</span><b>"+(d.goals|0)+"</b></div><div class='pfxr'><span>الانتصارات</span><b>"+(d.wins|0)+"</b></div><div class='pfxr'><span>الترتيب</span><b class='rk'>"+rankOf(lv)+"</b></div><div class='pfxr'><span>رمز الصداقة</span><b style='direction:ltr'>"+esc(String(d.fid||""))+"</b></div></div>"
    +(isF?"":"<button class='hb' id='fsend' data-u='"+esc(u)+"'>➕ إرسال طلب صداقة</button>")
    +"<div class='pfx3'>بطاقات صديقك</div><div class='pfxg'>"+(tiles||"<small style='grid-column:1/-1'>لا توجد بطاقات بعد</small>")+"</div><button class='hb g' id='fpbk' style='margin-top:12px'>↩ رجوع</button></div>"}
+
+// ---------- weekly leaderboard ----------
+const wkCur=()=>window.fbLB?window.fbLB.week():Math.floor((Date.now()-Date.UTC(2026,0,5))/6048e5);
+function wkSync(){const w=wkCur();if(prof.wk!==w){prof.wk=w;prof.wg=0}}
+let LBD=null,LBP=null,lbSig="",lbBusy=false,fpBack="";
+function lbPush(){if(!window.fbLB||!window.fbLB.me())return;wkSync();const d={name:cleanN(prof.name)||"لاعب",av:getAv64(),fr:prof.frame,g:prof.wg|0,t:Date.now()},sg=[d.name,d.av.length,d.fr,d.g,prof.wk].join("|");if(sg===lbSig)return;lbSig=sg;window.fbLB.set(prof.wk,d).catch(()=>{lbSig=""})}
+const lbSort=o=>Object.keys(o||{}).map(u=>({u,...o[u]})).filter(r=>r&&(r.g|0)>0).sort((a,b)=>(b.g|0)-(a.g|0)||(+a.t||0)-(+b.t||0));
+async function lbTick(){if(!window.fbLB||!window.fbLB.me()||lbBusy)return;lbBusy=true;try{wkSync();lbPush();const w=prof.wk,prev=w-1;
+  if((prof.lbc|0)<prev){const top=lbSort(await window.fbLB.get(prev))[0];if(top&&top.u===window.fbLB.me()){prof.bonus=(prof.bonus|0)+30;toast("🏆 تصدّرت الأسبوع الماضي! • 🔑 +30")}prof.lbc=prev;saveProf()}}catch(_){}lbBusy=false}
+setInterval(lbTick,30000);setTimeout(lbTick,6000);
+function lbLoad(){if(!window.fbLB)return;const w=wkCur();Promise.all([window.fbLB.get(w),window.fbLB.get(w-1)]).then(([a,b])=>{LBD=lbSort(a);LBP=lbSort(b)[0]||null;if(hk==="lb")rh("lb")}).catch(()=>{LBD=LBD||[];if(hk==="lb")rh("lb")})}
+function lbLeft(){const end=Date.UTC(2026,0,5)+(wkCur()+1)*6048e5,ms=Math.max(0,end-(window.fbNow?window.fbNow():Date.now()));return fmtLeft(ms)}
+function lbHTML(){wkSync();const me=window.fbLB&&window.fbLB.me();
+  if(!window.fbLB)return"<div class='sec'><b>🏆 المتصدرون</b><small>❌ ملف shim قديم — أعد بناء التطبيق</small><button class='hb g' id='lbbk'>رجوع</button></div>";
+  const rows=LBD===null?"<small>جاري التحميل…</small>":LBD.length?LBD.slice(0,50).map((r,i)=>"<div class='lbr"+(r.u===me?" me":"")+(i<3?" t"+i:"")+"'><span class='lbn'>"+(i<3?["🥇","🥈","🥉"][i]:i+1)+"</span><div class='fpic' id='lbv_"+esc(r.u)+"'>"+faceHTML(r,44)+"</div><b class='lbm'>"+esc(cleanN(r.name)||"لاعب")+"</b><span class='lbg'>⚽ "+(r.g|0)+"</span></div>").join(""):"<div class='or'>لا أحد سجّل أهدافًا هذا الأسبوع بعد — كن الأول!</div>";
+  return"<div class='sec'><b>🏆 المتصدرون — هذا الأسبوع</b><div class='lbinfo'>صاحب أعلى أهداف في نهاية الأسبوع يربح <b>🔑 30 مفتاح</b><br>إعادة الضبط بعد: <b>"+lbLeft()+"</b></div><div class='lbinfo'>أهدافك هذا الأسبوع: <b>⚽ "+(prof.wg|0)+"</b></div>"+(LBD&&LBD[0]?"<div class='lbch' id='lbv_"+esc(LBD[0].u)+"'><div class='lbcr'>👑</div>"+faceHTML(LBD[0],92)+"<b>"+esc(cleanN(LBD[0].name)||"لاعب")+"</b><span>المتصدر الأول • ⚽ "+(LBD[0].g|0)+" هدف</span></div>":"")
+  +(LBP?"<div class='lbinfo lbp' id='lbv_"+esc(LBP.u)+"'>"+faceHTML(LBP,40)+"<span>🏆 بطل الأسبوع الماضي: <b>"+esc(cleanN(LBP.name))+"</b> ("+(LBP.g|0)+" هدف)</span></div>":"")+rows+"<button class='hb g sm' id='lbre'>🔄 تحديث</button><button class='hb g' id='lbbk'>رجوع</button></div>"}
 function openFprof(u){if(!u)return;fpGet(u,()=>{if(hk==="fprof"&&hx===u)rh("fprof",u)});rh("fprof",u)}
 function fshopHTML(){fixFr();const kk=keysOf(),ini=esc([...(prof.name||"؟")][0]);
   return"<div class='sec'><b>🛒 المتجر — الإطارات والأنماط</b><div class='keys'>🔑 "+kk+" مفتاح</div>"+FRD.map((f,i)=>{const own=prof.fr[i],eq=prof.frame===i;return"<div style='background:rgba(255,255,255,.07);border-radius:16px;padding:8px 10px;margin:6px 0;text-align:center'><div class='fpv'>"+avHTML(ini)+frameHTML(i,.97)+"</div><b>"+f.n+(f.an?" ✨":"")+"</b>"+(own?(eq?"<button class='hb g' id='fx"+i+"'>✓ مجهّز — اضغط للإزالة</button>":"<button class='hb' id='fb"+i+"'>تجهيز الإطار</button>"):"<button class='hb' id='fb"+i+"'"+(kk>=f.p?"":" style='opacity:.55'")+">🔑 "+f.p+" شراء</button>")+"</div>"}).join("")+themesShopHTML()+"<button class='hb g' id='pkbk'>رجوع</button></div>"}
@@ -359,12 +391,12 @@ function rh(k,x){revStop();hk=k;hx=x;kboxUpd();
   applyTheme();getAv64();
   let h=k==="prof"||k==="fprof"?"":"<div class='mav"+(prof.frame>=0?" hasfr":"")+"' id='av'>"+avHTML(ini)+frameHTML(prof.frame,.97)+"</div><h1>⚽ كرة القدم</h1>";
   if(k==="name")h+="<div class='sec'>اكتب اسمك<input id='ni' maxlength='12' placeholder='اسم اللاعب' value='"+esc(prof.name)+"'><button class='hb' id='sv'>حفظ</button></div>";
-  else if(k==="menu")h+="<div id='flip'>"+flipHTML()+"</div><div class='sec'><button class='hb' id='m1'>🤖 ضد الكمبيوتر</button><button class='hb' id='m2'>👥 أنشئ غرفة مع صديق</button><button class='hb g' id='frb'>👥 الأصدقاء</button><button class='hb g' id='fsb'>🛒 المتجر</button><button class='hb g' id='pkb'>🎁 الباكجات"+(keysOf()?" 🔑"+keysOf():"")+"</button><div class='or'>أو ادخل غرفة صديقك</div><div class='rowc'><input id='ci' inputmode='numeric' maxlength='4' placeholder='الرمز'><button class='hb g' id='m3'>ادخل</button></div><small id='nt'>"+(R?"":"جاري تجهيز الأونلاين…")+(ren?"":" ⚠️ المجسّم ثلاثي الأبعاد غير متاح")+"</small><small id='cl'>"+cloudSt+"</small></div>";
+  else if(k==="menu")h+="<div id='flip'>"+flipHTML()+"</div><div class='sec'><button class='hb' id='m1'>🤖 ضد الكمبيوتر</button><button class='hb' id='m2'>👥 أنشئ غرفة مع صديق</button><button class='hb g' id='frb'>👥 الأصدقاء</button><button class='hb g' id='lbb'>🏆 المتصدرون</button><button class='hb g' id='fsb'>🛒 المتجر</button><button class='hb g' id='pkb'>🎁 الباكجات"+(keysOf()?" 🔑"+keysOf():"")+"</button><div class='or'>أو ادخل غرفة صديقك</div><div class='rowc'><input id='ci' inputmode='numeric' maxlength='4' placeholder='الرمز'><button class='hb g' id='m3'>ادخل</button></div><small id='nt'>"+(R?"":"جاري تجهيز الأونلاين…")+(ren?"":" ⚠️ المجسّم ثلاثي الأبعاد غير متاح")+"</small><small id='cl'>"+cloudSt+"</small></div>";
   else if(k==="lobby")h+="<div class='sec'>رمز الدعوة<div class='code'>"+esc(x)+"</div><button class='hb g' id='cpc'>📋 نسخ رمز الدعوة</button><button class='hb' id='afr'>👥 إضافة صديق إلى الغرفة</button><small>أرسل رمز الدعوة لصديقك ليدخله، أو اختر صديقًا من قائمتك<br>بانتظار الصديق…</small><button class='hb g' id='bk2'>إلغاء</button></div>";
   else if(k==="join")h+="<div class='sec'>جاري الاتصال بالغرفة "+esc(x)+"…<button class='hb g' id='bk2'>إلغاء</button></div>";
   else if(k==="packs")h+=packsHTML();
   else if(k==="friends")h+=friendsHTML(x);
-  else if(k==="prof")h+=profHTML();   else if(k==="fprof")h+=fprofHTML(x);   else if(k==="fshop")h+=fshopHTML();   else if(k==="acct")h+="<div class='sec'>"+(ACC?"✅ "+esc(ACC.email)+"<button class='hb g' id='alo'>تسجيل خروج</button>":"<input id='ae' type='email' placeholder='البريد الإلكتروني' style='direction:ltr'><input id='ap' type='password' placeholder='كلمة المرور' style='direction:ltr'><button class='hb' id='aln'>تسجيل دخول</button><button class='hb g' id='arg'>إنشاء حساب جديد</button>")+"<small>"+esc(amsg)+"</small><button class='hb g' id='bk2'>رجوع</button></div>";
+  else if(k==="prof")h+=profHTML();   else if(k==="fprof")h+=fprofHTML(x);   else if(k==="lb")h+=lbHTML();   else if(k==="fshop")h+=fshopHTML();   else if(k==="acct")h+="<div class='sec'>"+(ACC?"✅ "+esc(ACC.email)+"<button class='hb g' id='alo'>تسجيل خروج</button>":"<input id='ae' type='email' placeholder='البريد الإلكتروني' style='direction:ltr'><input id='ap' type='password' placeholder='كلمة المرور' style='direction:ltr'><button class='hb' id='aln'>تسجيل دخول</button><button class='hb g' id='arg'>إنشاء حساب جديد</button>")+"<small>"+esc(amsg)+"</small><button class='hb g' id='bk2'>رجوع</button></div>";
   else if(k==="fail")h+="<div class='sec'>ما لقيت غرفة بهذا الرمز 😕<button class='hb g' id='bk2'>رجوع</button></div>";
   if(k==="set")h=h.replace("<h1>⚽ كرة القدم</h1>","")+setHTML();
   $("hb").innerHTML=h;if(k==="set")paintPV();if(k==="packs"&&pkRes!==null&&pkRes>=0)startReveal(pkRes)}
@@ -422,6 +454,10 @@ home.addEventListener("click",e=>{const fb=e.target.closest("[data-f]");if(fb){p
     if(f.u)return openFprof(f.u);fmsg="جاري فتح الملف…";rh("friends",hx);frResolve(f).then(u=>{if(u)openFprof(u);else{fmsg="صديقك لم يحدّث اللعبة بعد، لا يوجد ملف";rh("friends",hx)}});return}}
   if(id==="fsv"){if(fsRes)return openFprof(fsRes.u);return}
   if(id==="fsend")return sendReq(el.dataset.u,el);
+  if(id==="lbb"||id==="lbre"){if(id==="lbb")LBD=null;lbLoad();return rh("lb")}
+  if(id==="lbbk")return rh("menu");
+  if(id.startsWith("lbv_")){const u=id.slice(4),r=(LBD||[]).find(v=>v.u===u)||(LBP&&LBP.u===u?LBP:null);if(r&&!FPC[u])FPC[u]={name:r.name,av:r.av,fr:r.fr};fpBack="lb";return openFprof(u)}
+  if(id==="fpbk"&&fpBack){const b=fpBack;fpBack="";return rh(b)}
   if(id==="fpbk")return rh(hx&&prof.friends.some(f=>f.u===hx)||fsRes?"friends":"menu","");
   if(id==="selp"){if(pkRes!==null&&pkRes>=0&&prof.cards[pkRes]){prof.sel=pkRes;saveProf();refreshSel()}return}
   if(id==="unsel"){prof.sel=-1;saveProf();refreshSel();return}
@@ -446,7 +482,7 @@ msg.addEventListener("click",e=>{const id=e.target.id;if(id==="bk2")toMenu();els
 function enterMatch(){if(wrap.style.display!=="block"){home.style.display="none";wrap.style.display="block";lockLand()}fit();names();setColors()}
 let avSent="";function names(){badges();if(R&&online()){const a=getAv64(),k=a.length+"|"+prof.frame;if(k!==avSent){avSent=k;try{R.presence({av:a,fr:prof.frame}).catch(()=>{avSent=""})}catch(_){avSent=""}}}const p=role==="solo"?null:find(role==="host"?"guest":"host");$("nm").textContent=(role==="solo"?"الكمبيوتر":(p&&p.presence.name)||"الخصم")+"  ⚔  "+(prof.name||"أنت")}
 function toast(s){const e=$("toast");e.textContent=s;e.style.opacity=1;clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.opacity=0,3000)}
-function addGoal(){const o=lvOf(prof.goals);prof.goals++;saveProf();const n=lvOf(prof.goals);if(n>o)toast("🎉 المستوى "+n+" • 🔑 مفتاح باكج جديد")}
+function addGoal(){const o=lvOf(prof.goals);wkSync();prof.wg=(prof.wg|0)+1;prof.goals++;setTimeout(lbPush,300);saveProf();const n=lvOf(prof.goals);if(n>o)toast("🎉 المستوى "+n+" • 🔑 مفتاح باكج جديد")}
 function startSolo(){role="solo";score=[0,0];left=MATCH;upd();resetPos();state="play";hide();enterMatch()}
 function startMatch(){score=[0,0];left=MATCH;upd();resetPos();stopAll();state="play";hide();enterMatch()}
 // ---------- game ----------
@@ -476,8 +512,9 @@ function step(){
   else if(O.stun>0){O.stun--;O.vx=O.vy=0}else{
     let tx=B.x>W/2?B.x:W*0.7,ty=B.y;if(own===O){tx=-30;ty=GY}let dx=tx-O.x,dy=ty-O.y,dd=Math.hypot(dx,dy)||1;O.fdx=dx/dd;O.fdy=dy/dd;if(own===O&&O.x<300&&Math.abs(O.y-GY)<GH*.8)O.k=true;if(own===P&&Math.hypot(O.x-P.x,O.y-P.y)<70&&Math.random()<.02)O.t=true;
     O.vx=dx/dd*2.7;O.vy=dy/dd*2.7;O.x+=O.vx;O.y+=O.vy}
-  const kp=(k)=>{k.y+=Math.max(-2.6,Math.min(2.6,B.y-k.y));k.y=Math.max(GY-GH+k.r,Math.min(GY+GH-k.r,k.y))};
-  kp(K);if(online())kp(K2);
+  const kp=(k,sd)=>{const gx=sd>0?W-14:14,dd=Math.abs(B.x-gx),out=dd<240?Math.max(0,Math.min(58,(240-dd)*.4,(dd-16)*.5)):0,tx=gx-sd*out;k.x+=Math.max(-3.2,Math.min(3.2,tx-k.x));
+    const ty=B.y+(B.vy||0)*Math.min(10,dd/Math.max(2,Math.abs(B.vx)||2));const ks=dd<130?5:3;k.y+=Math.max(-ks,Math.min(ks,ty-k.y));k.y=Math.max(GY-GH-28,Math.min(GY+GH+28,k.y))};
+  kp(K,1);if(online())kp(K2,-1);
   tackle(P,O);tackle(O,P);
   if(own!==P)collide(P,3.2);if(online()&&own!==O)collide(O,3.2);kick(P);kick(O);
   if(own!==O)collide(O,4);collide(K,6);if(online())collide(K2,6);
@@ -497,15 +534,15 @@ function step(){
 // ---------- networking ----------
 const peersL=()=>R?R.peers():[],find=r=>peersL().find(p=>!p.isMe&&p.presence&&p.presence.code===code&&p.presence.role===r);
 const r1=v=>Math.round(v*10)/10;
-function pub(){R.presence({st:[["","play","goal","end"].indexOf(state),r1(left),score[0],score[1],r1(P.x),r1(P.y),r1(O.x),r1(O.y),r1(B.x),r1(B.y),r1(K.y),r1(K2.y),P.stun>0?1:0,O.stun>0?1:0,P.fx,O.fx,gs,gi]}).catch(()=>{})}
+function pub(){R.presence({st:[["","play","goal","end"].indexOf(state),r1(left),score[0],score[1],r1(P.x),r1(P.y),r1(O.x),r1(O.y),r1(B.x),r1(B.y),r1(K.y),r1(K2.y),P.stun>0?1:0,O.stun>0?1:0,P.fx,O.fx,gs,gi,r1(K.x),r1(K2.x)]}).catch(()=>{})}
 let lastSt=null,prevIdx=0,gsSeen=-1,T=null,lastInp="",joinT=0;
 function guestSync(){
   const h=find("host");
   if(state==="join"&&!h&&++joinT===600){state="fail";rh("fail")}
   if(!h)return;const st=h.presence.st;
   if(Array.isArray(st)&&st!==lastSt){const first=!lastSt;lastSt=st;enterMatch();
-    const[si,l,s0,s1,px,py,ox,oy,bx,by,k1,k2,ps,os,pf,of,g,gix]=st;
-    {const n=performance.now(),q=T,f=q?Math.min(8,Math.max(1,(n-q.t)/16.7)):1,vv=(a,b)=>q&&Math.abs(a-b)<120?(a-b)/f:0;T={px,py,ox,oy,bx,by,t:n,vpx:vv(px,q&&q.px),vpy:vv(py,q&&q.py),vox:vv(ox,q&&q.ox),voy:vv(oy,q&&q.oy),vbx:vv(bx,q&&q.bx),vby:vv(by,q&&q.by)}}const pm=score[1];score=[s0,s1];left=l;upd();clock();P.stun=ps;O.stun=os;P.fx=pf;O.fx=of;K.y=k1;K2.y=k2;
+    const[si,l,s0,s1,px,py,ox,oy,bx,by,k1,k2,ps,os,pf,of,g,gix,kx1,kx2]=st;
+    {const n=performance.now(),q=T,f=q?Math.min(8,Math.max(1,(n-q.t)/16.7)):1,vv=(a,b)=>q&&Math.abs(a-b)<120?(a-b)/f:0;T={px,py,ox,oy,bx,by,t:n,vpx:vv(px,q&&q.px),vpy:vv(py,q&&q.py),vox:vv(ox,q&&q.ox),voy:vv(oy,q&&q.oy),vbx:vv(bx,q&&q.bx),vby:vv(by,q&&q.by)}}const pm=score[1];score=[s0,s1];left=l;upd();clock();P.stun=ps;O.stun=os;P.fx=pf;O.fx=of;K.y=k1;K2.y=k2;if(kx1!=null)K.x=kx1;if(kx2!=null)K2.x=kx2;
     if(first){Object.assign(P,{x:px,y:py});Object.assign(O,{x:ox,y:oy});Object.assign(B,{x:bx,y:by});gsSeen=g}
     if(si===1&&prevIdx!==1){state="play";hide();stopAll()}
     if(g!==gsSeen){gsSeen=g;state="goal";if(s1>pm)addGoal();celebrate(s1>pm?1:0);show(fimg(s1>pm?1:0)+(s1>pm?"هدف! ⚽🎉<small>سجّلت في مرمى الخصم</small>":"هدف للخصم 😬"),true)}
@@ -904,7 +941,7 @@ async function admStep(st){
       tk=Array.isArray(p.tk)?p.tk.reduce((a,e)=>a+(e&&e.u>tn?e.n|0:0),0):0,
       keys=Math.max(0,lvOf(p.goals|0)+(p.bonus|0)+(+r.credit||0)-(p.opened|0))+tk,cards=Array.isArray(p.cards)?p.cards.filter(v=>v>0).length:0,
       bn=r.ban&&r.ban.until>Date.now()?r.ban:null;
-      shopPanel("<h3>"+nm+"</h3><div class='kk'>"+em+"</div><div class='ord'><span>المستوى "+lvOf(p.goals|0)+" • الأهداف "+(p.goals|0)+"</span><span>🔑 المفاتيح: <b>"+keys+"</b>"+(tk?" (منها "+tk+" مؤقت)":"")+" • (رصيد الإدارة: "+(+r.credit||0)+")</span><span>🃏 بطاقات مفتوحة: "+cards+" / 7</span><span>"+(bn?"⛔ محظور — باقي "+fmtLeft(bn.until-Date.now()):"✅ غير محظور")+"</span></div>"
+      shopPanel("<h3>"+nm+"</h3><div class='ord'><span>المستوى "+lvOf(p.goals|0)+" • الأهداف "+(p.goals|0)+"</span><span>🔑 المفاتيح: <b>"+keys+"</b>"+(tk?" (منها "+tk+" مؤقت)":"")+" • (رصيد الإدارة: "+(+r.credit||0)+")</span><span>🃏 بطاقات مفتوحة: "+cards+" / 7</span><span>"+(bn?"⛔ محظور — باقي "+fmtLeft(bn.until-Date.now()):"✅ غير محظور")+"</span></div>"
        +"<div class='kk'>🔑 إعطاء مفاتيح مباشرة (اكتب الرقم)</div><input id='kcnt' type='number' inputmode='numeric' placeholder='عدد المفاتيح'><div class='ord' style='background:none;padding:0'><div class='rowc'><button class='hb' data-a='kadd'>➕ إعطاء</button><button class='hb g' data-a='ksub'>➖ خصم</button></div></div>"
        +"<div class='kk'>الوارد</div><div class='ord' style='background:none;padding:0'><div class='rowc'><button class='hb' data-a='pmsg'>✉️ إرسال رسالة</button><button class='hb' data-a='pgift'>🎁 إرسال هدية</button></div></div>"
        +"<div class='kk'>الحظر</div><div class='rowc'>"+ADAYS.map(d=>"<button class='hb g' data-a='ban' data-d='"+d[0]+"'>"+d[1]+"</button>").join("")+"</div>"
@@ -935,7 +972,7 @@ async function admClick(a,b){
   if(a==="pmsg"||a==="pgift"){if(!shopPick.u)return true;cmp={to:shopPick.u,name:shopPick.name,mode:a==="pgift"?"gift":"msg"};admStep("compose");return true}
   if(a==="csend"){await sendCompose(b);return true}
   if(a==="psearch"){const q=($("sq").value||"").trim(),el=$("sres");el.innerHTML="<div class='kk'>جارٍ البحث...</div>";
-    try{const r=await window.fbShop.search(q);el.innerHTML=r.length?r.map(p=>"<button class='hb g' data-a='pick' data-u='"+esc(p.u)+"' data-n='"+esc(p.name||"")+"' data-e='"+esc(p.email||"")+"'>"+esc(p.name||"?")+(p.email?" • "+esc(p.email):"")+"</button>").join(""):"<div class='kk'>ما لقيت أحد — جرّب جزءًا من الاسم، أو اضغط «فهرسة اللاعبين القدامى»</div>"}catch(_){el.innerHTML="<div class='kk'>تعذّر البحث — تأكد من الإنترنت ومن نشر قواعد قاعدة البيانات الجديدة</div>"}return true}
+    try{const r=await window.fbShop.search(q);el.innerHTML=r.length?r.map(p=>"<button class='hb g' data-a='pick' data-u='"+esc(p.u)+"' data-n='"+esc(p.name||"")+"' data-e='"+esc(p.email||"")+"'>"+esc(p.name||"?")+"</button>").join(""):"<div class='kk'>ما لقيت أحد — جرّب جزءًا من الاسم، أو اضغط «فهرسة اللاعبين القدامى»</div>"}catch(_){el.innerHTML="<div class='kk'>تعذّر البحث — تأكد من الإنترنت ومن نشر قواعد قاعدة البيانات الجديدة</div>"}return true}
   if(a==="reidx"){const el=$("sres");b.disabled=true;el.innerHTML="<div class='kk'>جارٍ الفهرسة...</div>";
     try{const r=await window.fbShop.reindex((d,t)=>{if(el.isConnected&&(d%5===0||d===t))el.innerHTML="<div class='kk'>الفهرسة "+d+" / "+t+"</div>"});if(el.isConnected)el.innerHTML="<div class='kk'>✅ تمت: أُضيف "+r.added+" لاعب (من "+r.total+" حساب)</div>"}catch(_){if(el.isConnected)el.innerHTML="<div class='kk'>تعذّرت الفهرسة — تأكد من نشر القواعد الجديدة</div>"}
     if(b.isConnected)b.disabled=false;return true}
