@@ -186,6 +186,7 @@ body.th2 .pfx{background:radial-gradient(ellipse at 50% 0,rgba(120,10,18,.92),rg
 .rvnt{background:rgba(255,255,255,.08);border-radius:12px;padding:6px 10px;font-size:.92rem;animation:rvpop .5s ease backwards}.rvnt b{direction:ltr;display:inline-block}
 #htoast{position:fixed;top:14px;left:50%;transform:translateX(-50%);background:#f5c518;color:#222;font-weight:800;font-size:.95rem;padding:.4em 1.1em;border-radius:1em;opacity:0;transition:opacity .3s;z-index:100001;pointer-events:none;max-width:92vw;text-align:center}
 .bssbp{width:100%;display:flex;flex-direction:column;gap:6px;background:rgba(10,20,14,.96);border:1px solid #f5c518;border-radius:14px;padding:10px}.bssbp button{background:rgba(255,255,255,.12);color:#fff;border-radius:10px;padding:10px;font-size:.95rem}
+.bsph{margin:2px auto;border-radius:12px;overflow:hidden;background:radial-gradient(circle at 50% 30%,#3a2a08,#0d0903);border:1px solid rgba(245,197,24,.5);display:flex;align-items:center;justify-content:center}.bsph.sm{width:58px;height:58px}.bsph.lg{width:120px;height:120px;border-width:2px}.bsph img,.bsph svg{width:100%;height:100%;object-fit:cover;display:block}
 @keyframes gl{0%{box-shadow:0 0 10px 2px rgba(255,200,0,.55);filter:brightness(1)}100%{box-shadow:0 0 26px 9px rgba(255,235,120,.95);filter:brightness(1.18)}}
 .pack.g{background:linear-gradient(160deg,#ffe27a 0,#c8900a 45%,#3a2400 100%);border-color:#fff3b0;box-shadow:0 8px 24px rgba(0,0,0,.5),0 0 30px rgba(255,215,0,.85)}
 .grid{flex-wrap:wrap}
@@ -325,7 +326,7 @@ async function cInit(){try{const U=await claude.use("user"),D=await claude.use("
     if(lts>cts){cPush();return}
     cSet("☁️ محفوظ في حسابك");return}
   if(prof.name){prof.ts=prof.ts||Date.now();cPush()}else cSet("☁️ سيتم الحفظ في حسابك تلقائياً")}catch(_){cSet("☁️ الحفظ السحابي غير متاح")}}
-try{const j=JSON.parse(localStorage.getItem("fb_prof2")||"null");if(j&&typeof j==="object"){prof.tk=j.tk;prof.tc=j.tc;prof.avatar=j.avatar;prof.fr=j.fr;prof.frame=j.frame;prof.th=j.th;prof.theme=j.theme;prof.wins=j.wins;prof.hid=j.hid;prof.snd=j.snd;prof.frx=j.frx;prof.thx=j.thx;prof.ntx=j.ntx;prof.ntk=j.ntk;prof.sndOff=j.sndOff;prof.wk=j.wk;prof.wg=j.wg;prof.lbc=j.lbc;prof.fid=/^[A-Z0-9]{6}$/.test(j.fid)?j.fid:"";if(Array.isArray(j.friends))prof.friends=j.friends.filter(f=>f&&/^[A-Z0-9]{6}$/.test(f.id)).slice(0,50).map(f=>({id:f.id,name:String(f.name||"صديق").replace(/[\u0000-\u001f<>]/g,"").slice(0,14)}))}}catch(_){}
+try{const j=JSON.parse(localStorage.getItem("fb_prof2")||"null");if(j&&typeof j==="object"){prof.tk=j.tk;prof.tc=j.tc;prof.avatar=j.avatar;prof.fr=j.fr;prof.frame=j.frame;prof.th=j.th;prof.theme=j.theme;prof.wins=j.wins;prof.bsw=j.bsw;prof.hid=j.hid;prof.snd=j.snd;prof.frx=j.frx;prof.thx=j.thx;prof.ntx=j.ntx;prof.ntk=j.ntk;prof.sndOff=j.sndOff;prof.wk=j.wk;prof.wg=j.wg;prof.lbc=j.lbc;prof.fid=/^[A-Z0-9]{6}$/.test(j.fid)?j.fid:"";if(Array.isArray(j.friends))prof.friends=j.friends.filter(f=>f&&/^[A-Z0-9]{6}$/.test(f.id)).slice(0,50).map(f=>({id:f.id,name:String(f.name||"صديق").replace(/[\u0000-\u001f<>]/g,"").slice(0,14)}))}}catch(_){}
 if(!prof.fid){const al="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";let f="";for(let i=0;i<6;i++)f+=al[Math.floor(Math.random()*al.length)];prof.fid=f;saveProf()}
 function fixGift(){if(prof.gift<4){const g=prof.gift|0;prof.bonus=Math.max(0,(prof.bonus|0)-(g>=1?100:0)-(g>=2?100:0)-(g>=3?1000:0))+5;prof.gift=4}}
 fixGift();
@@ -421,7 +422,7 @@ function sndPlayPrev(src){sndStop();try{sndPrev=new Audio(src);sndPrev.play().ca
 function sndPick(f){sndUp=null;if(!f)return rh("fshop");if(f.size>900*1024){sndMsg="❌ الملف كبير — الحد 900 كيلوبايت";return rh("fshop")}const r=new FileReader();r.onload=()=>{const u=String(r.result||"");if(!/^data:audio\//i.test(u)){sndMsg="❌ هذا ليس ملف صوت";return rh("fshop")}sndUp={a:u,f:String(f.name||"صوت").slice(0,24)};sndMsg="";rh("fshop")};r.onerror=()=>{sndMsg="تعذّر قراءة الملف";rh("fshop")};r.readAsDataURL(f)}
 
 // ---------- custom shop items (admin): frames, button styles ----------
-var FRX={},BTX={},NTX={},SXL=false,FD={},axUp=null,shopMsg="",invTab="snd";
+var FRX={},BTX={},NTX={},BPH={},SXL=false,FD={},axUp=null,shopMsg="",invTab="snd";
 function idOK(k){return typeof k==="string"&&/^[a-z0-9]{3,20}$/i.test(k)}function cOK(v){return typeof v==="string"&&/^#[0-9a-f]{6}$/i.test(v)}
 const imgOK=v=>typeof v==="string"&&/^data:image\/(png|webp|jpeg);base64,[A-Za-z0-9+\/=]+$/.test(v)&&v.length<450000;
 function frOn(k){return frameHTML(k,1)!==""}
@@ -430,6 +431,7 @@ function xVis(it){return!!it&&(!it.ad||isAdm())}function xOwn(it,id,own){return!
 function shopxNorm(v){const f={},b={};v=v||{};
   for(const k in v.f||{}){const x=v.f[k];if(idOK(k)&&x&&imgOK(x.u))f[k]={n:cleanN(x.n)||"إطار",p:Math.max(0,Math.min(100000,x.p|0)),u:x.u,dw:Math.max(.3,Math.min(.95,+x.dw||.62)),cx:50,cy:50,an:x.an?1:0,x:1,ad:x.ad?1:0,t:+x.t||0}}
   for(const k in v.b||{}){const x=v.b[k];if(idOK(k)&&x&&cOK(x.c1)&&cOK(x.c2)&&cOK(x.bc)&&cOK(x.tc))b[k]={n:cleanN(x.n)||"نمط",p:Math.max(0,Math.min(100000,x.p|0)),c1:x.c1,c2:x.c2,bc:x.bc,tc:x.tc,gl:x.gl?1:0,ad:x.ad?1:0,t:+x.t||0}}
+  const ph={};for(const k in v.p||{}){const x=v.p[k];if(/^c\d{1,2}p\d{1,2}$/.test(k)&&x&&typeof x.u==="string"&&/^data:image\/jpeg;base64,[A-Za-z0-9+\/=]+$/.test(x.u)&&x.u.length<60000)ph[k]=x.u}BPH=ph;
   const nt={};for(const k in v.n||{}){const x=v.n[k];if(idOK(k)&&x&&cOK(x.c1)&&cOK(x.c2)&&cOK(x.gc))nt[k]={n:cleanN(x.n)||"قالب",p:Math.max(0,Math.min(100000,x.p|0)),c1:x.c1,c2:x.c2,gc:x.gc,sh:cOK(x.sh)?x.sh:"#ffffff",gs:x.gs==null?5:Math.max(0,Math.min(20,+x.gs||0)),an:x.an?1:0,ad:x.ad?1:0,t:+x.t||0}}
   FRX=f;BTX=b;NTX=nt;SXL=true;btxCSS();fixFr();applyTheme()}
 function ntStyle(t){const g=t.an?"linear-gradient(90deg,"+t.c1+" 0%,"+t.c2+" 35%,"+t.sh+" 50%,"+t.c2+" 65%,"+t.c1+" 100%)":"linear-gradient(90deg,"+t.c1+","+t.c2+","+t.c1+")";
@@ -1039,10 +1041,10 @@ const BCATS=[
  {t:"قلوب الدفاع",ss:"2020/21",p:[["ماتيس دي ليخت","الدوري الإيطالي","هولندا",75,30],["ميلان شكرينيار","الدوري الإيطالي","سلوفاكيا",60,12],["دايو أوباميكانو","الدوري الألماني","فرنسا",40,45],["كاليدو كوليبالي","الدوري الإيطالي","السنغال",70,8],["ماركينيوس","الدوري الفرنسي","البرازيل",70,30],["جون ستونز","الدوري الإنجليزي","إنجلترا",20,20],["أليساندرو باستوني","الدوري الإيطالي","إيطاليا",25,70],["هاري ماغواير","الدوري الإنجليزي","إنجلترا",50,15]]},
  {t:"حراس المرمى",ss:"2020/21",p:[["إيدرسون","الدوري الإنجليزي","البرازيل",56,20],["أندريه أونانا","الدوري الهولندي","الكاميرون",30,15],["إيميليانو مارتينيز","الدوري الإنجليزي","الأرجنتين",20,20],["جوردان بيكفورد","الدوري الإنجليزي","إنجلترا",30,20],["يان سومر","الدوري الألماني","سويسرا",12,3],["كيبا أريزابالاغا","الدوري الإنجليزي","إسبانيا",20,15],["آرون رامسديل","الدوري الإنجليزي","إنجلترا",20,15],["فويتشيك تشيزني","الدوري الإيطالي","بولندا",20,1]]},
  {t:"الوسط الدفاعي",ss:"2022/23",p:[["رودري","الدوري الإنجليزي","إسبانيا",80,110],["كاسيميرو","الدوري الإنجليزي","البرازيل",40,8],["فابينيو","الدوري الإنجليزي","البرازيل",50,12],["برونو غيماريش","الدوري الإنجليزي","البرازيل",45,80],["سيرغي ميلينكوفيتش-سافيتش","الدوري الإيطالي","صربيا",60,30],["أدريان رابيو","الدوري الإيطالي","فرنسا",20,20],["جواو بالينيا","الدوري البرتغالي","البرتغال",40,45],["تيجاني ريندرز","الدوري الهولندي","هولندا",20,55]]}];
-const BR=10;
+const BR=11;
 const BPW=[["sw","🔄","الاستحواذ","بدّل كارتك مع كارت الخصم قبل الكشف"],["ex","🧠","الخبير","لو كارتك خسر — الخسارة تنقلب ربح 📈"],["x2","⚡","المضاربة ×2","ضاعف نتيجة كارتك — ربح أو خسارة"]];
 const BT={intro:3500,pick:15000,power:16000,reveal:3*4800+3800,board:5000};
-const bsMe=()=>role==="guest"?1:0,bsCard=(S,k)=>{const c=BCATS[S.cat[S.r]];return c.p[S.c[k]]},bsD=p=>p[4]-p[3];
+const bsMe=()=>role==="guest"?1:0,bsCard=(S,k)=>{const c=BCATS[S.cat[S.r]];return c.p[S.c[k]]},bsPhK=(S,k)=>"c"+S.cat[S.r]+"p"+S.c[k],bsPhoto=(S,k,cls)=>{const u=BPH[bsPhK(S,k)];return"<div class='bsph "+(cls||"")+"'>"+(u?"<img src='"+u+"' alt=''>":"<svg viewBox='0 0 64 64'><circle cx='32' cy='22' r='12' fill='rgba(255,215,90,.55)'/><path d='M10 60c2-14 11-21 22-21s20 7 22 21z' fill='rgba(255,215,90,.55)'/></svg>")+"</div>"},bsD=p=>p[4]-p[3];
 const eur=v=>(v<0?"-":"")+"€"+Math.abs(v).toFixed(1).replace(/\.0$/,".0")+"M",sgn=v=>(v>0?"+":v<0?"-":"±")+"€"+Math.abs(v).toFixed(1)+"M";
 function bsShuf(n){const a=[...Array(n).keys()];for(let i=n-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 function bsNorm(o){if(!o||typeof o!=="object")return null;const A=(v,n,d)=>{const r=[];for(let i=0;i<n;i++){const x=v&&v[i];r.push(x==null?d:x)}return r};
@@ -1084,7 +1086,7 @@ function bsTick(){if(!BS||state!=="bs")return;const host=role!=="guest";
   if(host){if(BS.ph!=="end"&&Date.now()>=bsDL)bsNext();bsAI();
     if(role==="host"&&R){const g=find("guest");if(g){bsLost=0;const bi=g.presence.bi;if(bi&&typeof bi==="object"&&(+bi.n||0)>bsBiN){bsBiN=+bi.n||0;if(bi.a==="p")bsPick(1,bi.k|0);else if(bi.a==="w")bsSubmit(1,bi);else if(bi.a==="again"&&BS.ph==="end")bsAgain()}}else if(BS.ph!=="end"&&++bsLost>60)bsDrop()}}
   else{const h=R&&find("host");if(!h){if(BS.ph!=="end"&&++bsLost>60)bsDrop()}else bsLost=0}
-  if(BS.ph==="end"&&!bsWinDone){bsWinDone=true;if(BS.win===bsMe()){const o=lvOf(prof.goals);prof.wins=(prof.wins|0)+1;prof.goals=(prof.goals|0)+PER;saveProf();const n=lvOf(prof.goals);toast(n>o?"🏆 فزت في البورصة! ⬆️ مستواك صار "+n+" • 🔑 +1":"🏆 فزت في البورصة!")}}
+  if(BS.ph==="end"&&!bsWinDone){bsWinDone=true;if(BS.win===bsMe()){const o=lvOf(prof.goals);prof.wins=(prof.wins|0)+1;prof.bsw=(prof.bsw|0)+1;prof.goals=(prof.goals|0)+PER;const n=lvOf(prof.goals);if(n>o)prof.opened=(prof.opened|0)+(n-o);const key=prof.bsw%10===0;if(key)prof.bonus=(prof.bonus|0)+1;saveProf();toast("🏆 فزت في البورصة!"+(n>o?" ⬆️ مستواك صار "+n:"")+(key?" • 🔑 +1 مفتاح (10 انتصارات)":" • 🔑 "+(10-prof.bsw%10)+" انتصارات للمفتاح"))}}
   bsRender(false)}
 setInterval(bsTick,250);
 function bsDrop(){if(!BS)return;BS.ph="end";BS.win=-3;BS.n++;bsRender(true)}
@@ -1111,6 +1113,10 @@ function bsAC(){if(prof.bsMute)return null;try{if(!BSA){const C=window.AudioCont
 function tone(f,d,o){const a=bsAC();if(!a)return;o=o||{};const t=a.currentTime+(o.at||0),g=a.createGain(),os=a.createOscillator();os.type=o.type||"sine";os.frequency.setValueAtTime(f,t);if(o.to)os.frequency.exponentialRampToValueAtTime(o.to,t+d);const v=o.v||.16;g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v,t+.012);g.gain.exponentialRampToValueAtTime(.0001,t+d);os.connect(g);g.connect(a.destination);os.start(t);os.stop(t+d+.05)}
 function noise(d,o){const a=bsAC();if(!a)return;o=o||{};const t=a.currentTime+(o.at||0),n=Math.floor(a.sampleRate*d),b=a.createBuffer(1,n,a.sampleRate),c=b.getChannelData(0);for(let i=0;i<n;i++)c[i]=Math.random()*2-1;
   const s=a.createBufferSource(),f=a.createBiquadFilter(),g=a.createGain();s.buffer=b;f.type="bandpass";f.Q.value=1.2;f.frequency.setValueAtTime(o.f0||800,t);f.frequency.exponentialRampToValueAtTime(o.f1||2000,t+d);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(o.v||.22,t+d*.3);g.gain.exponentialRampToValueAtTime(.0001,t+d);s.connect(f);f.connect(g);g.connect(a.destination);s.start(t);s.stop(t+d+.02)}
+function wah(at,f0,d,v){const a=bsAC();if(!a)return;const t=a.currentTime+(at||0),os=a.createOscillator(),lp=a.createBiquadFilter(),g=a.createGain();os.type="sawtooth";os.frequency.setValueAtTime(f0,t);os.frequency.linearRampToValueAtTime(f0*.94,t+d);
+  lp.type="lowpass";lp.Q.value=9;lp.frequency.setValueAtTime(350,t);lp.frequency.exponentialRampToValueAtTime(1500,t+d*.35);lp.frequency.exponentialRampToValueAtTime(260,t+d);
+  g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v||.13,t+.04);g.gain.setValueAtTime(v||.13,t+d*.7);g.gain.exponentialRampToValueAtTime(.0001,t+d);os.connect(lp);lp.connect(g);g.connect(a.destination);os.start(t);os.stop(t+d+.05)}
+function coin(at,f,v){tone(f,.09,{type:"triangle",at,v:v||.09});tone(f*1.5,.16,{type:"sine",at:at+.035,v:(v||.09)*.75});noise(.05,{f0:6000,f1:9000,v:.03,at})}
 const SFX={
  pick(){tone(880,.09,{type:"triangle"});tone(1320,.16,{at:.06,v:.13});noise(.08,{f0:3000,f1:1500,v:.08})},
  opp(){tone(523,.1,{type:"triangle",v:.12});tone(392,.14,{at:.07,v:.09})},
@@ -1121,10 +1127,10 @@ const SFX={
  toggle(on){tone(on?740:520,.07,{type:"triangle",v:.1});if(on)tone(1110,.08,{at:.05,v:.07})},
  confirm(){tone(660,.08,{type:"triangle"});tone(990,.14,{at:.08,v:.12})},
  flip(){noise(.2,{f0:2200,f1:500,v:.18});tone(220,.12,{type:"triangle",at:.05,v:.08})},
- up(i){tone(392*Math.pow(1.07,i),.07,{type:"triangle",v:.07})},
- dn(i){tone(784*Math.pow(.94,i),.08,{type:"sawtooth",v:.035})},
- gain(){[784,988,1318,1568].forEach((f,i)=>tone(f,.28,{type:"triangle",at:i*.07,v:.13}));noise(.25,{f0:5000,f1:7000,v:.05,at:.25})},
- loss(){tone(233,.55,{type:"sawtooth",to:110,v:.11});tone(175,.7,{at:.18,to:82,v:.09})},
+ up(i){for(let k=0;k<3;k++)coin(k*.055+Math.random()*.03,2000+Math.random()*1800+i*60,.07)},
+ dn(i){wah(0,262*Math.pow(.97,i),.32,.1)},
+ gain(){for(let k=0;k<16;k++)coin(k*.06+Math.random()*.04,1800+Math.random()*2600,.09);[784,1046,1318].forEach((f,i)=>tone(f,.35,{type:"triangle",at:.9+i*.08,v:.1}))},
+ loss(){[294,277,262].forEach((f,i)=>wah(i*.42,f,.38,.13));wah(1.26,247,1.0,.13)},
  flat(){tone(600,.25,{v:.08});tone(600,.25,{at:.2,v:.06})},
  swap(){noise(.35,{f0:300,f1:3000,v:.2});tone(480,.3,{type:"triangle",to:960,at:.08,v:.08})},
  board(){[392,494,587].forEach((f,i)=>tone(f,.7,{at:i*.09,v:.08}))},
@@ -1149,7 +1155,7 @@ function bsRevealHTML(S){const R2=S.res,me=bsMe(),op=1-me,st=bsStage(),el=bsStEl
   if(st<3&&ord[st]!=null){const k=ord[st],p=bsCard(S,k),o=R2.own[k],d=bsD(p),seed=(S.r+1)*97+S.c[k]*31+S.cat[S.r]*7,cs=bsCandles(p,seed),late=el>3100;
     let fin=d,notes=[];if(o>=0){if(R2.fl&&R2.fl[o]){fin=-d;notes.push("🧠 الخبير قلب الخسارة ربح")}else if(R2.ex&&R2.ex[o])notes.push("🧠 الخبير ما احتاجه");if(R2.x2[o]){fin*=2;notes.push("⚡ المضاربة ×2")}}
     return dots+(st>=1?swapNote:"")+"<div class='rvh'>"+(o<0?"<b>📈 كارت السوق</b><small>محدش اشتراه — السوق كان شايل إيه؟</small>":"<div class='rvo'>"+faceHTML(bsPl(o),40)+"<b>كارت "+nameHTML(S.nm[o],bsPl(o).nt)+(o===me?" (أنت)":"")+"</b></div>")+"</div>"
-     +"<div class='rvc"+(o===me?" mine":o>=0?" opp":"")+"' style='animation-delay:"+((-el)/1000).toFixed(2)+"s'><div class='bss'>"+c.ss+"</div><div class='rvn'>"+esc(p[0])+"</div><div class='bsl'>"+esc(p[1])+" • 🌍 "+esc(p[2])+"</div></div>"
+     +"<div class='rvc"+(o===me?" mine":o>=0?" opp":"")+"' style='animation-delay:"+((-el)/1000).toFixed(2)+"s'><div class='bss'>"+c.ss+"</div>"+bsPhoto(S,k,"lg")+"<div class='rvn'>"+esc(p[0])+"</div><div class='bsl'>"+esc(p[1])+" • 🌍 "+esc(p[2])+"</div></div>"
      +"<div class='rvp'><span>سعره في بداية الموسم<b>"+eur(p[3])+"</b></span><span>سعره النهارده<b id='rvnow' class='"+(late?(d>0?"up":d<0?"dn":""):"")+"' data-s='"+p[3]+"' data-v='"+p[4]+"'>"+eur(late?p[4]:p[3])+"</b></span></div>"
      +"<div class='rvchw'>"+bsChart(cs,el)+"<div class='rvar "+(d>0?"up":d<0?"dn":"")+"' style='animation-delay:"+((3000-el)/1000).toFixed(2)+"s'>"+(d>0?"▲":d<0?"▼":"▬")+"</div></div>"
      +"<div class='rvd "+(d>0?"up":d<0?"dn":"")+"' style='animation-delay:"+((3100-el)/1000).toFixed(2)+"s'>"+sgn(d)+"</div>"
@@ -1177,7 +1183,7 @@ setInterval(bsSfx,120);
 // ---- rendering ----
 function bsCardHTML(S,k,o){const p=bsCard(S,k),c=BCATS[S.cat[S.r]],me=bsMe(),rev=o&&o.rev,own=S.own[k],d=bsD(p);
   return"<div class='bsc"+(rev?" rv":"")+(o&&o.click?" ck":"")+(own===me?" mine":own>=0?" opp":"")+"'"+(o&&o.click?" id='bsk_"+k+"'":"")+"><div class='bss'>"+c.ss+"</div>"
-   +(rev?"<div class='bsn'>"+esc(p[0])+"</div>":"<div class='bsq'>?</div><div class='bsn'>لاعب مجهول</div>")
+   +(rev?bsPhoto(S,k,"sm")+"<div class='bsn'>"+esc(p[0])+"</div>":"<div class='bsq'>?</div><div class='bsn'>لاعب مجهول</div>")
    +"<div class='bsl'>"+esc(p[1])+"</div><div class='bsl'>🌍 "+esc(p[2])+"</div>"
    +(rev?"<div class='bspr'><span>بداية الموسم<b>"+eur(p[3])+"</b></span><span>اليوم<b>"+eur(p[4])+"</b></span></div><div class='bsdl "+(d>0?"up":d<0?"dn":"")+"'>"+sgn(d)+"</div>":"")
    +(own>=0?"<div class='bsow'>"+(own===me?"✅ كارتك":"👤 "+esc(S.nm[own]))+"</div>":rev?"<div class='bsow mk'>📈 السوق</div>":"")+"</div>"}
@@ -1280,7 +1286,7 @@ async function shopClick(e){
     try{if(a==="facc"){await window.fbFriends.accept(u);if(r&&!prof.friends.some(f=>f.u===u)&&prof.friends.length<50){prof.friends.push({id:/^[A-Z0-9]{6}$/.test(r.fid)?r.fid:"U"+u.slice(0,5).toUpperCase(),name:r.name,u});saveProf()}toast("✅ أصبحتما أصدقاء")}else{await window.fbFriends.reject(u);toast("تم رفض الطلب")}}catch(e){b.disabled=false;smsg(/permission/i.test(String(e&&(e.code||e.message)))?"القواعد ترفض العملية — انشر قواعد Firebase الجديدة":"تعذّرت العملية، تأكد من الإنترنت");return}
     delete REQ[u];kboxUpd();inboxStep("list");return}
   await admClick(a,b)}
-function shopChange(e){const t=e.target;if(t.id==="gcc"){const h=gcol(+t.value);if(h)$("gcv").value=h;return}if(t.id==="gk"){$("gnw").style.display=t.value==="keys"?"":"none";$("gcw").style.display=t.value==="card"?"":"none"}else if(t.id==="gt")$("gdw").style.display=t.value==="1"?"":"none";else if(t.id==="nf")ncPick(t.files&&t.files[0])}
+function shopChange(e){const t=e.target;if(t.id==="bpc"){bpC=+t.value;bpP=0;bpUp="";return bpPanel()}if(t.id==="bpp"){bpP=+t.value;bpUp="";return bpPanel()}if(t.id==="bpf")return bpPick(t.files&&t.files[0]);if(t.id==="gcc"){const h=gcol(+t.value);if(h)$("gcv").value=h;return}if(t.id==="gk"){$("gnw").style.display=t.value==="keys"?"":"none";$("gcw").style.display=t.value==="card"?"":"none"}else if(t.id==="gt")$("gdw").style.display=t.value==="1"?"":"none";else if(t.id==="nf")ncPick(t.files&&t.files[0])}
 
 // ---------- لوحة المدير ----------
 const PKA=["pkg","pkgs","pkdur","pkfor","pkhide","pkrm","pkad","pkw","pkwr","ncn","ncsave","ncdel","gcs","gcr"];let ncImg="";let pkgP="t";
@@ -1322,7 +1328,7 @@ function fmtLeft(ms){const d=Math.floor(ms/864e5),h=Math.floor(ms%864e5/36e5),m=
 async function admStep(st){
   if(!isAdm()){closeShop();return}
   const x="<button class='hb g sm' data-a='close'>إغلاق</button>";
-  if(st==="pkg"){pkgPanel(x)}else if(st==="newc"){newcPanel(x)}else if(st==="adm"){shopPanel("<h3>🛠️ لوحة الإدارة</h3><button class='hb' data-a='players'>👤 اللاعبون</button><button class='hb' data-a='bmsg'>📢 رسالة لجميع اللاعبين</button><button class='hb' data-a='bgift'>🎁 هدية لجميع اللاعبين</button><button class='hb' data-a='pkg'>📦 إدارة الباكجات</button>"+x)}
+  if(st==="pkg"){pkgPanel(x)}else if(st==="newc"){newcPanel(x)}else if(st==="adm"){shopPanel("<h3>🛠️ لوحة الإدارة</h3><button class='hb' data-a='players'>👤 اللاعبون</button><button class='hb' data-a='bmsg'>📢 رسالة لجميع اللاعبين</button><button class='hb' data-a='bgift'>🎁 هدية لجميع اللاعبين</button><button class='hb' data-a='pkg'>📦 إدارة الباكجات</button><button class='hb' data-a='bpimg'>🖼️ صور لاعبي البورصة</button>"+x)}
   else if(st==="players"){shopPanel("<h3>👤 اللاعبون</h3><input id='sq' maxlength='40' placeholder='جزء من الاسم أو الإيميل (أو اتركه فارغًا لعرض الجميع)'><button class='hb' data-a='psearch'>🔍 بحث</button><div id='sres'></div><button class='hb g sm' data-a='reidx'>🔄 فهرسة اللاعبين القدامى</button><button class='hb g sm' data-a='adm'>↩ رجوع</button>")}
   else if(st==="player"){const u=shopPick.u;shopPanel("<h3>جارٍ التحميل...</h3>");
     try{const r=await window.fbShop.playerInfo(u);if(!shopEl)return;const p=r.prof||{},nm=esc(shopPick.name||p.name||"?"),em=esc(shopPick.email||""),tn=tNow(),
@@ -1351,7 +1357,16 @@ async function sendCompose(b){
   try{if(cmp.to==="all")await window.fbInbox.broadcast(m);else await window.fbInbox.sendTo(cmp.to,m)}catch(e){if(b.isConnected){b.disabled=false;delete b.dataset.cf;b.textContent="إرسال";const c=String(e&&(e.code||e.message)||"");
     smsg(!window.fbInbox?"ملف shim لم يُحدَّث — أعد بناء التطبيق بالملفات الجديدة":/permission/i.test(c)?"القواعد ترفض الإرسال (PERMISSION_DENIED) — انشر القواعد الجديدة":/admin only/.test(c)?"هذا الحساب ليس حساب الأدمن":/network|offline|timeout|fetch/i.test(c)?"لا يوجد اتصال بالإنترنت":"فشل الإرسال: "+c.slice(0,80))}return}
   shopPanel("<h3>✅ تم الإرسال</h3><div class='kk'>"+(cmp.to==="all"?"وصلت لجميع اللاعبين":"وصلت إلى "+esc(cmp.name||"اللاعب"))+"</div><button class='hb g' data-a='"+(cmp.to==="all"?"adm":"player")+"'>↩ رجوع</button>")}
+let bpC=0,bpP=0,bpUp="";
+function bpPanel(){const c=BCATS[bpC],k="c"+bpC+"p"+bpP,u=bpUp||BPH[k];
+  shopPanel("<h3>🖼️ صور لاعبي البورصة</h3><div class='kk'>اختر اللاعب وارفع صورته (وجه واضح) — تظهر داخل كارته عند الكشف لكل اللاعبين</div><select id='bpc'>"+BCATS.map((x,i)=>"<option value='"+i+"'"+(i===bpC?" selected":"")+">"+esc(x.t)+" "+x.ss+"</option>").join("")+"</select><select id='bpp'>"+c.p.map((p,i)=>"<option value='"+i+"'"+(i===bpP?" selected":"")+">"+(BPH["c"+bpC+"p"+i]?"✅ ":"")+esc(p[0])+"</option>").join("")+"</select>"
+   +"<div class='ord' style='align-items:center'>"+(u?"<img src='"+u+"' style='width:110px;height:110px;border-radius:12px;object-fit:cover'>":"<span>لا توجد صورة</span>")+"</div><input id='bpf' type='file' accept='image/*'>"
+   +"<div id='smsg'></div><div class='rowc'><button class='hb' data-a='bpup'>💾 حفظ الصورة</button>"+(BPH[k]?"<button class='hb g' data-a='bpdel'>🗑 حذف</button>":"")+"</div><div class='kk'>عدد الصور المرفوعة: "+Object.keys(BPH).length+" / "+BCATS.reduce((n,x)=>n+x.p.length,0)+"</div><button class='hb g sm' data-a='adm'>↩ رجوع</button>")}
+function bpPick(f){bpUp="";if(!f)return bpPanel();const u=URL.createObjectURL(f),im=new Image();im.onload=()=>{try{const m=Math.min(im.naturalWidth,im.naturalHeight),c=document.createElement("canvas");c.width=c.height=160;c.getContext("2d").drawImage(im,(im.naturalWidth-m)/2,(im.naturalHeight-m)/2*.6,m,m,0,0,160,160);let q=.85,d=c.toDataURL("image/jpeg",q);while(d.length>55000&&q>.4){q-=.1;d=c.toDataURL("image/jpeg",q)}bpUp=d}catch(_){}URL.revokeObjectURL(u);bpPanel();if(!bpUp)smsg("تعذّر قراءة الصورة")};im.onerror=()=>{URL.revokeObjectURL(u);smsg("هذا ليس ملف صورة")};im.src=u}
 async function admClick(a,b){
+  if(a==="bpimg"){if(isAdm())bpPanel();return true}
+  if(a==="bpup"||a==="bpdel"){if(!isAdm())return true;if(!window.fbShopX){smsg("❌ ملف shim قديم");return true}const k="c"+bpC+"p"+bpP;if(a==="bpup"&&!bpUp){smsg("اختر صورة أولاً");return true}b.disabled=true;
+    try{if(a==="bpup")await window.fbShopX.set("p",k,{u:bpUp});else await window.fbShopX.del("p",k);if(a==="bpup")BPH[k]=bpUp;else delete BPH[k];bpUp="";bpPanel();smsg(a==="bpup"?"✅ تم حفظ الصورة":"🗑 تم الحذف")}catch(e){b.disabled=false;smsg(/permission/i.test(String(e&&(e.code||e.message)))?"القواعد ترفض الحفظ — تأكد من قاعدة shopx":"فشل الحفظ")}return true}
   if(PKA.includes(a))return pkgAct(a,b);
   if(!["adm","players","psearch","pick","player","kadd","ksub","ban","unban","reidx","bmsg","bgift","pmsg","pgift","csend"].includes(a))return false;
   if(!isAdm())return true;
