@@ -160,18 +160,6 @@ body.th2 .pfx{background:radial-gradient(ellipse at 50% 0,rgba(120,10,18,.92),rg
 .bss{font-size:.7rem;background:#000;border-radius:6px;padding:0 6px;color:#ffd35a}.bsq{font:900 3rem Georgia,serif;color:#ffd35a;line-height:1.1}.bsn{font-weight:800;font-size:.85rem;color:#fff;line-height:1.25}.bsl{font-size:.68rem;opacity:.85}
 .bspr{display:flex;gap:4px;width:100%;margin-top:2px}.bspr span{flex:1;background:rgba(0,0,0,.5);border-radius:6px;padding:2px;font-size:.55rem;display:flex;flex-direction:column}.bspr b{font-size:.78rem;direction:ltr;color:#fff}
 .bsdl{font-weight:900;font-size:1rem;direction:ltr}.up{color:#2ee66b!important}.dn{color:#ff5a5a!important}.bsow{font-size:.68rem;font-weight:800;background:#2a1f5a;border-radius:8px;padding:1px 6px}.bsow.mk{background:#333}
-.bsbank{width:100%;box-sizing:border-box;padding:10px;border-radius:16px;border:2px solid #c9a227;background:linear-gradient(170deg,#1d2a12,#0a1004);text-align:center;display:flex;flex-direction:column;gap:6px;animation:bkin .5s ease}
-.bsbank.dl{border-color:#2ee66b;box-shadow:0 0 18px rgba(46,230,107,.45)}
-.bkh b{color:#ffd35a;font-size:1rem}.bkh{animation:bkring 1s ease 2}
-.bko{font-size:.85rem}.bko em{font-style:normal;font-weight:900;font-size:1.25rem;padding:0 4px}
-.bko em.up{color:#21d07a}.bko em.dn{color:#ff4d5e}
-.bkb{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.bkb button{padding:10px 4px;border-radius:12px;font-weight:900;font-size:1rem;color:#fff;border:2px solid #555;background:#1a1a1a;opacity:.7}
-.bkb .bkd.on{background:linear-gradient(#1f9d4f,#0d5c2b);border-color:#2ee66b;opacity:1}
-.bkb .bkn.on{background:linear-gradient(#b3262f,#5c0d12);border-color:#ff4d5e;opacity:1}
-.bsbank small{font-size:.62rem;opacity:.8}
-@keyframes bkin{from{transform:scale(.9);opacity:0}to{transform:none;opacity:1}}
-@keyframes bkring{0%,100%{transform:none}20%{transform:rotate(-4deg)}40%{transform:rotate(4deg)}60%{transform:rotate(-3deg)}80%{transform:rotate(2deg)}}
 .bspw{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;width:100%}.bspc{display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 4px;border-radius:14px;border:2px solid #7a5a12;background:linear-gradient(170deg,#4a1010,#160404);color:#fff}.bspc i{font-style:normal;font-size:1.6rem}.bspc b{font-size:.8rem;color:#ffd35a}.bspc small{font-size:.58rem;opacity:.85}.bspc.on{border-color:#2ee66b;box-shadow:0 0 14px rgba(46,230,107,.6);transform:translateY(-3px)}.bspc.used{opacity:.35}
 .bsex{width:100%;background:rgba(46,230,107,.08);border:1px solid rgba(46,230,107,.5);border-radius:12px;padding:8px;font-size:.9rem}
 .bsgain{display:flex;gap:8px;width:100%}.bsgain div{flex:1;background:rgba(0,0,0,.45);border-radius:12px;padding:8px;display:flex;flex-direction:column}.bsgain span{font-size:1.3rem;font-weight:900;direction:ltr}
@@ -1037,7 +1025,7 @@ let acc=0,prev=performance.now(),nextR=0,fc=0,fl=prev;snap();
   requestAnimationFrame(loop)})(prev);
 upd();clock();applyUI();rh(prof.name?"menu":"name");
 // ---------- لعبة البورصة ----------
-var GM="fb",BS=null,BSN=-1,BSD={sw:0,ex:0,x2:0,dl:0},bsDL=0,bsBiN=0,bsLastBi=0,bsLost=0,bsAiT=0,bsSig="",bsWinDone=false,MMT=0,MM=false;
+var GM="fb",BS=null,BSN=-1,BSD={sw:0,ex:0,x2:0},bsDL=0,bsBiN=0,bsLastBi=0,bsLost=0,bsAiT=0,bsSig="",bsWinDone=false,MMT=0,MM=false;
 const BCATS=[
  {t:"الحراس",ss:"2024/25",p:[["أليسون بيكر","الدوري الإنجليزي","البرازيل",28,17],["مارك-أندريه تير شتيغن","الدوري الإسباني","ألمانيا",28,7],["تيبو كورتوا","الدوري الإسباني","بلجيكا",35,18],["جانلويجي دوناروما","الدوري الفرنسي","إيطاليا",40,35],["يان أوبلاك","الدوري الإسباني","سلوفينيا",25,12],["مايك مينيان","الدوري الإيطالي","فرنسا",35,25],["ديفيد رايا","الدوري الإنجليزي","إسبانيا",35,40],["غولييلمو فيكاريو","الدوري الإنجليزي","إيطاليا",30,20],["جيورجي مامارداشفيلي","الدوري الإسباني","جورجيا",35,30],["لوكاس شوفالييه","الدوري الفرنسي","فرنسا",25,40]]},
  {t:"المهاجمين",ss:"2022/23",p:[["إيرلينغ هالاند","الدوري الإنجليزي","النرويج",150,180],["فيكتور أوسيمين","الدوري الإيطالي","نيجيريا",100,75],["هاري كين","الدوري الإنجليزي","إنجلترا",90,65],["روبرت ليفاندوفسكي","الدوري الإسباني","بولندا",45,10],["دوشان فلاهوفيتش","الدوري الإيطالي","صربيا",70,25],["داروين نونيز","الدوري الإنجليزي","الأوروغواي",70,45],["لاوتارو مارتينيز","الدوري الإيطالي","الأرجنتين",75,85],["كريم بنزيما","الدوري الإسباني","فرنسا",35,8]]},
@@ -1062,42 +1050,37 @@ const eur=v=>(v<0?"-":"")+"€"+Math.abs(v).toFixed(1).replace(/\.0$/,".0")+"M",
 function bsShuf(n){const a=[...Array(n).keys()];for(let i=n-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 function bsNorm(o){if(!o||typeof o!=="object")return null;const A=(v,n,d)=>{const r=[];for(let i=0;i<n;i++){const x=v&&v[i];r.push(x==null?d:x)}return r};
   return{g:"bs",n:o.n|0,r:o.r|0,ph:String(o.ph||"intro"),cat:A(o.cat,BR,0).map(v=>v|0),c:A(o.c,3,0).map(v=>v|0),own:A(o.own,3,-1).map(v=>v|0),turn:o.turn|0,w:A(o.w,2,0).map(v=>+v||0),
-   used:A(o.used,2,null).map(u=>({sw:u&&u.sw?1:0,ex:u&&u.ex?1:0,x2:u&&u.x2?1:0})),sub:A(o.sub,2,null).map(u=>u&&u.k?{sw:u.sw?1:0,ex:u.ex?1:0,x2:u.x2?1:0,dl:u.dl?1:0,k:1}:null),of:A(o.of,2,0).map(v=>+v||0),
+   used:A(o.used,2,null).map(u=>({sw:u&&u.sw?1:0,ex:u&&u.ex?1:0,x2:u&&u.x2?1:0})),sub:A(o.sub,2,null).map(u=>u&&u.k?{sw:u.sw?1:0,ex:u.ex?1:0,x2:u.x2?1:0,k:1}:null),
    res:o.res||null,tl:+o.tl||0,nm:A(o.nm,2,"لاعب").map(v=>cleanN(v)||"لاعب"),win:o.win==null?-2:o.win|0}}
 function bsSeen(){let a=[];try{a=JSON.parse(localStorage.getItem("fb_bsseen")||"[]")}catch(_){}return Array.isArray(a)?a.filter(v=>typeof v==="string").slice(-150):[]}
 function bsDeal(ci){const seen=bsSeen(),P=BCATS[ci].p,n=P.length,key=i=>ci+"-"+i,ord=f=>{const ids=bsShuf(n).filter(i=>f(P[i]));return ids.filter(i=>!seen.includes(key(i))).concat(ids.filter(i=>seen.includes(key(i))).sort((a,b)=>seen.indexOf(key(a))-seen.indexOf(key(b))))};
   const ups=ord(p=>p[4]>p[3]),dns=ord(p=>p[4]<p[3]),pk3=ups.length&&dns.length>=2?[ups[0],dns[0],dns[1]]:bsShuf(n).slice(0,3),pick=bsShuf(3).map(i=>pk3[i]),pk=pick.map(key);try{localStorage.setItem("fb_bsseen",JSON.stringify(seen.filter(k=>!pk.includes(k)).concat(pk).slice(-150)))}catch(_){}return pick}
 function bsCatPick(){let rc=[];try{rc=JSON.parse(localStorage.getItem("fb_bscats")||"[]")}catch(_){}if(!Array.isArray(rc))rc=[];const okc=c=>BCATS[c].p.some(p=>p[4]>p[3])&&BCATS[c].p.filter(p=>p[4]<p[3]).length>=2,all=bsShuf(BCATS.length).filter(okc),cats=all.filter(c=>!rc.includes(c)).concat(all.filter(c=>rc.includes(c))).slice(0,BR);
   try{localStorage.setItem("fb_bscats",JSON.stringify(cats))}catch(_){}const av=c=>{const p=BCATS[c].p;return p.reduce((a,x)=>a+x[3]+x[4],0)/p.length};return cats.slice().sort((a,b)=>av(a)-av(b))}
-function bsNew(oppName){const cats=bsCatPick();return{g:"bs",n:1,r:0,ph:"intro",cat:cats,c:bsDeal(cats[0]),own:[-1,-1,-1],turn:0,w:[0,0],used:[{sw:0,ex:0,x2:0},{sw:0,ex:0,x2:0}],sub:[null,null],of:[0,0],res:null,tl:BT.intro,nm:[cleanN(prof.name)||"أنت",oppName],win:-2}}
+function bsNew(oppName){const cats=bsCatPick();return{g:"bs",n:1,r:0,ph:"intro",cat:cats,c:bsDeal(cats[0]),own:[-1,-1,-1],turn:0,w:[0,0],used:[{sw:0,ex:0,x2:0},{sw:0,ex:0,x2:0}],sub:[null,null],res:null,tl:BT.intro,nm:[cleanN(prof.name)||"أنت",oppName],win:-2}}
 function bsSet(ph,ms){BS.ph=ph;BS.n++;bsDL=Date.now()+ms;BS.tl=ms;bsPub()}
 function bsPub(){if(role==="host"&&R){BS.tl=Math.max(0,bsDL-Date.now());try{R.presence({bs:JSON.parse(JSON.stringify(BS))}).catch(()=>{})}catch(_){}}bsRender(true)}
-function bsStart(oppName){BS=bsNew(oppName);BSD={sw:0,ex:0,x2:0,dl:0};bsWinDone=false;bsLost=0;state="bs";bsDL=Date.now()+BT.intro;BSN=-1;bsPub();rh("bs")}
+function bsStart(oppName){BS=bsNew(oppName);BSD={sw:0,ex:0,x2:0};bsWinDone=false;bsLost=0;state="bs";bsDL=Date.now()+BT.intro;BSN=-1;bsPub();rh("bs")}
 function bsSolo(){bsAC();GM="bs";role="solo";code="";bsStart("🤖 الكمبيوتر")}
 // ---- host-side rules ----
 function bsPick(pl,k){const S=BS;if(!S||S.ph!=="pick"||S.turn!==pl||S.own[k]!==-1)return;S.own[k]=pl;const picks=S.own.filter(o=>o>=0).length;
-  if(picks>=2){S.of=[0,1].map(i=>bsOffer(S,i));bsSet("power",BT.power)}else{S.turn=1-pl;S.n++;bsDL=Date.now()+BT.pick;bsPub()}}
-// 🏦 Deal or No Deal: the bank makes each player an offer for their hidden card
-function bsOffer(S,i){const k=S.own.indexOf(i);if(k<0)return 0;const ds=[0,1,2].map(j=>bsD(bsCard(S,j))),ev=(ds[0]+ds[1]+ds[2])/3,mine=ds[k],sp=Math.max(...ds)-Math.min(...ds),rn=(Math.random()-.5)*sp*.18;
-  let v=.5*ev+.32*mine+rn;if(mine>0)v=Math.min(v,mine*.7);v=Math.round(v*10)/10;return Math.abs(v)<.1?(mine>=0?.5:-.5):v}
-function bsSubmit(pl,d){const S=BS;if(!S||S.ph!=="power"||S.sub[pl])return;const u=S.used[pl],o={k:1,dl:d&&d.dl?1:0};for(const k of["sw","ex","x2"])o[k]=!o.dl&&d&&d[k]&&!u[k]?1:0;S.sub[pl]=o;S.n++;if(S.sub[0]&&S.sub[1])bsResolve();else bsPub()}
-function bsResolve(){const S=BS;for(let i=0;i<2;i++)if(!S.sub[i])S.sub[i]={sw:0,ex:0,x2:0,dl:0,k:1};
-  const dl=[S.sub[0].dl?1:0,S.sub[1].dl?1:0];for(let i=0;i<2;i++)if(dl[1-i])S.sub[i].sw=0;
+  if(picks>=2){bsSet("power",BT.power)}else{S.turn=1-pl;S.n++;bsDL=Date.now()+BT.pick;bsPub()}}
+function bsSubmit(pl,d){const S=BS;if(!S||S.ph!=="power"||S.sub[pl])return;const u=S.used[pl],o={k:1};for(const k of["sw","ex","x2"])o[k]=d&&d[k]&&!u[k]?1:0;S.sub[pl]=o;S.n++;if(S.sub[0]&&S.sub[1])bsResolve();else bsPub()}
+function bsResolve(){const S=BS;for(let i=0;i<2;i++)if(!S.sub[i])S.sub[i]={sw:0,ex:0,x2:0,k:1};
   const own=S.own.slice(),swp=[S.sub[0].sw,S.sub[1].sw];if(swp[0]^swp[1]){const a=own.indexOf(0),b=own.indexOf(1);own[a]=1;own[b]=0}
-  const g=[0,0],flip=[0,0];own.forEach((o,k)=>{if(o<0)return;if(dl[o]){g[o]=S.of[o]||0;return}let d=bsD(bsCard(S,k));if(S.sub[o].ex&&d<0){d=-d;flip[o]=1}g[o]+=d*(S.sub[o].x2?2:1)});
+  const g=[0,0],flip=[0,0];own.forEach((o,k)=>{if(o<0)return;let d=bsD(bsCard(S,k));if(S.sub[o].ex&&d<0){d=-d;flip[o]=1}g[o]+=d*(S.sub[o].x2?2:1)});
   for(let i=0;i<2;i++){for(const k of["sw","ex","x2"])if(S.sub[i][k])S.used[i][k]=1;S.w[i]=Math.round((S.w[i]+g[i])*10)/10}
-  S.res={own,g,dl,of:(S.of||[0,0]).slice(),sw:swp,x2:[S.sub[0].x2,S.sub[1].x2],ex:[S.sub[0].ex,S.sub[1].ex],fl:flip};bsSet("reveal",BT.reveal)}
+  S.res={own,g,sw:swp,x2:[S.sub[0].x2,S.sub[1].x2],ex:[S.sub[0].ex,S.sub[1].ex],fl:flip};bsSet("reveal",BT.reveal)}
 function bsNext(){const S=BS;if(S.ph==="intro"){S.turn=S.r%2;bsSet("pick",BT.pick);return}
   if(S.ph==="pick"){const free=[0,1,2].filter(k=>S.own[k]<0);bsPick(S.turn,free[Math.floor(Math.random()*free.length)]);return}
   if(S.ph==="power"){bsResolve();return}
   if(S.ph==="reveal"){bsSet("board",BT.board);return}
   if(S.ph==="board"){if(S.r>=BR-1){S.win=S.w[0]===S.w[1]?-1:S.w[0]>S.w[1]?0:1;bsSet("end",0);return}
-    S.r++;S.c=bsDeal(S.cat[S.r]);S.own=[-1,-1,-1];S.sub=[null,null];S.of=[0,0];S.res=null;bsSet("intro",BT.intro)}}
+    S.r++;S.c=bsDeal(S.cat[S.r]);S.own=[-1,-1,-1];S.sub=[null,null];S.res=null;bsSet("intro",BT.intro)}}
 function bsAI(){const S=BS,now=Date.now();if(!S||role!=="solo"||now<bsAiT)return;
   if(S.ph==="pick"&&S.turn===1){bsAiT=now+1400+Math.random()*1200;if(!bsAI.w){bsAI.w=1;return}bsAI.w=0;const free=[0,1,2].filter(k=>S.own[k]<0);bsPick(1,free[Math.floor(Math.random()*free.length)])}
   else if(S.ph==="power"&&!S.sub[1]){if(!bsAI.p){bsAI.p=now+1500+Math.random()*2500;return}if(now<bsAI.p)return;bsAI.p=0;
-    const u=S.used[1],me=S.own.indexOf(1),op=S.own.indexOf(0),dm=bsD(bsCard(S,me)),dp=bsD(bsCard(S,op)),d={sw:0,ex:0,x2:0,dl:0},late=S.r>=BR-3,of=S.of[1]||0;
-    if(Math.random()<(of>3?.55:of>0?.35:of>-2?.15:.05)){bsSubmit(1,{dl:1});return}
+    const u=S.used[1],me=S.own.indexOf(1),op=S.own.indexOf(0),dm=bsD(bsCard(S,me)),dp=bsD(bsCard(S,op)),d={sw:0,ex:0,x2:0},late=S.r>=BR-3;
     const last=S.r>=BR-1;if(!u.ex&&(last||Math.random()<(late?.45:.2)))d.ex=1;if(!u.sw&&(last||Math.random()<(late?.4:.15)))d.sw=1;if(!u.x2&&(last||Math.random()<(late?.45:.18)))d.x2=1;
     bsSubmit(1,d)}}
 function bsTick(){if(!BS||state!=="bs")return;const host=role!=="guest";
@@ -1111,19 +1094,18 @@ function bsDrop(){if(!BS)return;BS.ph="end";BS.win=-3;BS.n++;bsRender(true)}
 function bsAgain(){if(role==="guest"){bsSend({a:"again"});return}const nm=BS.nm[1];bsStart(nm)}
 function bsHostNet(){if(state==="lobby"&&find("guest")){const g=find("guest");try{R.presence({mm:null}).catch(()=>{})}catch(_){}MM=false;bsStart(cleanN(g.presence.name)||"الخصم")}if(state==="bs"&&frame%120===0)bsPub()}
 function bsGuest(h){GM="bs";const o=bsNorm(h.presence.bs);if(!o){if(state==="join"&&hk!=="join")rh("join",code);return}
-  if(o.n!==BSN||!BS){const first=!BS||state!=="bs";BS=o;BSN=o.n;bsDL=Date.now()+o.tl;if(first){state="bs";bsWinDone=false;BSD={sw:0,ex:0,x2:0,dl:0};rh("bs")}else{if(o.ph==="power"&&!o.sub[1]&&BS.r!==bsGuest.r){bsGuest.r=BS.r;BSD={sw:0,ex:0,x2:0,dl:0}}bsRender(true)}}}
+  if(o.n!==BSN||!BS){const first=!BS||state!=="bs";BS=o;BSN=o.n;bsDL=Date.now()+o.tl;if(first){state="bs";bsWinDone=false;BSD={sw:0,ex:0,x2:0};rh("bs")}else{if(o.ph==="power"&&!o.sub[1]&&BS.r!==bsGuest.r){bsGuest.r=BS.r;BSD={sw:0,ex:0,x2:0}}bsRender(true)}}}
 function bsSend(o){if(!R)return;bsLastBi=Math.max(bsLastBi+1,Date.now());try{R.presence({bi:{...o,n:bsLastBi}}).catch(()=>{})}catch(_){}}
 // ---- client actions ----
 function bsAct(id){const S=BS;if(!S)return;const me=bsMe();
   {const m=/^bsk_(\d)$/.exec(id);if(m){const k=+m[1];if(S.ph!=="pick"||S.turn!==me||S.own[k]!==-1)return;SFX.pick();if(role==="guest"){if(S.own.includes(me))return;S.own[k]=me;bsRender(true);bsSend({a:"p",k})}else bsPick(0,k);return}}
-  {const m=/^bsdl_([01])$/.exec(id);if(m){if(S.ph!=="power"||S.sub[me])return;BSD.dl=+m[1];if(BSD.dl){BSD.sw=BSD.ex=BSD.x2=0;SFX.dealOk()}else SFX.noDeal();return bsRender(true)}}
-  {const m=/^bsp_(sw|ex|x2)$/.exec(id);if(m){if(S.ph!=="power"||S.sub[me]||S.used[me][m[1]]||BSD.dl)return;BSD[m[1]]=BSD[m[1]]?0:1;SFX.toggle(BSD[m[1]]);return bsRender(true)}}
-  if(id==="bsok"){if(S.ph!=="power"||S.sub[me])return;SFX.confirm();if(role==="guest"){S.sub[me]={...BSD,k:1};bsRender(true);bsSend({a:"w",...BSD})}else bsSubmit(0,BSD);BSD={sw:0,ex:0,x2:0,dl:0};return}
+  {const m=/^bsp_(sw|ex|x2)$/.exec(id);if(m){if(S.ph!=="power"||S.sub[me]||S.used[me][m[1]])return;BSD[m[1]]=BSD[m[1]]?0:1;SFX.toggle(BSD[m[1]]);return bsRender(true)}}
+  if(id==="bsok"){if(S.ph!=="power"||S.sub[me])return;SFX.confirm();if(role==="guest"){S.sub[me]={...BSD,k:1};bsRender(true);bsSend({a:"w",...BSD})}else bsSubmit(0,BSD);BSD={sw:0,ex:0,x2:0};return}
   if(id==="bssb"){unlock();bsSbOpen=!bsSbOpen;return bsRender(true)}
   if(id==="bssbx"){bsSbOpen=false;return bsRender(true)}
   {const m=/^bssn_(\d|c[a-z0-9]{3,20})$/i.exec(id);if(m){bsSbOpen=false;bsRender(true);unlock();return sendSnd(m[1][0]==="c"?m[1].slice(1):+m[1])}}
   if(id==="bsmu"){prof.bsMute=!prof.bsMute;saveProf();if(!prof.bsMute)SFX.toggle(1);return bsRender(true)}
-  if(id==="bsag"){BSD={sw:0,ex:0,x2:0,dl:0};return bsAgain()}
+  if(id==="bsag"){BSD={sw:0,ex:0,x2:0};return bsAgain()}
   if(id==="bsx"){const b=$("bsx");if(S.ph!=="end"&&b&&!b.dataset.cf){b.dataset.cf="1";b.textContent="⚠️ اضغط مرة ثانية للخروج";return}BS=null;GM="fb";toMenu()}}
 // ---- Bourse: sound engine (synthesised, no files) ----
 var BSA=null,bsW={},bsAnimOn=false;
@@ -1137,9 +1119,6 @@ function wah(at,f0,d,v){const a=bsAC();if(!a)return;const t=a.currentTime+(at||0
   g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v||.13,t+.04);g.gain.setValueAtTime(v||.13,t+d*.7);g.gain.exponentialRampToValueAtTime(.0001,t+d);os.connect(lp);lp.connect(g);g.connect(a.destination);os.start(t);os.stop(t+d+.05)}
 function coin(at,f,v){tone(f,.09,{type:"triangle",at,v:v||.09});tone(f*1.5,.16,{type:"sine",at:at+.035,v:(v||.09)*.75});noise(.05,{f0:6000,f1:9000,v:.03,at})}
 const SFX={
- bank(){[0,.32,1.0,1.32].forEach(t=>{tone(1250,.22,{type:"triangle",at:t,v:.07});tone(1650,.22,{type:"sine",at:t+.01,v:.05})})},
- dealOk(){coin(0,1568,.1);coin(.07,1976,.09);tone(784,.35,{at:.05,v:.1});tone(1046,.4,{at:.12,v:.08})},
- noDeal(){tone(330,.12,{type:"triangle",v:.1});tone(262,.2,{type:"triangle",at:.09,v:.08})},
  pick(){tone(880,.09,{type:"triangle"});tone(1320,.16,{at:.06,v:.13});noise(.08,{f0:3000,f1:1500,v:.08})},
  opp(){tone(523,.1,{type:"triangle",v:.12});tone(392,.14,{at:.07,v:.09})},
  deal(i){noise(.12,{f0:1200+i*400,f1:600,v:.12});tone(300+i*80,.06,{type:"triangle",v:.06})},
@@ -1175,7 +1154,7 @@ function bsRevealHTML(S){const R2=S.res,me=bsMe(),op=1-me,st=bsStage(),el=bsStEl
   const swapNote=(R2.sw[0]^R2.sw[1])?"<div class='bsex'>🔄 "+nameHTML(S.nm[R2.sw[0]?0:1],bsPl(R2.sw[0]?0:1).nt)+" استخدم الاستحواذ وبدّل الكروت!</div>":"";
   const dots="<div class='rvdots'>"+ord.map((k,i)=>"<i class='"+(i<st?"dn":i===st?"on":"")+"'></i>").join("")+"<i class='"+(st>=3?"on":"")+"'></i></div>";
   if(st<3&&ord[st]!=null){const k=ord[st],p=bsCard(S,k),o=R2.own[k],d=bsD(p),seed=(S.r+1)*97+S.c[k]*31+S.cat[S.r]*7,cs=bsCandles(p,seed),late=el>3100;
-    let fin=d,notes=[];if(o>=0&&R2.dl&&R2.dl[o]){fin=R2.of[o];notes.push("🏦 باعه للبنك (ديل)")}else if(o>=0){if(R2.fl&&R2.fl[o]){fin=-d;notes.push("🧠 الخبير قلب الخسارة ربح")}else if(R2.ex&&R2.ex[o])notes.push("🧠 الخبير ما احتاجه");if(R2.x2[o]){fin*=2;notes.push("⚡ المضاربة ×2")}}
+    let fin=d,notes=[];if(o>=0){if(R2.fl&&R2.fl[o]){fin=-d;notes.push("🧠 الخبير قلب الخسارة ربح")}else if(R2.ex&&R2.ex[o])notes.push("🧠 الخبير ما احتاجه");if(R2.x2[o]){fin*=2;notes.push("⚡ المضاربة ×2")}}
     return dots+(st>=1?swapNote:"")+"<div class='rvh'>"+(o<0?"<b>📈 كارت السوق</b><small>محدش اشتراه — السوق كان شايل إيه؟</small>":"<div class='rvo'>"+faceHTML(bsPl(o),40)+"<b>كارت "+nameHTML(S.nm[o],bsPl(o).nt)+(o===me?" (أنت)":"")+"</b></div>")+"</div>"
      +"<div class='rvc"+(o===me?" mine":o>=0?" opp":"")+"' style='animation-delay:"+((-el)/1000).toFixed(2)+"s'><div class='bss'>"+c.ss+"</div>"+bsPhoto(S,k,"lg")+"<div class='rvn'>"+esc(p[0])+"</div><div class='bsl'>"+esc(p[1])+" • 🌍 "+esc(p[2])+"</div></div>"
      +"<div class='rvp'><span>سعره في بداية الموسم<b>"+eur(p[3])+"</b></span><span>سعره النهارده<b id='rvnow' class='"+(late?(d>0?"up":d<0?"dn":""):"")+"' data-s='"+p[3]+"' data-v='"+p[4]+"'>"+eur(late?p[4]:p[3])+"</b></span></div>"
@@ -1183,7 +1162,7 @@ function bsRevealHTML(S){const R2=S.res,me=bsMe(),op=1-me,st=bsStage(),el=bsStEl
      +"<div class='rvd "+(d>0?"up":d<0?"dn":"")+"' style='animation-delay:"+((3100-el)/1000).toFixed(2)+"s'>"+sgn(d)+"</div>"
      +(o>=0&&notes.length?"<div class='rvnt' style='animation-delay:"+((3600-el)/1000).toFixed(2)+"s'>"+notes.join(" • ")+" → <b class='"+(fin>0?"up":fin<0?"dn":"")+"'>"+sgn(fin)+"</b></div>":"")}
   return dots+swapNote+"<div class='bsmsg on'>📊 نتيجة الجولة "+(S.r+1)+"</div><div class='bsg'>"+[0,1,2].map(k=>{const t={...S,own:R2.own};return bsCardHTML(t,k,{rev:1})}).join("")+"</div>"
-   +"<div class='bsgain'>"+[me,op].map(i=>"<div><b>"+nameHTML(S.nm[i],bsPl(i).nt)+(i===me?" (أنت)":"")+"</b><span class='"+(R2.g[i]>0?"up":R2.g[i]<0?"dn":"")+"'>"+sgn(R2.g[i])+"</span><small>"+(R2.dl&&R2.dl[i]?"🏦 ديل مع البنك ":"")+(R2.fl&&R2.fl[i]?"🧠 الخبير قلب الخسارة ربح ":R2.ex&&R2.ex[i]?"🧠 الخبير (ما احتاجه) ":"")+(R2.x2[i]?"⚡×2":"")+"</small></div>").join("")+"</div>"}
+   +"<div class='bsgain'>"+[me,op].map(i=>"<div><b>"+nameHTML(S.nm[i],bsPl(i).nt)+(i===me?" (أنت)":"")+"</b><span class='"+(R2.g[i]>0?"up":R2.g[i]<0?"dn":"")+"'>"+sgn(R2.g[i])+"</span><small>"+(R2.fl&&R2.fl[i]?"🧠 الخبير قلب الخسارة ربح ":R2.ex&&R2.ex[i]?"🧠 الخبير (ما احتاجه) ":"")+(R2.x2[i]?"⚡×2":"")+"</small></div>").join("")+"</div>"}
 // counter + per-stage sounds driven by animation frames
 function bsAnim(){if(hk!=="bs"||!BS||BS.ph!=="reveal"||home.style.display==="none"){bsAnimOn=false;return}
   const st=bsStage(),el=bsStEl(),S=BS,key=S.r+"-"+st;if(bsW.sk!==key){bsW.sk=key;bsW.ci=-1;bsW.end=0;if(st<3){SFX.flip();if(st===1&&(S.res.sw[0]^S.res.sw[1]))setTimeout(()=>SFX.swap(),250)}else SFX.board()}
@@ -1196,7 +1175,7 @@ function bsAnim(){if(hk!=="bs"||!BS||BS.ph!=="reveal"||home.style.display==="non
 function bsSfx(){const S=BS;if(!S||state!=="bs"||hk!=="bs"||home.style.display==="none")return;const me=bsMe(),k=S.r+"|"+S.ph;
   {const ow=S.own.join();if(bsW.own&&bsW.own!==ow&&(S.ph==="pick"||S.ph==="power")){const old=bsW.own.split(",").map(Number);S.own.forEach((o,i)=>{if(o>=0&&old[i]<0&&o!==me)SFX.opp()})}bsW.own=ow}
   if(bsW.k!==k){bsW.k=k;bsW.tk=-1;bsW.dealT=Date.now();
-    if(S.ph==="intro")SFX.bell();else if(S.ph==="pick")[0,1,2].forEach(i=>setTimeout(()=>SFX.deal(i),i*150));else if(S.ph==="power"){SFX.whoosh();setTimeout(()=>SFX.bank(),450)}else if(S.ph==="board"){}else if(S.ph==="end")(S.win===me?SFX.win:S.win===1-me?SFX.lose:SFX.board)();
+    if(S.ph==="intro")SFX.bell();else if(S.ph==="pick")[0,1,2].forEach(i=>setTimeout(()=>SFX.deal(i),i*150));else if(S.ph==="power")SFX.whoosh();else if(S.ph==="board"){}else if(S.ph==="end")(S.win===me?SFX.win:S.win===1-me?SFX.lose:SFX.board)();
     if(S.ph==="reveal"&&!bsAnimOn){bsAnimOn=true;requestAnimationFrame(bsAnim)}return}
   if(S.ph==="reveal"&&!bsAnimOn){bsAnimOn=true;requestAnimationFrame(bsAnim)}
   if((S.ph==="pick"&&S.turn===me)||(S.ph==="power"&&!S.sub[me])){const tl=Math.ceil((bsDL-Date.now())/1000);if(tl<=5&&tl>0&&tl!==bsW.tk){bsW.tk=tl;SFX.tick()}}}
@@ -1220,15 +1199,12 @@ function bsHTML(){const S=BS;if(!S)return"<div class='sec'><b>جاري التح�
   const top="<div class='bsh'>"+pw(me,pm,"أنت")+"<div class='bst'><b id='bstm'>"+(S.ph==="end"?"🏁":tl)+"</b><small>"+(S.ph==="end"?"":"ث")+"</small></div>"+pw(op,po,"الخصم")+"</div>"
    +(S.ph!=="end"?"<div class='bsr'>الجولة "+(S.r+1)+"/"+BR+" • "+c.t+" • موسم "+c.ss+"</div>":"");
   let b="";
-  if(S.ph==="intro")b="<div class='bsi'><div class='bsbig'>"+(S.r+1)+"<small>/"+BR+"</small></div><div class='bsit'>"+c.t+"</div><div class='bsis'>كل الكروت من موسم "+c.ss+"</div><small>اختار اللاعب اللي تتوقع إن سعره زاد 📈 — وبعدها البنك يعرض عليك صفقة: ديل أو نو ديل؟ 🏦</small></div>";
+  if(S.ph==="intro")b="<div class='bsi'><div class='bsbig'>"+(S.r+1)+"<small>/"+BR+"</small></div><div class='bsit'>"+c.t+"</div><div class='bsis'>كل الكروت من موسم "+c.ss+"</div><small>اختار اللاعب اللي تتوقع إن سعره زاد من بداية الموسم لليوم 📈</small></div>";
   else if(S.ph==="pick"){const my=S.turn===me,dl=Date.now()-(bsW.dealT||0)<900;b="<div class='bsmsg"+(my?" on":"")+"'>"+(my?"دورك! اشترِ لاعب واحد 👆":"⏳ "+esc(S.nm[op])+" بيختار…")+"</div><div class='bsg"+(dl?" deal":"")+"'>"+[0,1,2].map(k=>bsCardHTML(S,k,{click:my&&S.own[k]<0})).join("")+"</div>"}
   else if(S.ph==="power"){const mk=S.own.indexOf(me),ok=S.own.indexOf(op),sub=S.sub[me],u=S.used[me];
-    const of=(S.of||[0,0])[me],dlOn=sub?sub.dl:BSD.dl;
-    const ex="<div class='bsbank"+(dlOn?" dl":"")+"'><div class='bkh'>☎️ <b>البنك يتصل…</b></div><div class='bko'>يعرض عليك <em dir='ltr' class='"+(of>0?"up":of<0?"dn":"")+"'>"+sgn(of)+"</em> بدل كارتك المجهول</div>"
-      +"<div class='bkb'><button class='bkd"+(dlOn?" on":"")+"' id='bsdl_1'"+(sub?" disabled":"")+">🤝 ديل</button><button class='bkn"+(!dlOn?" on":"")+"' id='bsdl_0'"+(sub?" disabled":"")+">❌ نو ديل</button></div>"
-      +"<small>"+(dlOn?"بعت كارتك للبنك — مضمون <bdi dir='ltr'>"+sgn(of)+"</bdi> وكروت القوة تتوقف هالجولة":"تحتفظ بكارتك وتخاطر بسعره الحقيقي")+"</small></div>";
-    b="<div class='bsmsg'>🏦 ديل أو نو ديل؟ + ⚡ كروت القوة</div><div class='bsg two'>"+bsCardHTML(S,mk,{})+bsCardHTML(S,ok,{})+"</div>"+ex
-     +"<div class='bspw'>"+BPW.map(([k,ic,n,ds])=>{const used=u[k],on=sub?sub[k]:BSD[k];return"<button class='bspc"+(on&&!dlOn?" on":"")+(used||dlOn?" used":"")+"' id='bsp_"+k+"'"+(used||sub||dlOn?" disabled":"")+"><i>"+ic+"</i><b>"+n+"</b><small>"+(used?"مستخدم":ds)+"</small></button>"}).join("")+"</div>"
+    const ex="";
+    b="<div class='bsmsg'>⚡ كروت القوة — كل كارت مرة واحدة في الماتش</div><div class='bsg two'>"+bsCardHTML(S,mk,{})+bsCardHTML(S,ok,{})+"</div>"
+     +"<div class='bspw'>"+BPW.map(([k,ic,n,ds])=>{const used=u[k],on=sub?sub[k]:BSD[k];return"<button class='bspc"+(on?" on":"")+(used?" used":"")+"' id='bsp_"+k+"'"+(used||sub?" disabled":"")+"><i>"+ic+"</i><b>"+n+"</b><small>"+(used?"مستخدم":ds)+"</small></button>"}).join("")+"</div>"+ex
      +(sub?"<div class='bsmsg'>✅ سلّمت اختيارك — مستني "+esc(S.nm[op])+"…</div>":"<button class='hb' id='bsok'>سلّم اختيارك</button><small>تقدر تستخدم كارت واحد أو الثلاثة مرة وحدة، أو ولا واحد</small>")}
   else if(S.ph==="reveal"&&S.res)b=bsRevealHTML(S);
   else if(S.ph==="board"||S.ph==="end"){const ord=[0,1].sort((a,b)=>S.w[b]-S.w[a]);
