@@ -914,7 +914,7 @@ async function pkgAct(a,b){if(!isAdm())return true;
   if(a==="pkgs"){pkgP=b.dataset.p==="k"?"k":"t";admStep("pkg");return true}
   if(a==="ncn"){ncImg="";admStep("newc");return true}
   const cp=q=>({c:q.c.slice(),u:q.u,w:q.w?{...q.w}:null}),nx={t:cp(PKCFG.t),k:cp(PKCFG.k),x:CUST.map(c=>({...c}))},p=nx[pkgP];
-  if(a==="ncsave"){const nm=($("nn").value||"").trim().slice(0,14),rt=Math.floor(+$("nr").value||0),tm=$("nt").value,tg=$("np").value;
+  if(a==="ncsave"){const nm=($("nn").value||"").trim().slice(0,14),rt=Math.floor(+String($("nr").value||"").replace(/[٠-٩]/g,d=>"٠١٢٣٤٥٦٧٨٩".indexOf(d))||0),tm=$("nt").value,tg=$("np").value;
     if(!nm){smsg("اكتب اسم اللاعب");return true}if(!(rt>=40&&rt<=150)){smsg("المستوى لازم بين 40 و150");return true}if(!ncImg){smsg("اختر صورة للاعب");return true}if(CUST.length>=40){smsg("وصلت للحد الأقصى من البطاقات المضافة");return true}
     const id=7+CUST.length;nx.x.push({name:nm,rt,img:ncImg,team:tm,del:0});
     if(tg){const q=nx[tg],w=pkW(tg),sum=Object.values(w).reduce((u,v)=>u+v,0);q.w=w;q.c.push(id);q.w[id]=Math.max(0,Math.min(5,100-sum))}}
@@ -926,7 +926,7 @@ async function pkgAct(a,b){if(!isAdm())return true;
   else if(a==="pkad"){const e=$("pka");if(!e)return true;{const w=pkW(pkgP),sum=Object.values(w).reduce((x,y)=>x+y,0);p.w=w;p.c.push(+e.value);p.w[+e.value]=Math.max(0,Math.min(5,100-sum))}}
   else if(a==="pkwr")p.w=null
   else if(a==="pkw"){const w={};let sum=0;for(const c of p.c){const v=+($("pw"+c).value);if(!isFinite(v)||v<0||v>100){smsg("اكتب نسبة صحيحة بين 0 و100");return true}w[c]=Math.round(v*100)/100;sum+=w[c]}if(sum>100.001){smsg("مجموع النسب لازم ما يزيد عن 100% (الآن "+Math.round(sum*100)/100+"%)");return true}if(sum<=0){smsg("لازم يكون لبطاقة واحدة على الأقل نسبة أكبر من 0");return true}p.w=w}
-  try{if(!window.fbPacks)throw new Error("shim");await window.fbPacks.set(nx)}catch(e){const c=String(e&&(e.code||e.message)||"");smsg(c==="shim"?"ملف shim لم يُحدَّث — أعد بناء التطبيق بالملفات الجديدة":/permission/i.test(c)?"القواعد ترفض الحفظ (PERMISSION_DENIED) — أضف قاعدة packcfg":/admin only/.test(c)?"هذا الحساب ليس حساب الأدمن":"فشل الحفظ: "+c.slice(0,80));return true}
+  try{if(!window.fbPacks)throw new Error("shim");const cln=v=>Array.isArray(v)?v.map(cln):v&&typeof v==="object"?Object.fromEntries(Object.entries(v).filter(([k,x])=>x!==undefined&&!(typeof x==="number"&&!isFinite(x))).map(([k,x])=>[k,cln(x)])):v===undefined?null:v;await window.fbPacks.set(cln(nx))}catch(e){const c=String(e&&(e.code||e.message)||"");smsg(c==="shim"?"ملف shim لم يُحدَّث — أعد بناء التطبيق بالملفات الجديدة":/permission/i.test(c)?"القواعد ترفض الحفظ (PERMISSION_DENIED) — أضف قاعدة packcfg":/admin only/.test(c)?"هذا الحساب ليس حساب الأدمن":"فشل الحفظ: "+c.slice(0,80));return true}
   PKCFG={t:nx.t,k:nx.k};CUST=nx.x;cardsExtend();pkSave();pkFix();if(a==="ncsave"||a==="ncdel"){ncImg="";admStep("newc");smsg("✅ تم الحفظ وسيظهر لكل اللاعبين")}else{admStep("pkg");smsg("✅ تم الحفظ وسيظهر لكل اللاعبين")}return true}
 
 const ADAYS=[[1,"يوم"],[2,"يومين"],[3,"3 أيام"],[7,"أسبوع"]];
